@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "dev": "tsc --watch",
     "build": "tsc",
-    "build:clean": "tsc --build --clean && tsc --build"
+    "build:clean": "tsc --build --clean && tsc --build",
+    "generate": "openapi-generator generate -i openapi.json -g typescript-fetch -o src"
   },
   "files": [
     "dist/**/*",

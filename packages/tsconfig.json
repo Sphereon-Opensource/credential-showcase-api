@@ -1,7 +1,6 @@
 {
   "files": [],
   "references": [
-    { "path": "credential-showcase-api-server" },
     { "path": "credential-showcase-openapi" },
     { "path": "credential-showcase-ts-model" },
     { "path": "credential-showcase-ts-sdk" }

@@ -33,7 +33,7 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
 
-  packages/credential-showcase-api-server:
+  apps/credential-showcase-api-server:
     dependencies:
       express:
         specifier: ^4.21.2

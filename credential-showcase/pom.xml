@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>credential-showcase</artifactId>
+
+    <build>
+        <pluginManagement>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <groupId>org.openapitools</groupId>
+                <version>${openapi-generator-version}</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <addCompileSourceRoot>true</addCompileSourceRoot>
+                            <apiPackage>com.sphereon.credential.showcase.api</apiPackage>
+                            <artifactVersion>${project.version}</artifactVersion>
+
+                            <artifactVersion>${project.version}</artifactVersion>
+                            <configOptions>
+                                <useTags>true</useTags>
+                                <serializableModel>true</serializableModel>
+                                <snapshotVersion>true</snapshotVersion>
+                            </configOptions>
+
+                            <enablePostProcessFile>true</enablePostProcessFile>
+                            <generateApis>true</generateApis>
+                            <generateModelDocumentation>true</generateModelDocumentation>
+                            <generateModels>true</generateModels>
+
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <generatorName>typescript-fetch</generatorName>
+
+                            <ignoreFileOverride>${project.basedir}/target/generated-sources/java/api/.swagger-codegen-ignore</ignoreFileOverride>
+                            <importMappings>
+                                <importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+                            </importMappings>
+                            <inputSpec>/Users/zoemaas/IdeaProjects/credential-showcase-api/credential-showcase/openapi/openapi.yaml</inputSpec>
+
+                            <invokerPackage>com.sphereon.credential.showcase.handler</invokerPackage>
+                            <modelPackage>com.sphereon.credential.showcase.model</modelPackage>
+                            <output>${project.basedir}/target/sdks/typescript/api</output>
+
+                            <skipOverwrite>false</skipOverwrite>
+                            <typeMappings>
+                                <typeMapping>OffsetDateTime=Instant</typeMapping>
+                            </typeMappings>
+                            <verbose>${openapi-codegen-verbose}</verbose>
+                        </configuration>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <id>typescript-server</id>
+                    </execution>
+
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <proc>none</proc>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>${maven-compiler-plugin-version}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <description>Credential Showcase Openapi</description>
+    <modelVersion>4.0.0</modelVersion>
+    <name>Credential Showcase Openapi</name>
+
+    <parent>
+        <artifactId>credential-showcase-parent</artifactId>
+        <groupId>com.sphereon.credential.showcase</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <properties>
+        <jackson-databind.version>0.2.1</jackson-databind.version>
+
+        <java.version>17</java.version>
+
+        <openapi-codegen-verbose>false</openapi-codegen-verbose>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springfox-swagger.version>3.0.0</springfox-swagger.version>
+    </properties>
+</project>

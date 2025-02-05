@@ -57,7 +57,7 @@
     <groupId>com.sphereon.credential.showcase</groupId>
     <modelVersion>4.0.0</modelVersion>
     <modules>
-        <module>credential-showcase</module>
+        <module>packages/credential-showcase-openapi</module>
     </modules>
     <name>Credential Showcase Parent Project</name>
     <packaging>pom</packaging>

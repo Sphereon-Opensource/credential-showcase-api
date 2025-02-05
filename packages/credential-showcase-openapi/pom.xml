@@ -38,11 +38,11 @@
                             <importMappings>
                                 <importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
                             </importMappings>
-                            <inputSpec>/Users/zoemaas/IdeaProjects/credential-showcase-api/credential-showcase/openapi/openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/credential-showcase-openapi/openapi/openapi.yaml</inputSpec>
 
                             <invokerPackage>com.sphereon.credential.showcase.handler</invokerPackage>
                             <modelPackage>com.sphereon.credential.showcase.model</modelPackage>
-                            <output>${project.basedir}/target/sdks/typescript/api</output>
+                            <output>${project.basedir}/packages/credential-showcase-openapi/target/sdks/typescript/api</output>
 
                             <skipOverwrite>false</skipOverwrite>
                             <typeMappings>

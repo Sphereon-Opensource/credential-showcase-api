@@ -5,3 +5,11 @@ A TypeScript-based monorepo for the Credential Showcase API, consisting of backe
 # credential-showcase-openapi
 
 Defines the OpenAPI specification for the Credential Showcase application. It provides the API contract for the backend services and can be used to generate client code, validate requests, and document the API.
+
+## Usage
+
+From the parent project, run:
+
+```shell 
+mvn clean install
+```

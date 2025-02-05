@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>credential-showcase</artifactId>
+    <artifactId>credential-showcase-openapi</artifactId>
 
     <build>
         <pluginManagement>
@@ -38,11 +38,11 @@
                             <importMappings>
                                 <importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
                             </importMappings>
-                            <inputSpec>${project.basedir}/credential-showcase-openapi/openapi/openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/openapi/openapi.yaml</inputSpec>
 
                             <invokerPackage>com.sphereon.credential.showcase.handler</invokerPackage>
                             <modelPackage>com.sphereon.credential.showcase.model</modelPackage>
-                            <output>${project.basedir}/packages/credential-showcase-openapi/target/sdks/typescript/api</output>
+                            <output>${project.basedir}/target/sdks/typescript/api</output>
 
                             <skipOverwrite>false</skipOverwrite>
                             <typeMappings>

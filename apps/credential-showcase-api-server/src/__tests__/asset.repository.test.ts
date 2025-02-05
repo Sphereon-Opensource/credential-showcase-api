@@ -108,7 +108,6 @@ describe('Database asset repository tests', (): void => {
         const updatedAsset = await repository.update({ ...savedAsset, fileName: newFileName })
 
         expect(updatedAsset).toBeDefined()
-        expect(updatedAsset).toBeDefined()
         expect(updatedAsset.mediaType).toEqual(asset.mediaType)
         expect(updatedAsset.fileName).toEqual(newFileName)
         expect(updatedAsset.description).toEqual(asset.description)

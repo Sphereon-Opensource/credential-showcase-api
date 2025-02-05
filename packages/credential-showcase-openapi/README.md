@@ -1,13 +1,7 @@
 ## credential-showcase-openapi
 
-## Installation
+### Generate files from Open API Specs
 
 ```shell
-pnpm install credential-showcase-openapi
-```
-
-## Build
-
-```shell
-pnpm build
+mvn clean install
 ```

@@ -10,14 +10,6 @@ the backend server for the Credential Showcase application. It provides REST API
 
 Defines the OpenAPI specification for the Credential Showcase application. It provides the API contract for the backend services and can be used to generate client code, validate requests, and document the API.
 
-## Usage
-
-From the parent project, run:
-
-```shell 
-mvn clean install
-```
-
 # credential-showcase-ts-sdk
 
 Contains the generated TypeScript SDK client code for interacting with the Credential Showcase API. It provides a set of functions and utilities to connect with the backend services.

@@ -16,7 +16,7 @@
                     <execution>
                         <configuration>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
-                            <apiPackage>com.sphereon.credential.showcase.api</apiPackage>
+                            <apiPackage>tech.4sure.credential.showcase.api</apiPackage>
                             <artifactVersion>${project.version}</artifactVersion>
 
                             <artifactVersion>${project.version}</artifactVersion>
@@ -40,8 +40,8 @@
                             </importMappings>
                             <inputSpec>${project.basedir}/openapi/openapi.yaml</inputSpec>
 
-                            <invokerPackage>com.sphereon.credential.showcase.handler</invokerPackage>
-                            <modelPackage>com.sphereon.credential.showcase.model</modelPackage>
+                            <invokerPackage>tech.4sure.credential.showcase.handler</invokerPackage>
+                            <modelPackage>tech.4sure.credential.showcase.model</modelPackage>
                             <output>${project.basedir}/src</output>
 
                             <skipOverwrite>false</skipOverwrite>

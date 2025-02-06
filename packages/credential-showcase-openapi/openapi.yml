@@ -914,26 +914,29 @@ components:
     Asset:
       type: object
       required:
-        - assetId
-        - assetType
-        - urlOrPath
+        - mediaType
+        - contents
       properties:
         id:
           type: string
-          description: Unique identifier for the asset
+          description: Unique identifier for the asset in the database
           example: asset123
-        assetId:
-          type: string
-          description: External reference identifier for the asset
-          example: asset123
-        assetType:
+        mediaType:
           type: string
           description: Type of asset (e.g., image, document, icon)
           example: image/jpeg
-        urlOrPath:
+        contents:
           type: string
-          description: URL or file path to access the asset content
-          example: https://example.com/asset.jpg
+          description: Binary data of the asset
+          example: base64 encoded binary data
+        fileName:
+          type: string
+          description: Name of the asset file
+          example: asset.jpg
+        description:
+          type: string
+          description: Description of the asset
+          example: A beautiful image of a cat
     Step:
       type: object
       required:
@@ -1102,11 +1105,11 @@ components:
           type: string
           description: Detailed description of the persona
           example: John Doe is a verifier for the system
-        headshot_image:
+        headshotImage:
           $ref: '#/components/schemas/Asset'
           description: Headshot image asset for the persona
           example: https://example.com/headshot.jpg
-        body_image:
+        bodyImage:
           $ref: '#/components/schemas/Asset'
           description: Full body image asset for the persona
           example: https://example.com/body.jpg

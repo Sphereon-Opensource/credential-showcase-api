@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "start": "ts-node src/index.ts",
     "build": "tsc",
     "build:clean": "tsc --build --clean && tsc --build",
     "migration:generate": "drizzle-kit generate --config=drizzle.config.ts --name=credential-showcase-api"
@@ -14,15 +15,18 @@
     "drizzle-orm": "^0.39.1",
     "express": "^4.21.2",
     "pg": "^8.13.1",
-    "typedi": "^0.10.0",
-    "credential-showcase-openapi": "workspace:*"
+    "reflect-metadata": "^0.2.2",
+    "routing-controllers": "^0.10.4",
+    "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.16",
     "@types/dotenv-flow": "^3.3.3",
     "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
     "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.4"
+    "drizzle-kit": "^0.30.4",
+    "ts-node": "^10.9.2"
   },
   "files": [
     "dist/**/*",

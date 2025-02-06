@@ -42,7 +42,7 @@
 
                             <invokerPackage>com.sphereon.credential.showcase.handler</invokerPackage>
                             <modelPackage>com.sphereon.credential.showcase.model</modelPackage>
-                            <output>${project.basedir}/target/sdks/typescript/api</output>
+                            <output>${project.basedir}/src</output>
 
                             <skipOverwrite>false</skipOverwrite>
                             <typeMappings>

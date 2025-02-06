@@ -53,7 +53,7 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <id>typescript-server</id>
+                        <id>typescript-fetch-models</id>
                     </execution>
 
                 </executions>

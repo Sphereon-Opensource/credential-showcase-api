@@ -27,7 +27,7 @@
                             </configOptions>
 
                             <enablePostProcessFile>true</enablePostProcessFile>
-                            <generateApis>true</generateApis>
+                            <generateApis>false</generateApis>
                             <generateModelDocumentation>true</generateModelDocumentation>
                             <generateModels>true</generateModels>
 

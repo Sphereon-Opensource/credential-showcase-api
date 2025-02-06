@@ -6,7 +6,7 @@ export type AssetRepositoryDefinition = {
     findAll(): Promise<Asset[]>;
     create(asset: NewAsset): Promise<Asset>;
     update(asset: Asset): Promise<Asset | null>;
-    delete(assetId: string): Promise<boolean>;
+    delete(assetId: string): Promise<void>;
 }
 
 export type AssetRepositoryArgs = {

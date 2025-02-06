@@ -1,15 +1,22 @@
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import {Inject, Service} from 'typedi';
 import { assets } from '../schema';
-import { Asset, AssetRepositoryArgs, AssetRepositoryDefinition, NewAsset } from '../../types';
+import { Asset, AssetRepositoryDefinition, NewAsset } from '../../types';
 
+
+//AssetRepositoryArgs
+
+@Service()
 class AssetRepository implements AssetRepositoryDefinition {
-    private database: NodePgDatabase;
+    // private database: NodePgDatabase;
+    //
+    // constructor(args: AssetRepositoryArgs) {
+    //     const { database } = args
+    //     this.database = database
+    // }
 
-    constructor(args: AssetRepositoryArgs) {
-        const { database } = args
-        this.database = database
-    }
+    constructor(@Inject("database") private readonly database: NodePgDatabase) {}
 
     async create(asset: NewAsset): Promise<Asset> {
         const result = await this.database
@@ -19,11 +26,10 @@ class AssetRepository implements AssetRepositoryDefinition {
         return result[0]
     }
 
-    async delete(assetId: string): Promise<boolean> {
-        return this.database
+    async delete(assetId: string): Promise<void> {
+        await this.database
             .delete(assets)
             .where(eq(assets.assetId, assetId))
-            .then(() => true)
     }
 
     async update(asset: Asset): Promise<Asset> {

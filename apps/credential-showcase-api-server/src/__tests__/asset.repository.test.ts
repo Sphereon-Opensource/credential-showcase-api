@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import AssetRepository from '../database/repositories/assetRepository';
+import AssetRepository from '../database/repositories/AssetRepository';
 import { NewAsset } from '../types';
 
 describe('Database asset repository tests', (): void => {

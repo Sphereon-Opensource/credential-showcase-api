@@ -1,4 +1,4 @@
-import { Service } from "typedi";
+import { Service } from 'typedi';
 import { Asset, NewAsset } from '../types';
 import AssetRepository from '../database/repositories/AssetRepository';
 
@@ -8,42 +8,23 @@ class AssetService {
 
     public getAssets = async (): Promise<Asset[]> => {
         return this.assetRepository.findAll()
-        // console.log('Not yet implemented')
-        // return []
     };
 
-    public getAsset = async (assetId: string): Promise<Asset> => {
-        console.log('Not yet implemented')
-        return {
-            assetId,
-            mediaType: 'image/png',
-            fileName: 'image.png',
-            description: 'some image',
-            data: Buffer.from('some binary data'),
-        } as Asset
+    public getAsset = async (id: string): Promise<Asset | null> => {
+        return this.assetRepository.findById(id)
     };
 
     public createAsset = async (asset: NewAsset): Promise<Asset> => {
-        console.log('Not yet implemented')
-        return {
-            assetId: '123',
-            mediaType: asset.mediaType,
-            fileName: asset.fileName,
-            description: asset.description,
-            data: Buffer.from('some binary data'), // TODO, how do we REST binary data
-        } as Asset
+        return this.assetRepository.create(asset)
     };
 
-    public updateAsset = async (assetId: string, asset: Asset): Promise<Asset> => { // TODO use id and asset
-        console.log('Not yet implemented')
-        return asset
+    public updateAsset = async (id: string, asset: Asset): Promise<Asset> => {
+        return this.assetRepository.update(id, asset)
     };
 
-    public deleteAsset = async (assetId: string): Promise<void> => {
-        console.log('Asset deleted')
-        console.log('Not yet implemented')
+    public deleteAsset = async (id: string): Promise<void> => {
+        return this.assetRepository.delete(id)
     };
-
 }
 
 export default AssetService

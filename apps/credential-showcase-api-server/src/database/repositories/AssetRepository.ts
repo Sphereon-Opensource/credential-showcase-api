@@ -1,55 +1,54 @@
 import { eq } from 'drizzle-orm';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import {Inject, Service} from 'typedi';
+import { Service } from 'typedi';
+import { DatabaseService } from '../../services/DatabaseService';
 import { assets } from '../schema';
 import { Asset, AssetRepositoryDefinition, NewAsset } from '../../types';
 
-
-//AssetRepositoryArgs
-
 @Service()
 class AssetRepository implements AssetRepositoryDefinition {
-    // private database: NodePgDatabase;
-    //
-    // constructor(args: AssetRepositoryArgs) {
-    //     const { database } = args
-    //     this.database = database
-    // }
-
-    constructor(@Inject("database") private readonly database: NodePgDatabase) {}
+    constructor(private readonly databaseService: DatabaseService) {}
 
     async create(asset: NewAsset): Promise<Asset> {
-        const result = await this.database
+        const result = await (await this.databaseService.getConnection())
             .insert(assets)
             .values(asset)
             .returning();
+
         return result[0]
     }
 
-    async delete(assetId: string): Promise<void> {
-        await this.database
+    async delete(id: string): Promise<void> {
+        await this.findById(id)
+        await (await this.databaseService.getConnection())
             .delete(assets)
-            .where(eq(assets.assetId, assetId))
+            .where(eq(assets.id, id))
     }
 
-    async update(asset: Asset): Promise<Asset> {
-        const result = await this.database
+    async update(id: string, asset: Asset): Promise<Asset> {  // TODO use id and asset
+        await this.findById(id) // TODO fetch asset and update, maybe use NewAsset as update?
+        const result = await (await this.databaseService.getConnection())
             .update(assets)
             .set(asset)
             .returning();
+
         return result[0]
     }
 
-    async findById(assetId: string): Promise<Asset | null> {
-        const result = await this.database
+    async findById(id: string): Promise<Asset> {
+        const result = await (await this.databaseService.getConnection())
             .select()
             .from(assets)
-            .where(eq(assets.assetId, assetId));
-        return result.length > 0 ? result[0] : null;
+            .where(eq(assets.id, id));
+
+        if (result.length === 0 && !result[0]) {
+            return Promise.reject(Error(`No asset found for id: ${id}`))
+        }
+
+        return result[0]
     }
 
     async findAll(): Promise<Asset[]> {
-        return this.database
+        return (await this.databaseService.getConnection())
             .select()
             .from(assets);
     }

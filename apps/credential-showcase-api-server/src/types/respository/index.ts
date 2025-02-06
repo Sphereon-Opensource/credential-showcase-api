@@ -1,14 +1,9 @@
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Asset, NewAsset } from '../schema';
 
 export type AssetRepositoryDefinition = {
-    findById(assetId: string): Promise<Asset | null>;
+    findById(assetId: string): Promise<Asset>;
     findAll(): Promise<Asset[]>;
     create(asset: NewAsset): Promise<Asset>;
-    update(asset: Asset): Promise<Asset | null>;
+    update(id: string, asset: Asset): Promise<Asset>;
     delete(assetId: string): Promise<void>;
-}
-
-export type AssetRepositoryArgs = {
-    database: NodePgDatabase
 }

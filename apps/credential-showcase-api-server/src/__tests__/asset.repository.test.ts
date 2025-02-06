@@ -9,7 +9,7 @@ describe('Database asset repository tests', (): void => {
     beforeEach(async (): Promise<void> => {
         const database: any = drizzle();
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
-        repository = new AssetRepository({ database })
+        repository = new AssetRepository(database)
     })
 
     it('Should save asset to database', async (): Promise<void> => {
@@ -17,7 +17,7 @@ describe('Database asset repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            data: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data'),
         };
 
         const savedAsset = await repository.create(asset)
@@ -26,7 +26,7 @@ describe('Database asset repository tests', (): void => {
         expect(savedAsset.mediaType).toEqual(asset.mediaType)
         expect(savedAsset.fileName).toEqual(asset.fileName)
         expect(savedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(savedAsset.data)).toStrictEqual(asset.data);
+        expect(Buffer.from(savedAsset.content)).toStrictEqual(asset.content);
     })
 
     it('Should get asset by id from database', async (): Promise<void> => {
@@ -34,19 +34,19 @@ describe('Database asset repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            data: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data'),
         };
 
         const savedAsset = await repository.create(asset)
         expect(savedAsset).toBeDefined()
 
-        const fromDb = await repository.findById(savedAsset.assetId)
+        const fromDb = await repository.findById(savedAsset.id)
 
         expect(fromDb).not.toBeNull()
         expect(fromDb!.mediaType).toEqual(asset.mediaType)
         expect(fromDb!.fileName).toEqual(asset.fileName)
         expect(fromDb!.description).toEqual(asset.description)
-        expect(Buffer.from(fromDb!.data)).toStrictEqual(asset.data);
+        expect(Buffer.from(fromDb!.content)).toStrictEqual(asset.content);
     })
 
     it('Should get all assets from database', async (): Promise<void> => {
@@ -54,7 +54,7 @@ describe('Database asset repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            data: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data'),
         };
 
         const savedAsset1 = await repository.create(asset1)
@@ -64,7 +64,7 @@ describe('Database asset repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            data: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data'),
         };
 
         const savedAsset2 = await repository.create(asset2)
@@ -80,17 +80,15 @@ describe('Database asset repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            data: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data'),
         };
 
         const savedAsset = await repository.create(asset)
         expect(savedAsset).toBeDefined()
 
-        const deletionResult = await repository.delete(savedAsset.assetId)
-        expect(deletionResult).toEqual(true)
+        await repository.delete(savedAsset.id)
 
-        const fromDb = await repository.findById(savedAsset.assetId)
-        expect(fromDb).toBeNull()
+        await expect(repository.findById(savedAsset.id)).rejects.toThrowError(`No asset found for id: ${savedAsset.id}`)
     })
 
     it('Should update asset in database', async (): Promise<void> => {
@@ -98,20 +96,20 @@ describe('Database asset repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            data: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data'),
         };
 
         const savedAsset = await repository.create(asset)
         expect(savedAsset).toBeDefined()
 
         const newFileName = 'new_image.png'
-        const updatedAsset = await repository.update({ ...savedAsset, fileName: newFileName })
+        const updatedAsset = await repository.update(savedAsset.id, { ...savedAsset, fileName: newFileName })
 
         expect(updatedAsset).toBeDefined()
         expect(updatedAsset).toBeDefined()
         expect(updatedAsset.mediaType).toEqual(asset.mediaType)
         expect(updatedAsset.fileName).toEqual(newFileName)
         expect(updatedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(updatedAsset.data)).toStrictEqual(asset.data);
+        expect(Buffer.from(updatedAsset.content)).toStrictEqual(asset.content);
     })
 })

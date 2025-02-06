@@ -1,5 +1,8 @@
+import 'reflect-metadata';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { Container } from 'typedi';
+import { DatabaseService } from '../services/DatabaseService';
 import AssetRepository from '../database/repositories/AssetRepository';
 import { NewAsset } from '../types';
 
@@ -9,8 +12,17 @@ describe('Database asset repository tests', (): void => {
     beforeEach(async (): Promise<void> => {
         const database: any = drizzle();
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
-        repository = new AssetRepository(database)
+        const mockDatabaseService = {
+            getConnection: jest.fn().mockResolvedValue(database),
+        };
+        Container.set(DatabaseService, mockDatabaseService);
+        repository = Container.get(AssetRepository);
     })
+
+    afterEach((): void => {
+        jest.resetAllMocks();
+        Container.reset();
+    });
 
     it('Should save asset to database', async (): Promise<void> => {
         const asset: NewAsset = {

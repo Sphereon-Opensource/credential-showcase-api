@@ -1,23 +1,34 @@
 import { drizzle } from 'drizzle-orm/pglite'
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { migrate } from 'drizzle-orm/node-postgres/migrator'
 import { NewPersona } from '../types'
-import PersonaRepository from '../database/repositories/personaRepository'
+import PersonaRepository from '../database/repositories/PersonaRepository'
+import { Container } from 'typedi'
+import { DatabaseService } from '../services/DatabaseService'
 
 describe('Database persona repository tests', (): void => {
-  let repository: PersonaRepository;
+  let repository: PersonaRepository
 
   beforeEach(async (): Promise<void> => {
-    const database: any = drizzle();
+    const database: any = drizzle()
     await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
-    repository = new PersonaRepository({ database })
+    const mockDatabaseService = {
+      getConnection: jest.fn().mockResolvedValue(database),
+    }
+    Container.set(DatabaseService, mockDatabaseService)
+    repository = Container.get(PersonaRepository)
   })
+
+  afterEach((): void => {
+    jest.resetAllMocks();
+    Container.reset();
+  });
 
   it('Should save persona to database', async (): Promise<void> => {
     const persona: NewPersona = {
-      name: "test",
-      role: "tester",
+      name: 'test',
+      role: 'tester',
       description: 'some persona',
-    };
+    }
 
     const savedPersona = await repository.create(persona)
 
@@ -29,15 +40,15 @@ describe('Database persona repository tests', (): void => {
 
   it('Should get persona by id from database', async (): Promise<void> => {
     const persona: NewPersona = {
-      name: "test",
-      role: "tester",
-      description: "some persona"
-    };
+      name: 'test',
+      role: 'tester',
+      description: 'some persona',
+    }
 
     const savedPersona = await repository.create(persona)
     expect(savedPersona).toBeDefined()
 
-    const fromDb = await repository.findById(savedPersona.personaId)
+    const fromDb = await repository.findById(savedPersona.id)
 
     expect(fromDb).not.toBeNull()
     expect(fromDb!.name).toEqual(persona.name)
@@ -47,19 +58,19 @@ describe('Database persona repository tests', (): void => {
 
   it('Should get all personas from database', async (): Promise<void> => {
     const persona1: NewPersona = {
-      name: "test",
-      role: "tester",
-      description: "some persona"
-    };
+      name: 'test',
+      role: 'tester',
+      description: 'some persona',
+    }
 
     const savedPersona1 = await repository.create(persona1)
     expect(savedPersona1).toBeDefined()
 
     const persona2: NewPersona = {
-      name: "test",
-      role: "tester",
-      description: "some persona"
-    };
+      name: 'test',
+      role: 'tester',
+      description: 'some persona',
+    }
 
     const savedAsset2 = await repository.create(persona2)
     expect(savedAsset2).toBeDefined()
@@ -71,33 +82,33 @@ describe('Database persona repository tests', (): void => {
 
   it('Should delete persona from database', async (): Promise<void> => {
     const persona: NewPersona = {
-      name: "test",
-      role: "tester",
-      description: "some persona"
-    };
+      name: 'test',
+      role: 'tester',
+      description: 'some persona',
+    }
 
     const savedPersona = await repository.create(persona)
     expect(savedPersona).toBeDefined()
 
-    const deletionResult = await repository.delete(savedPersona.personaId)
+    const deletionResult = await repository.delete(savedPersona.id)
     expect(deletionResult).toEqual(true)
 
-    const fromDb = await repository.findById(savedPersona.personaId)
+    const fromDb = await repository.findById(savedPersona.id)
     expect(fromDb).toBeNull()
   })
 
   it('Should update persona in database', async (): Promise<void> => {
     const persona: NewPersona = {
-      name: "test",
-      role: "tester",
-      description: "some persona"
-    };
+      name: 'test',
+      role: 'tester',
+      description: 'some persona',
+    }
 
     const savedPersona = await repository.create(persona)
     expect(savedPersona).toBeDefined()
 
     const newRole = 'senior tester'
-    const updatedPersona = await repository.update({ ...savedPersona, role: newRole })
+    const updatedPersona = await repository.update(savedPersona.id, { ...savedPersona, role: newRole })
 
     expect(updatedPersona).toBeDefined()
     expect(updatedPersona.name).toEqual(persona.name)

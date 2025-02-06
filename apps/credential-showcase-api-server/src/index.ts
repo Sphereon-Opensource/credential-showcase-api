@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { createExpressServer, useContainer } from 'routing-controllers';
 import Container from 'typedi';
 import AssetController from './controllers/AssetController';
-import { ExpressErrorHandler } from './handlers/ExpressErrorHandler';
+import { ExpressErrorHandler } from './middleware/ExpressErrorHandler';
 
 require('dotenv-flow').config();
 

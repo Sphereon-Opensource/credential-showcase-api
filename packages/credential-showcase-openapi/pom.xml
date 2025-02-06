@@ -76,9 +76,9 @@
     <name>Credential Showcase Openapi</name>
 
     <parent>
-        <artifactId>credential-showcase-parent</artifactId>
-        <groupId>com.sphereon.credential.showcase</groupId>
-        <version>0.1.0-SNAPSHOT</version>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>2.7.6</version>
     </parent>
 
     <pluginRepositories>
@@ -90,12 +90,11 @@
     </pluginRepositories>
 
     <properties>
-        <jackson-databind.version>0.2.1</jackson-databind.version>
-
-        <java.version>17</java.version>
-
         <openapi-codegen-verbose>false</openapi-codegen-verbose>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springfox-swagger.version>3.0.0</springfox-swagger.version>
+        <openapi-generator-version>7.11.0</openapi-generator-version>
+        <maven-compiler-plugin-version>3.9.0</maven-compiler-plugin-version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 </project>

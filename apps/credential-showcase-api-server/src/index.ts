@@ -1,7 +1,8 @@
 import 'reflect-metadata';
-import {createExpressServer, useContainer} from 'routing-controllers';
-import AssetController from './controllers/AssetController';
+import { createExpressServer, useContainer } from 'routing-controllers';
 import Container from 'typedi';
+import AssetController from './controllers/AssetController';
+import { ExpressErrorHandler } from './handlers/ExpressErrorHandler';
 
 require('dotenv-flow').config();
 
@@ -9,7 +10,9 @@ require('dotenv-flow').config();
 useContainer(Container);
 
 const app = createExpressServer({
-    controllers: [AssetController]
+    controllers: [AssetController],
+    middlewares: [ExpressErrorHandler],
+    defaultErrorHandler: false,
 });
 
 const port = Number(process.env.PORT)

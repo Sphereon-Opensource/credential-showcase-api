@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { PgDatabase } from 'drizzle-orm/pg-core';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
@@ -10,7 +11,7 @@ describe('Database asset repository tests', (): void => {
     let repository: AssetRepository;
 
     beforeEach(async (): Promise<void> => {
-        const database: any = drizzle();
+        const database: PgDatabase<any> = drizzle();
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
         const mockDatabaseService = {
             getConnection: jest.fn().mockResolvedValue(database),

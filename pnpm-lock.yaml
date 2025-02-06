@@ -38,6 +38,9 @@ importers:
 
   apps/credential-showcase-api-server:
     dependencies:
+      credential-showcase-openapi:
+        specifier: workspace:*
+        version: link:../../packages/credential-showcase-openapi
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0

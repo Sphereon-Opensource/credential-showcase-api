@@ -14,7 +14,8 @@
     "drizzle-orm": "^0.39.1",
     "express": "^4.21.2",
     "pg": "^8.13.1",
-    "typedi": "^0.10.0"
+    "typedi": "^0.10.0",
+    "credential-showcase-openapi": "workspace:*"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.16",

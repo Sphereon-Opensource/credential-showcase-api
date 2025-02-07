@@ -33,3 +33,39 @@ mvn clean install -P <profile_id>
 ```
 
 **Profile id defaults to typescript-fetch-models and may be ignored at the moment**
+
+### Using the models
+
+The models will be generated in `<root-folder>/packages/credential-showcase-openapi`, therefore,
+they may be imported into another submodule as a workspace dependency by: 
+
+adding the lines below to the respective files
+###### package.json
+```json
+{
+  "dependencies": {
+    "credential-showcase-openapi": "workspace:*"
+  }
+}
+```
+
+###### tsconfig.json
+```json
+{
+  "references": [{
+    "path": "../credential-showcase-openapi"
+  }]
+}
+```
+
+running the command below from the root project
+```shell
+pnpm install
+```
+
+And importing them as any other package
+```typescript
+import { Asset } from 'credential-showcase-openapi'
+
+const asset: Asset = {}
+```

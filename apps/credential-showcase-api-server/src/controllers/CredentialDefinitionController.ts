@@ -15,7 +15,7 @@ import { CredentialDefinition, NewCredentialDefinition } from '../types';
 
 @JsonController('/credential-definitions')
 @Service()
-class AssetController {
+class CredentialDefinitionController {
     constructor(private credentialDefinitionService: CredentialDefinitionService) { }
 
     @Get('/')
@@ -46,4 +46,4 @@ class AssetController {
     }
 }
 
-export default AssetController
+export default CredentialDefinitionController

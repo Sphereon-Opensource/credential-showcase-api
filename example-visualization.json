@@ -1,0 +1,89 @@
+{
+  "id": "123",
+  "name": "Credential Showcase BCGov",
+  "description": "Collection of credential usage scenarios",
+  "status": "pending",
+  "hidden": false,
+  "scenarios": [
+    {
+      "id": "university-parking-scenario",
+      "name": "University Parking Journey",
+      "description": "Student obtaining and using parking credentials",
+      "workflowRefs": [
+        "issuance-flow-123",
+        "presentation-flow-123"
+      ],
+      "personaRefs": [
+        "issuer-persona-123",
+        "holder-persona-123",
+        "verifier-persona-123"
+      ]
+    }
+  ],
+  "credentials": [
+    {
+      "id": "university-parking-123",
+      "name": "University Parking Permit",
+      "version": "1.0",
+      "type": "ANONCRED",
+      "attributes": [
+        {
+          "name": "permit_type",
+          "type": "STRING",
+          "value": "Student Parking"
+        },
+        {
+          "name": "valid_until",
+          "type": "DATE",
+          "value": "2024-12-31"
+        }
+      ],
+      "representations": [
+        {
+          "id": "rep-123",
+          "type": "CREDENTIAL_DEFINITION"
+        }
+      ],
+      "revocation": {
+        "title": "Parking Permit Revocation",
+        "description": "Revocation settings for parking permits",
+        "registryId": "registry-123"
+      }
+    }
+  ],
+  "personas": [
+    {
+      "id": "issuer-persona-123",
+      "name": "Parking Administrator",
+      "role": "Issuer",
+      "description": "University parking services administrator",
+      "headshotImage": {
+        "id": "headshot-123",
+        "mediaType": "image/jpeg",
+        "fileName": "admin.jpg",
+        "contents": "base64-encoded-image"
+      }
+    }
+  ],
+  "workflows": [
+    {
+      "id": "issuance-flow-123",
+      "type": "ISSUANCE",
+      "name": "Parking Permit Issuance",
+      "description": "Workflow for issuing parking permits",
+      "steps": [
+      ],
+      "credentialDefinitionRefs": ["university-parking-123"],
+    },
+    {
+      "id": "presentation-flow-123",
+      "type": "PRESENTATION",
+      "name": "Parking Permit Verification",
+      "description": "Workflow for verifying parking permits",
+      "steps": [
+      ],
+      "credentialDefinitionRefs": ["university-parking-123"]
+    }
+  ]
+}
+

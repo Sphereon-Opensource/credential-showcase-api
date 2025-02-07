@@ -5,6 +5,13 @@ config:
   layout: elk
 ---
 classDiagram
+    class Showcase {
+        +id : String
+        +name : String
+        +description : String
+        +status : String
+        hidden : Boolean
+    }
     class Workflow {
         +name : String
         +description : String
@@ -19,7 +26,7 @@ classDiagram
         +title : String
         +description : String
         +order : int
-        +type: StepType
+        +type : StepType
         subFlow: Workflow
         actions: List~StepAction~
     }
@@ -128,6 +135,9 @@ classDiagram
     BOOLEAN
     DATE
    }
+    Showcase <|-- Workflow : specialization (workflow)
+    Showcase <|-- Persona : specialization (persona)
+    Showcase <|-- CredentialDefinition
     Workflow <|-- IssuanceFlow : specialization (onboarding)
     Workflow <|-- PresentationFlow : specialization (scenario)
     Workflow "1" *-- "1..*" Step : contains

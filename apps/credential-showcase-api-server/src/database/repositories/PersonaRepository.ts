@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
 
 import { Persona, NewPersona, PersonaRepositoryDefinition } from '../../types'
-import { assets, personas } from '../schema'
+import { personas } from '../schema'
 import { DatabaseService } from '../../services/DatabaseService'
 
 class PersonaRepository implements PersonaRepositoryDefinition {
@@ -20,8 +20,8 @@ class PersonaRepository implements PersonaRepositoryDefinition {
   async delete(id: string): Promise<void> {
     await this.findById(id)
     await (await this.databaseService.getConnection())
-      .delete(assets)
-      .where(eq(assets.id, id))
+      .delete(personas)
+      .where(eq(personas.id, id))
   }
 
   async update(id: string, persona: Persona): Promise<Persona> {

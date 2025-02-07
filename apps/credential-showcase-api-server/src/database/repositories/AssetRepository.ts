@@ -25,8 +25,8 @@ class AssetRepository implements AssetRepositoryDefinition {
             .where(eq(assets.id, id))
     }
 
-    async update(id: string, asset: Asset): Promise<Asset> {  // TODO use id and asset
-        await this.findById(id) // TODO fetch asset and update, maybe use NewAsset as update?
+    async update(id: string, asset: Asset): Promise<Asset> { // TODO see the result of openapi and the payloads to determine how we update an asset
+        await this.findById(id)
         const result = await (await this.databaseService.getConnection())
             .update(assets)
             .set(asset)

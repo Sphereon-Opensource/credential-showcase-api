@@ -3,6 +3,7 @@ import { createExpressServer, useContainer } from 'routing-controllers';
 import Container from 'typedi';
 import AssetController from './controllers/AssetController';
 import { ExpressErrorHandler } from './middleware/ExpressErrorHandler';
+import IssuerController from './controllers/IssuerController'
 
 require('dotenv-flow').config();
 
@@ -10,7 +11,7 @@ require('dotenv-flow').config();
 useContainer(Container);
 
 const app = createExpressServer({
-    controllers: [AssetController],
+    controllers: [AssetController, IssuerController],
     middlewares: [ExpressErrorHandler],
     defaultErrorHandler: false,
 });

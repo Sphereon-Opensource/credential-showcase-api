@@ -8,11 +8,11 @@ export class ExpressErrorHandler implements ExpressErrorMiddlewareInterface {
     error(error: any, request: any, response: any, next: (err: any) => any): void {
         if (error instanceof NotFoundError) {
             response.status(404).json({
-                message: error.message || 'Not Found',
+                message: error.message ?? 'Not Found',
             });
         } else {
             response.status(500).json({
-                message: error.message || 'Internal server error',
+                message: error.message ?? 'Internal server error',
             });
         }
     }

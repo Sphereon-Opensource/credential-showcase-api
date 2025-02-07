@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
-import { Asset, NewAsset } from '../types';
 import AssetRepository from '../database/repositories/AssetRepository';
+import { Asset, NewAsset } from '../types';
 
 @Service()
 class AssetService {

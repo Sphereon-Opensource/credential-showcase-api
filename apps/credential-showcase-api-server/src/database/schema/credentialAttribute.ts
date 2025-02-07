@@ -12,7 +12,7 @@ export const credentialAttributes = pgTable('credentialAttribute', {
 });
 
 export const credentialAttributeRelations = relations(credentialAttributes, ({ one }) => ({
-    author: one(credentialDefinitions, {
+    credentialDefinition: one(credentialDefinitions, {
         fields: [credentialAttributes.credentialDefinitionId],
         references: [credentialDefinitions.id],
     }),

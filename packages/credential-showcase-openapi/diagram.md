@@ -6,11 +6,21 @@ config:
 ---
 classDiagram
     class Showcase {
-        +id : String
         +name : String
         +description : String
         +status : String
-        hidden : Boolean
+        hidden : Boolean = false,
+        +scenarios: List~String~
+        +workflows: List~String~
+        +personas: List~String~
+        +credentials: List~String~
+    }
+    class Scenario {
+        +name : String
+        +description : String
+        +workflows: List~String~
+        +personas: List~String~
+        +credentials: List~String~
     }
     class Workflow {
         +name : String
@@ -136,6 +146,7 @@ classDiagram
     DATE
    }
     Showcase <|-- Workflow : specialization (workflow)
+    Showcase <|-- Scenario : specialization (scenario)
     Showcase <|-- Persona : specialization (persona)
     Showcase <|-- CredentialDefinition
     Workflow <|-- IssuanceFlow : specialization (onboarding)

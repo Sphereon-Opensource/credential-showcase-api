@@ -73,7 +73,7 @@
       "description": "Workflow for issuing parking permits",
       "steps": [
       ],
-      "credentialDefinitionRefs": ["university-parking-123"],
+      "credentialDefinitionRefs": ["university-parking-123"]
     },
     {
       "id": "presentation-flow-123",

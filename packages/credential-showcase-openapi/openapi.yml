@@ -27,6 +27,8 @@ tags:
     description: Endpoints for creating and managing credential definitions
   - name: Assets
     description: Endpoints related to media or static assets
+  - name: Showcases
+    description: Endpoints for managing showcases
 security:
   - OAuth2: []
   - OIDC: []
@@ -894,6 +896,93 @@ paths:
       responses:
         '204':
           description: Deleted
+  /showcases:
+    get:
+      tags:
+        - Showcases
+      summary: List all showcases
+      operationId: listShowcases
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Showcase'
+    post:
+      tags:
+        - Showcases
+      summary: Create a new showcase
+      operationId: createShowcase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Showcase'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Showcase'
+
+  /showcases/{showcaseId}:
+    parameters:
+      - name: showcaseId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier of the showcase
+    get:
+      tags:
+        - Showcases
+      summary: Get a specific showcase
+      operationId: getShowcase
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Showcase'
+        '404':
+          description: Showcase not found
+    put:
+      tags:
+        - Showcases
+      summary: Update a showcase
+      operationId: updateShowcase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Showcase'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Showcase'
+        '404':
+          description: Showcase not found
+    delete:
+      tags:
+        - Showcases
+      summary: Delete a showcase
+      operationId: deleteShowcase
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Showcase not found
+
 components:
   securitySchemes:
     OAuth2:
@@ -1115,10 +1204,21 @@ components:
           example: https://example.com/body.jpg
     Workflow:
       type: object
-      description: Base class for all workflows
       required:
         - name
+        - type
       properties:
+        type:
+          type: string
+          enum: [ISSUANCE, PRESENTATION]
+          description: Type of workflow
+          example: ISSUANCE
+        credentialDefinitionRefs:
+          type: array
+          description: References to credential definitions used in this workflow
+          items:
+            type: string
+          example: ["university-parking-123"]
         id:
           type: string
           description: Unique identifier for the workflow
@@ -1402,3 +1502,80 @@ components:
               description: Identifier of the revocation registry for AnonCreds
               example: registry123
       description: Anonymous Credentials specific revocation information
+    Showcase:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the showcase
+          example: showcase-123
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            $ref: '#/components/schemas/Scenario'
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+        personas:
+          type: array
+          description: List of personas involved in this showcase
+          items:
+            $ref: '#/components/schemas/Persona'
+        workflows:
+          type: array
+          description: List of workflows used in this showcase
+          items:
+            $ref: '#/components/schemas/Workflow'
+    Scenario:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the scenario
+          example: scenario-123
+        name:
+          type: string
+          description: Name of the scenario
+          example: University Parking Journey
+        description:
+          type: string
+          description: Description of the scenario
+          example: Student obtaining and using parking credentials
+        workflowRefs:
+          type: array
+          description: References to workflows used in this scenario
+          items:
+            type: string
+          example: ["issuance-flow-123", "presentation-flow-123"]
+        personaRefs:
+          type: array
+          description: References to personas involved in this scenario
+          items:
+            type: string
+          example: ["issuer-persona-123", "holder-persona-123"]

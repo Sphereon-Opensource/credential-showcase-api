@@ -25,7 +25,7 @@ class IssuerRepository implements IssuerRepositoryDefinition {
       .where(eq(issuers.id, id))
   }
 
-  async update(id: string, issuer: Issuer): Promise<Issuer> { // TODO see the result of openapi and the payloads to determine how we update an asset
+  async update(id: string, issuer: Issuer): Promise<Issuer> {
     await this.findById(id)
     const result = await (await this.databaseService.getConnection())
       .update(issuers)
@@ -42,7 +42,7 @@ class IssuerRepository implements IssuerRepositoryDefinition {
       .where(eq(issuers.id, id));
 
     if (result.length === 0 && !result[0]) {
-      return Promise.reject(new NotFoundError(`No asset found for id: ${id}`))
+      return Promise.reject(new NotFoundError(`No issuer found for id: ${id}`))
     }
 
     return result[0]

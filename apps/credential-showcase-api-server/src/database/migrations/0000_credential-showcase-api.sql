@@ -5,3 +5,14 @@ CREATE TABLE "asset" (
 	"description" varchar(255),
 	"content" "bytea" NOT NULL
 );
+
+CREATE TYPE "issuer_type" AS ENUM ('ARIES');
+
+CREATE TABLE "issuer" (
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+    "name" varchar(255) NOT NULL,
+    "description" varchar(255),
+    "type" issuer_type NOT NULL,
+    "organization" varchar(255) NOT NULL,
+    "logoId" uuid
+);

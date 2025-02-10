@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Credential Showcase API
-  version: 0.1.0
+  version: 0.1.1
+
 servers:
-  - url: https://virtserver.swaggerhub.com/SphereonInt/showcase/0.1.0
+  - url: https://virtserver.swaggerhub.com/SphereonInt/showcase/0.1.0/v1
     description: SwaggerHub API Auto Mocking
-  - url: https://api.example.com
+  - url: https://api.example.com/v1
+
 tags:
   - name: Workflows
     description: Base endpoints for managing workflows
@@ -29,6 +31,7 @@ tags:
     description: Endpoints related to media or static assets
   - name: Showcases
     description: Endpoints for managing showcases
+
 security:
   - OAuth2: []
   - OIDC: []
@@ -363,6 +366,7 @@ paths:
       responses:
         '204':
           description: Deleted
+ 
   /credential-definitions:
     get:
       tags:
@@ -464,6 +468,7 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/CredentialRepresentation'
                     - $ref: '#/components/schemas/OCARepresentation'
+  
   /personas:
     get:
       tags:
@@ -542,6 +547,7 @@ paths:
       responses:
         '204':
           description: Deleted
+  
   /assets:
     get:
       tags:
@@ -554,9 +560,16 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Asset'
+                $ref: '#/components/schemas/AssetsResponse'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+                
     post:
       tags:
         - Assets
@@ -566,7 +579,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Asset'
+              $ref: '#/components/schemas/AssetsRequest'
         required: true
       responses:
         '201':
@@ -657,6 +670,7 @@ paths:
       responses:
         '200':
           description: Content uploaded successfully
+  
   /roles/issuers:
     get:
       tags:
@@ -896,6 +910,7 @@ paths:
       responses:
         '204':
           description: Deleted
+  
   /showcases:
     get:
       tags:
@@ -929,7 +944,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Showcase'
-
   /showcases/{showcaseId}:
     parameters:
       - name: showcaseId
@@ -1026,6 +1040,40 @@ components:
           type: string
           description: Description of the asset
           example: A beautiful image of a cat
+    AssetsRequest:
+      type: object
+      required:
+        - mediaType
+        - contents
+      properties:
+        mediaType:
+          type: string
+          description: Type of asset (e.g., image, document, icon)
+          example: image/jpeg
+        contents:
+          type: string
+          description: Binary data of the asset
+          example: base64 encoded binary data
+        fileName:
+          type: string
+          description: Name of the asset file
+          example: asset.jpg
+        description:
+          type: string
+          description: Description of the asset
+          example: A beautiful image of a cat
+    AssetsResponse:
+      properties:
+        metadata:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Number of assets in the response
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
     Step:
       type: object
       required:
@@ -1218,7 +1266,7 @@ components:
           description: References to credential definitions used in this workflow
           items:
             type: string
-          example: ["university-parking-123"]
+          example: ['university-parking-123']
         id:
           type: string
           description: Unique identifier for the workflow
@@ -1567,15 +1615,71 @@ components:
           type: string
           description: Description of the scenario
           example: Student obtaining and using parking credentials
-        workflowRefs:
+        workflows:
           type: array
           description: References to workflows used in this scenario
           items:
             type: string
-          example: ["issuance-flow-123", "presentation-flow-123"]
-        personaRefs:
+          example: ['issuance-flow-123', 'presentation-flow-123']
+        personas:
           type: array
           description: References to personas involved in this scenario
           items:
             type: string
-          example: ["issuer-persona-123", "holder-persona-123"]
+          example: ['issuer-persona-123', 'holder-persona-123']
+
+    
+  responses:
+    'BadRequest':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Invalid request data'
+    'Unauthorized':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Invalid authentication credentials'
+    'Forbidden':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Insufficient permissions to access resource'
+    'NotFound':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Resource not found'
+    'InternalServerError':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'An unexpected error occurred'
+              error_id:
+                type: string
+              example: 'e123456'

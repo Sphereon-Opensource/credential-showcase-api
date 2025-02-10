@@ -53,3 +53,7 @@ test/*.js
 
 /packages/*/dist
 /apps/*/dist
+
+**/.env
+**/.env.*
+!**/.env.example

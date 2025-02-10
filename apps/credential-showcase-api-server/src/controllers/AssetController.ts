@@ -26,8 +26,6 @@ class AssetController {
     @Get('/:id')
     getOne(@Param('id') id: string) {
         return this.assetService.getAsset(id);
-
-        // TODO 404
     }
 
     @HttpCode(201)

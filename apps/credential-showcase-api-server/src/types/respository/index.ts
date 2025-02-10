@@ -1,11 +1,11 @@
 import { Asset, NewAsset, NewPersona, Persona } from '../schema'
 
 export type AssetRepositoryDefinition = {
-    findById(assetId: string): Promise<Asset>;
+    findById(id: string): Promise<Asset>;
     findAll(): Promise<Asset[]>;
     create(asset: NewAsset): Promise<Asset>;
     update(id: string, asset: Asset): Promise<Asset>;
-    delete(assetId: string): Promise<void>;
+    delete(id: string): Promise<void>;
 }
 
 export type PersonaRepositoryDefinition = {

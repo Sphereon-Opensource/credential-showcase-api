@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { Service } from 'typedi';
 import { DatabaseService } from '../../services/DatabaseService';
+import { NotFoundError } from '../../errors/NotFoundError';
 import { assets } from '../schema';
 import { Asset, AssetRepositoryDefinition, NewAsset } from '../../types';
 
@@ -24,8 +25,8 @@ class AssetRepository implements AssetRepositoryDefinition {
             .where(eq(assets.id, id))
     }
 
-    async update(id: string, asset: Asset): Promise<Asset> {  // TODO use id and asset
-        await this.findById(id) // TODO fetch asset and update, maybe use NewAsset as update?
+    async update(id: string, asset: Asset): Promise<Asset> { // TODO see the result of openapi and the payloads to determine how we update an asset
+        await this.findById(id)
         const result = await (await this.databaseService.getConnection())
             .update(assets)
             .set(asset)
@@ -41,7 +42,7 @@ class AssetRepository implements AssetRepositoryDefinition {
             .where(eq(assets.id, id));
 
         if (result.length === 0 && !result[0]) {
-            return Promise.reject(Error(`No asset found for id: ${id}`))
+            return Promise.reject(new NotFoundError(`No asset found for id: ${id}`))
         }
 
         return result[0]

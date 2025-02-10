@@ -4,7 +4,7 @@ import {
     assets,
     credentialAttributes,
     credentialDefinitions,
-    credentialRepresentations,
+    credentialRepresentations, relyingParties,
     revocationInfo
 } from '../../database/schema';
 import {CredentialAttributeType} from '../rest';
@@ -45,7 +45,6 @@ export type CredentialDefinition = Omit<typeof credentialDefinitions.$inferSelec
     representations: CredentialRepresentation[]
     revocation: RevocationInfo | null
 }
-
 export type NewCredentialDefinition = Omit<typeof credentialDefinitions.$inferInsert, 'icon'> & {
     icon: NewAsset | string
     attributes: NewCredentialAttribute[]
@@ -61,3 +60,13 @@ export type NewCredentialRepresentation = Omit<typeof credentialRepresentations.
 
 export type RevocationInfo = Omit<typeof revocationInfo.$inferSelect, 'credentialDefinitionId'>;
 export type NewRevocationInfo = Omit<typeof revocationInfo.$inferInsert, 'credentialDefinitionId'>
+
+export type RelyingParty = Omit<typeof relyingParties.$inferSelect, 'logo'> & {
+    credentialDefinitions: string[]
+    logo: Asset | null
+};
+export type NewRelyingParty = Omit<typeof relyingParties.$inferInsert, 'logo'> & {
+    credentialDefinitions: string[]
+    organization?: string
+    logo?: NewAsset | string
+};

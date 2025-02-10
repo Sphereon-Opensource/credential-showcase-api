@@ -28,3 +28,7 @@ export enum CredentialAttributeType {
     BOOLEAN = "BOOLEAN",
     DATE = "DATE",
 }
+
+export enum RelyingPartyType {
+    ARIES = "ARIES",
+}

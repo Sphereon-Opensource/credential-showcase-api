@@ -15,6 +15,6 @@ export const customBytea = customType<{
         if (typeof value === 'string') {
             return Buffer.from(value.replace(/^\\x/, ''), 'hex');
         }
-        throw new Error("Invalid value for bytea column");
+        throw new Error('Invalid value for bytea column');
     },
 })

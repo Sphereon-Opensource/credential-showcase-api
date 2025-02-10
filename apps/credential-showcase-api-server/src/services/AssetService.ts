@@ -10,7 +10,7 @@ class AssetService {
         return this.assetRepository.findAll()
     };
 
-    public getAsset = async (id: string): Promise<Asset | null> => {
+    public getAsset = async (id: string): Promise<Asset> => {
         return this.assetRepository.findById(id)
     };
 

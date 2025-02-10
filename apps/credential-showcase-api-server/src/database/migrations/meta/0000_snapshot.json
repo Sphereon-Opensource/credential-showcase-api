@@ -1,0 +1,432 @@
+{
+  "id": "3905be6f-d938-4ac0-96ea-8b71f6af294f",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.asset": {
+      "name": "asset",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "media_type": {
+          "name": "media_type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "file_name": {
+          "name": "file_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.credentialAttribute": {
+      "name": "credentialAttribute",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credential_attribute_type": {
+          "name": "credential_attribute_type",
+          "type": "CredentialAttributeType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "credential_definition_id": {
+          "name": "credential_definition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "credentialAttribute_credential_definition_id_credentialDefinition_id_fk": {
+          "name": "credentialAttribute_credential_definition_id_credentialDefinition_id_fk",
+          "tableFrom": "credentialAttribute",
+          "tableTo": "credentialDefinition",
+          "columnsFrom": [
+            "credential_definition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.credentialDefinition": {
+      "name": "credentialDefinition",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "icon": {
+          "name": "icon",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credential_type": {
+          "name": "credential_type",
+          "type": "CredentialType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "credentialDefinition_icon_asset_id_fk": {
+          "name": "credentialDefinition_icon_asset_id_fk",
+          "tableFrom": "credentialDefinition",
+          "tableTo": "asset",
+          "columnsFrom": [
+            "icon"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.credentialRepresentation": {
+      "name": "credentialRepresentation",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "credential_definition_id": {
+          "name": "credential_definition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "credentialRepresentation_credential_definition_id_credentialDefinition_id_fk": {
+          "name": "credentialRepresentation_credential_definition_id_credentialDefinition_id_fk",
+          "tableFrom": "credentialRepresentation",
+          "tableTo": "credentialDefinition",
+          "columnsFrom": [
+            "credential_definition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.revocationInfo": {
+      "name": "revocationInfo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credential_definition_id": {
+          "name": "credential_definition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "revocationInfo_credential_definition_id_credentialDefinition_id_fk": {
+          "name": "revocationInfo_credential_definition_id_credentialDefinition_id_fk",
+          "tableFrom": "revocationInfo",
+          "tableTo": "credentialDefinition",
+          "columnsFrom": [
+            "credential_definition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "revocationInfo_credential_definition_id_unique": {
+          "name": "revocationInfo_credential_definition_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "credential_definition_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.relyingParty": {
+      "name": "relyingParty",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "relying_party_type": {
+          "name": "relying_party_type",
+          "type": "RelyingPartyType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organization": {
+          "name": "organization",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "logo": {
+          "name": "logo",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "relyingParty_logo_asset_id_fk": {
+          "name": "relyingParty_logo_asset_id_fk",
+          "tableFrom": "relyingParty",
+          "tableTo": "asset",
+          "columnsFrom": [
+            "logo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.relyingPartiesToCredentialDefinitions": {
+      "name": "relyingPartiesToCredentialDefinitions",
+      "schema": "",
+      "columns": {
+        "relying_party_id": {
+          "name": "relying_party_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credential_definition_id": {
+          "name": "credential_definition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "relyingPartiesToCredentialDefinitions_relying_party_id_relyingParty_id_fk": {
+          "name": "relyingPartiesToCredentialDefinitions_relying_party_id_relyingParty_id_fk",
+          "tableFrom": "relyingPartiesToCredentialDefinitions",
+          "tableTo": "relyingParty",
+          "columnsFrom": [
+            "relying_party_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "relyingPartiesToCredentialDefinitions_credential_definition_id_credentialDefinition_id_fk": {
+          "name": "relyingPartiesToCredentialDefinitions_credential_definition_id_credentialDefinition_id_fk",
+          "tableFrom": "relyingPartiesToCredentialDefinitions",
+          "tableTo": "credentialDefinition",
+          "columnsFrom": [
+            "credential_definition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "relyingPartiesToCredentialDefinitions_relying_party_id_credential_definition_id_pk": {
+          "name": "relyingPartiesToCredentialDefinitions_relying_party_id_credential_definition_id_pk",
+          "columns": [
+            "relying_party_id",
+            "credential_definition_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.CredentialAttributeType": {
+      "name": "CredentialAttributeType",
+      "schema": "public",
+      "values": [
+        "STRING",
+        "INTEGER",
+        "FLOAT",
+        "BOOLEAN",
+        "DATE"
+      ]
+    },
+    "public.CredentialType": {
+      "name": "CredentialType",
+      "schema": "public",
+      "values": [
+        "ANONCRED"
+      ]
+    },
+    "public.RelyingPartyType": {
+      "name": "RelyingPartyType",
+      "schema": "public",
+      "values": [
+        "ARIES"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

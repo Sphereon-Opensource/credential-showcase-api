@@ -14,5 +14,5 @@ CREATE TABLE "issuer" (
     "description" varchar(255),
     "type" issuer_type NOT NULL,
     "organization" varchar(255) NOT NULL,
-    "logoId" uuid
+    "logo_id" uuid REFERENCES "asset" ("id")
 );

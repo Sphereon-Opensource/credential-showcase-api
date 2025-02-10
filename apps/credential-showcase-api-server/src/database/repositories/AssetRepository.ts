@@ -1,12 +1,12 @@
 import { eq } from 'drizzle-orm';
 import { Service } from 'typedi';
-import { DatabaseService } from '../../services/DatabaseService';
-import { NotFoundError } from '../../errors/NotFoundError';
+import DatabaseService from '../../services/DatabaseService';
+import { NotFoundError } from '../../errors';
 import { assets } from '../schema';
-import { Asset, AssetRepositoryDefinition, NewAsset } from '../../types';
+import { Asset, NewAsset, RepositoryDefinition } from '../../types';
 
 @Service()
-class AssetRepository implements AssetRepositoryDefinition {
+class AssetRepository implements RepositoryDefinition<Asset, NewAsset> {
     constructor(private readonly databaseService: DatabaseService) {}
 
     async create(asset: NewAsset): Promise<Asset> {

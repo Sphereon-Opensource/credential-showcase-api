@@ -1,17 +1,17 @@
 import 'reflect-metadata';
-import { PgDatabase } from 'drizzle-orm/pg-core';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import { DatabaseService } from '../services/DatabaseService';
+import DatabaseService from '../services/DatabaseService';
 import AssetRepository from '../database/repositories/AssetRepository';
+import * as schema from '../database/schema';
 import { NewAsset } from '../types';
 
 describe('Database asset repository tests', (): void => {
     let repository: AssetRepository;
 
     beforeEach(async (): Promise<void> => {
-        const database: PgDatabase<any> = drizzle();
+        const database: any = drizzle({ schema });
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
         const mockDatabaseService = {
             getConnection: jest.fn().mockResolvedValue(database),
@@ -39,7 +39,7 @@ describe('Database asset repository tests', (): void => {
         expect(savedAsset.mediaType).toEqual(asset.mediaType)
         expect(savedAsset.fileName).toEqual(asset.fileName)
         expect(savedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(savedAsset.content)).toStrictEqual(asset.content);
+        expect(savedAsset.content).toStrictEqual(asset.content);
     })
 
     it('Should get asset by id from database', async (): Promise<void> => {
@@ -55,32 +55,25 @@ describe('Database asset repository tests', (): void => {
 
         const fromDb = await repository.findById(savedAsset.id)
 
-        expect(fromDb).not.toBeNull()
+        expect(fromDb).toBeDefined()
         expect(fromDb!.mediaType).toEqual(asset.mediaType)
         expect(fromDb!.fileName).toEqual(asset.fileName)
         expect(fromDb!.description).toEqual(asset.description)
-        expect(Buffer.from(fromDb!.content)).toStrictEqual(asset.content);
+        expect(fromDb!.content).toStrictEqual(asset.content);
     })
 
     it('Should get all assets from database', async (): Promise<void> => {
-        const asset1: NewAsset = {
+        const asset: NewAsset = {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
             content: Buffer.from('some binary data'),
         };
 
-        const savedAsset1 = await repository.create(asset1)
+        const savedAsset1 = await repository.create(asset)
         expect(savedAsset1).toBeDefined()
 
-        const asset2: NewAsset = {
-            mediaType: 'image/png',
-            fileName: 'image.png',
-            description: 'some image',
-            content: Buffer.from('some binary data'),
-        };
-
-        const savedAsset2 = await repository.create(asset2)
+        const savedAsset2 = await repository.create(asset)
         expect(savedAsset2).toBeDefined()
 
         const fromDb = await repository.findAll()
@@ -119,10 +112,9 @@ describe('Database asset repository tests', (): void => {
         const updatedAsset = await repository.update(savedAsset.id, { ...savedAsset, fileName: newFileName })
 
         expect(updatedAsset).toBeDefined()
-        expect(updatedAsset).toBeDefined()
         expect(updatedAsset.mediaType).toEqual(asset.mediaType)
         expect(updatedAsset.fileName).toEqual(newFileName)
         expect(updatedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(updatedAsset.content)).toStrictEqual(asset.content);
+        expect(updatedAsset.content).toStrictEqual(asset.content);
     })
 })

@@ -23,7 +23,6 @@
     "@electric-sql/pglite": "^0.2.16",
     "@types/dotenv-flow": "^3.3.3",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.13.1",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.4",
     "ts-node": "^10.9.2"

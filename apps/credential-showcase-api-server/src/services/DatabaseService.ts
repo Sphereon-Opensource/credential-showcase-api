@@ -28,3 +28,5 @@ export class DatabaseService {
         return this.db;
     }
 }
+
+export default DatabaseService

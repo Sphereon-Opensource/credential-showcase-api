@@ -8,7 +8,7 @@ export const credentialAttributes = pgTable('credentialAttribute', {
     name: varchar({ length: 255 }).notNull(),
     value: varchar({ length: 255 }).notNull(),
     type: CredentialAttributeTypePg('credential_attribute_type'),
-    credentialDefinitionId: uuid('credential_definition_id').references(() => credentialDefinitions.id).notNull()
+    credentialDefinitionId: uuid('credential_definition_id').references(() => credentialDefinitions.id,{ onDelete: 'cascade' }).notNull()
 });
 
 export const credentialAttributeRelations = relations(credentialAttributes, ({ one }) => ({

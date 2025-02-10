@@ -1,17 +1,7 @@
-import { Asset, NewAsset, CredentialDefinition, NewCredentialDefinition } from '../schema';
-
-export type AssetRepositoryDefinition = {
-    findById(id: string): Promise<Asset>;
-    findAll(): Promise<Asset[]>;
-    create(asset: NewAsset): Promise<Asset>;
-    update(id: string, asset: Asset): Promise<Asset>;
+export type RepositoryDefinition<T, U> = {
+    findById(id: string): Promise<T>;
+    findAll(): Promise<T[]>;
+    create(item: U): Promise<T>;
+    update(id: string, item: T): Promise<T>;
     delete(id: string): Promise<void>;
-}
-
-export type CredentialDefinitionRepositoryDefinition = {
-    findById(id: string): Promise<CredentialDefinition>;
-    findAll(): Promise<CredentialDefinition[]>;
-    create(credentialDefinition: NewCredentialDefinition): Promise<CredentialDefinition>;
-    update(id: string, credentialDefinition: CredentialDefinition): Promise<CredentialDefinition>;
-    delete(id: string): Promise<void>;
-}
+};

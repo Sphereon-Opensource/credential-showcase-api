@@ -5,3 +5,12 @@ CREATE TABLE "asset" (
 	"description" varchar(255),
 	"content" "bytea" NOT NULL
 );
+
+CREATE TABLE "persona" (
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+    "name" varchar(255) NOT NULL,
+    "role" varchar(255) NOT NULL,
+    "description" varchar(255),
+    "headshot_image_id" uuid REFERENCES "asset" ("id"),
+    "body_image_id": uuid REFERENCES "asset" ("id")
+)

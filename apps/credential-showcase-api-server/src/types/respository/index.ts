@@ -9,9 +9,9 @@ export type AssetRepositoryDefinition = {
 }
 
 export type PersonaRepositoryDefinition = {
-    findById(personaId: string): Promise<Persona>;
+    findById(id: string): Promise<Persona>;
     findAll(): Promise<Persona[]>;
     create(persona: NewPersona): Promise<Persona>;
     update(id: string, persona: Persona): Promise<Persona>;
-    delete(personaId: string): Promise<void>;
+    delete(id: string): Promise<void>;
 }

@@ -32,3 +32,9 @@ export enum CredentialAttributeType {
 export enum RelyingPartyType {
     ARIES = "ARIES",
 }
+
+export enum StepType {
+    HUMAN_TASK = "HUMAN_TASK",
+    SERVICE = "SERVICE",
+    WORKFLOW = "WORKFLOW",
+}

@@ -4,14 +4,15 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
 import DatabaseService from '../services/DatabaseService';
 import RelyingPartyRepository from '../database/repositories/RelyingPartyRepository';
-import * as schema from '../database/schema';
-import {NewAsset, NewCredentialDefinition, NewRelyingParty} from '../types';
-import {CredentialAttributeType, CredentialType, RelyingPartyType} from '../types/rest';
 import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
+import * as schema from '../database/schema';
+import { CredentialDefinition, NewAsset, NewCredentialDefinition, NewRelyingParty } from '../types';
+import { CredentialAttributeType, CredentialType, RelyingPartyType } from '../types/rest';
 
 describe('Database relying party repository tests', (): void => {
-    let relyingPartyRepository: RelyingPartyRepository;
-    let credentialDefinitionRepository: CredentialDefinitionRepository;
+    let repository: RelyingPartyRepository;
+    let credentialDefinition1: CredentialDefinition
+    let credentialDefinition2: CredentialDefinition
 
     beforeEach(async (): Promise<void> => {
         const database: any = drizzle({ schema });
@@ -20,47 +21,9 @@ describe('Database relying party repository tests', (): void => {
             getConnection: jest.fn().mockResolvedValue(database),
         };
         Container.set(DatabaseService, mockDatabaseService);
-        relyingPartyRepository = Container.get(RelyingPartyRepository);
-        credentialDefinitionRepository = Container.get(CredentialDefinitionRepository);
-    })
-
-    afterEach((): void => {
-        jest.resetAllMocks();
-        Container.reset();
-    });
-
-    it('Should save asset to database', async (): Promise<void> => {
-        const relyingParty: NewRelyingParty = {
-            name: 'example_name',
-            type: RelyingPartyType.ARIES,
-            credentialDefinitions: ['a'],
-            description: 'example_description',
-            organization: 'example_organization',
-            logo: {
-                mediaType: 'image/png',
-                fileName: 'icon.png',
-                description: 'some icon',
-                content: Buffer.from('some binary data'),
-            },
-        };
-
-        const savedRelyingParty = await relyingPartyRepository.create(relyingParty)
-
-        expect(savedRelyingParty).toBeDefined()
-        expect(savedRelyingParty.name).toEqual(relyingParty.name)
-        expect(savedRelyingParty.type).toEqual(relyingParty.type)
-        expect(savedRelyingParty.description).toEqual(relyingParty.description)
-        expect(savedRelyingParty.organization).toStrictEqual(relyingParty.organization);
-        expect(savedRelyingParty.logo).not.toBeNull()
-        expect(savedRelyingParty.logo!.id).toBeDefined()
-        expect(savedRelyingParty.logo!.mediaType).toEqual((<NewAsset>relyingParty.logo).mediaType)
-        expect(savedRelyingParty.logo!.fileName).toEqual((<NewAsset>relyingParty.logo).fileName)
-        expect(savedRelyingParty.logo!.description).toEqual((<NewAsset>relyingParty.logo).description)
-        expect(savedRelyingParty.logo!.content).toStrictEqual((<NewAsset>relyingParty.logo).content)
-    })
-
-    it('Should get asset by id from database', async (): Promise<void> => {
-        const credentialDefinition: NewCredentialDefinition = {
+        repository = Container.get(RelyingPartyRepository);
+        const credentialDefinitionRepository = Container.get(CredentialDefinitionRepository);
+        const newCredentialDefinition: NewCredentialDefinition = {
             name: 'example_name',
             version: 'example_version',
             icon: {
@@ -95,13 +58,20 @@ describe('Database relying party repository tests', (): void => {
                 description: 'example_revocation_description'
             }
         };
+        credentialDefinition1 = await credentialDefinitionRepository.create(newCredentialDefinition)
+        credentialDefinition2 = await credentialDefinitionRepository.create(newCredentialDefinition)
+    })
 
-        const savedCredentialDefinition = await credentialDefinitionRepository.create(credentialDefinition)
+    afterEach((): void => {
+        jest.resetAllMocks();
+        Container.reset();
+    });
 
+    it('Should save relying party to database', async (): Promise<void> => {
         const relyingParty: NewRelyingParty = {
             name: 'example_name',
             type: RelyingPartyType.ARIES,
-            credentialDefinitions: [savedCredentialDefinition.id],
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
             description: 'example_description',
             organization: 'example_organization',
             logo: {
@@ -112,16 +82,48 @@ describe('Database relying party repository tests', (): void => {
             },
         };
 
-        const savedRelyingParty = await relyingPartyRepository.create(relyingParty)
+        const savedRelyingParty = await repository.create(relyingParty)
+
+        expect(savedRelyingParty).toBeDefined()
+        expect(savedRelyingParty.name).toEqual(relyingParty.name)
+        expect(savedRelyingParty.type).toEqual(relyingParty.type)
+        expect(savedRelyingParty.description).toEqual(relyingParty.description)
+        expect(savedRelyingParty.organization).toEqual(relyingParty.organization);
+        expect(savedRelyingParty.credentialDefinitions.length).toEqual(2);
+        expect(savedRelyingParty.logo).not.toBeNull()
+        expect(savedRelyingParty.logo!.id).toBeDefined()
+        expect(savedRelyingParty.logo!.mediaType).toEqual((<NewAsset>relyingParty.logo).mediaType)
+        expect(savedRelyingParty.logo!.fileName).toEqual((<NewAsset>relyingParty.logo).fileName)
+        expect(savedRelyingParty.logo!.description).toEqual((<NewAsset>relyingParty.logo).description)
+        expect(savedRelyingParty.logo!.content).toStrictEqual((<NewAsset>relyingParty.logo).content)
+    })
+
+    it('Should get relying party by id from database', async (): Promise<void> => {
+        const relyingParty: NewRelyingParty = {
+            name: 'example_name',
+            type: RelyingPartyType.ARIES,
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
+            description: 'example_description',
+            organization: 'example_organization',
+            logo: {
+                mediaType: 'image/png',
+                fileName: 'icon.png',
+                description: 'some icon',
+                content: Buffer.from('some binary data'),
+            },
+        };
+
+        const savedRelyingParty = await repository.create(relyingParty)
         expect(savedRelyingParty).toBeDefined()
 
-        const fromDb = await relyingPartyRepository.findById(savedRelyingParty.id)
+        const fromDb = await repository.findById(savedRelyingParty.id)
 
         expect(fromDb).toBeDefined()
         expect(fromDb.name).toEqual(relyingParty.name)
         expect(fromDb.type).toEqual(relyingParty.type)
         expect(fromDb.description).toEqual(relyingParty.description)
-        expect(fromDb.organization).toStrictEqual(relyingParty.organization);
+        expect(fromDb.organization).toEqual(relyingParty.organization);
+        expect(fromDb.credentialDefinitions.length).toEqual(2);
         expect(fromDb.logo).not.toBeNull()
         expect(fromDb.logo!.id).toBeDefined()
         expect(fromDb.logo!.mediaType).toEqual((<NewAsset>relyingParty.logo).mediaType)
@@ -130,11 +132,11 @@ describe('Database relying party repository tests', (): void => {
         expect(fromDb.logo!.content).toStrictEqual((<NewAsset>relyingParty.logo).content)
     })
 
-    it('Should get all assets from database', async (): Promise<void> => {
+    it('Should get all relying parties from database', async (): Promise<void> => {
         const relyingParty: NewRelyingParty = {
             name: 'example_name',
             type: RelyingPartyType.ARIES,
-            credentialDefinitions: ['a'],
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
             description: 'example_description',
             organization: 'example_organization',
             logo: {
@@ -145,22 +147,22 @@ describe('Database relying party repository tests', (): void => {
             },
         };
 
-        const savedRelyingParty1 = await relyingPartyRepository.create(relyingParty)
+        const savedRelyingParty1 = await repository.create(relyingParty)
         expect(savedRelyingParty1).toBeDefined()
 
-        const savedRelyingParty2 = await relyingPartyRepository.create(relyingParty)
+        const savedRelyingParty2 = await repository.create(relyingParty)
         expect(savedRelyingParty2).toBeDefined()
 
-        const fromDb = await relyingPartyRepository.findAll()
+        const fromDb = await repository.findAll()
 
         expect(fromDb.length).toEqual(2)
     })
 
-    it('Should delete asset from database', async (): Promise<void> => {
+    it('Should delete relying party from database', async (): Promise<void> => {
         const relyingParty: NewRelyingParty = {
             name: 'example_name',
             type: RelyingPartyType.ARIES,
-            credentialDefinitions: ['a'],
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
             description: 'example_description',
             organization: 'example_organization',
             logo: {
@@ -171,32 +173,46 @@ describe('Database relying party repository tests', (): void => {
             },
         };
 
-        const savedRelyingParty = await relyingPartyRepository.create(relyingParty)
+        const savedRelyingParty = await repository.create(relyingParty)
         expect(savedRelyingParty).toBeDefined()
 
-        await relyingPartyRepository.delete(savedRelyingParty.id)
+        await repository.delete(savedRelyingParty.id)
 
-        await expect(relyingPartyRepository.findById(savedRelyingParty.id)).rejects.toThrowError(`No relying party found for id: ${savedRelyingParty.id}`)
+        await expect(repository.findById(savedRelyingParty.id)).rejects.toThrowError(`No relying party found for id: ${savedRelyingParty.id}`)
     })
 
-    // it('Should update asset in database', async (): Promise<void> => {
-    //     const asset: NewRelyingParty = {
-    //         mediaType: 'image/png',
-    //         fileName: 'image.png',
-    //         description: 'some image',
-    //         content: Buffer.from('some binary data'),
-    //     };
-    //
-    //     const savedAsset = await repository.create(asset)
-    //     expect(savedAsset).toBeDefined()
-    //
-    //     const newFileName = 'new_image.png'
-    //     const updatedAsset = await repository.update(savedAsset.id, { ...savedAsset, fileName: newFileName })
-    //
-    //     expect(updatedAsset).toBeDefined()
-    //     expect(updatedAsset.mediaType).toEqual(asset.mediaType)
-    //     expect(updatedAsset.fileName).toEqual(newFileName)
-    //     expect(updatedAsset.description).toEqual(asset.description)
-    //     expect(updatedAsset.content).toStrictEqual(asset.content);
-    // })
+    it('Should update relying party in database', async (): Promise<void> => {
+        const relyingParty: NewRelyingParty = {
+            name: 'example_name',
+            type: RelyingPartyType.ARIES,
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
+            description: 'example_description',
+            organization: 'example_organization',
+            logo: {
+                mediaType: 'image/png',
+                fileName: 'icon.png',
+                description: 'some icon',
+                content: Buffer.from('some binary data'),
+            },
+        };
+
+        const savedRelyingParty = await repository.create(relyingParty)
+        expect(savedRelyingParty).toBeDefined()
+
+        const newName = 'new_name'
+        const updatedAsset = await repository.update(savedRelyingParty.id, { ...savedRelyingParty, name: newName })
+
+        expect(updatedAsset).toBeDefined()
+        expect(updatedAsset.name).toEqual(newName)
+        expect(updatedAsset.type).toEqual(relyingParty.type)
+        expect(updatedAsset.description).toEqual(relyingParty.description)
+        expect(updatedAsset.organization).toEqual(relyingParty.organization);
+        expect(updatedAsset.credentialDefinitions.length).toEqual(2);
+        // expect(updatedAsset.logo).not.toBeNull()
+        // expect(updatedAsset.logo!.id).toBeDefined()
+        // expect(updatedAsset.logo!.mediaType).toEqual((<NewAsset>relyingParty.logo).mediaType)
+        // expect(updatedAsset.logo!.fileName).toEqual((<NewAsset>relyingParty.logo).fileName)
+        // expect(updatedAsset.logo!.description).toEqual((<NewAsset>relyingParty.logo).description)
+        // expect(updatedAsset.logo!.content).toStrictEqual((<NewAsset>relyingParty.logo).content)
+    })
 })

@@ -4,8 +4,8 @@ import { relyingParties } from './relyingParty';
 import { credentialDefinitions } from './credentialDefinition';
 
 export const relyingPartiesToCredentialDefinitions = pgTable('relyingPartiesToCredentialDefinitions', {
-        relyingPartyId: uuid('relying_party_id').references(() => relyingParties.id).notNull(),
-        credentialDefinitionId: uuid('credential_definition_id').references(() => credentialDefinitions.id).notNull(),
+        relyingPartyId: uuid('relying_party_id').references(() => relyingParties.id, { onDelete: 'cascade' }).notNull(),
+        credentialDefinitionId: uuid('credential_definition_id').references(() => credentialDefinitions.id, { onDelete: 'cascade' }).notNull(),
     },
     (t) => [
         primaryKey({ columns: [t.relyingPartyId, t.credentialDefinitionId] })

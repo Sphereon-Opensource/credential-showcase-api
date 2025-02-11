@@ -2,8 +2,7 @@ import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { RelyingPartyTypePg } from './relyingPartyType';
 import { assets } from './asset';
-//import { credentialDefinitions } from './credentialDefinition';
-import {relyingPartiesToCredentialDefinitions} from './relyingPartiesToCredentialDefinitions';
+import { relyingPartiesToCredentialDefinitions } from './relyingPartiesToCredentialDefinitions';
 
 export const relyingParties = pgTable('relyingParty', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
@@ -15,7 +14,7 @@ export const relyingParties = pgTable('relyingParty', {
 });
 
 export const relyingPartyRelations = relations(relyingParties, ({ one, many }) => ({
-    credentialDefinitions: many(relyingPartiesToCredentialDefinitions), //credentialDefinitions
+    credentialDefinitions: many(relyingPartiesToCredentialDefinitions),
     logo: one(assets, {
         fields: [relyingParties.logo],
         references: [assets.id],

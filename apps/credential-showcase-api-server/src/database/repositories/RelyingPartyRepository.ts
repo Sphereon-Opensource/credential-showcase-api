@@ -3,10 +3,8 @@ import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
 import { NotFoundError } from '../../errors';
-import {relyingParties, relyingPartiesToCredentialDefinitions} from '../schema';
-import { RelyingParty, NewRelyingParty, RepositoryDefinition
-    //, Asset
-} from '../../types';
+import { relyingParties, relyingPartiesToCredentialDefinitions } from '../schema';
+import { RelyingParty, NewRelyingParty, RepositoryDefinition } from '../../types';
 
 @Service()
 class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRelyingParty> {
@@ -34,8 +32,6 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
                 })
                 .returning())
 
-            //const userId = relyingPartyResult.id;
-
             const relyingPartiesToCredentialDefinitionsResult = await tx.insert(relyingPartiesToCredentialDefinitions)
                 .values(relyingParty.credentialDefinitions.map((credentialDefinitionId: string) => ({
                     relyingPartyId: relyingPartyResult.id,
@@ -49,19 +45,6 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
                 credentialDefinitions: relyingPartiesToCredentialDefinitionsResult.map((item) => item.credentialDefinitionId)
             };
         })
-
-        // const result = await (await this.databaseService.getConnection())
-        //     .insert(relyingParties)
-        //     .values({
-        //         ...relyingParty,
-        //         logo: logoResult ? logoResult.id : null
-        //     })
-        //     .returning();
-        //
-        // return {
-        //     ...result[0],
-        //     logo: logoResult
-        // }
     }
 
     async delete(id: string): Promise<void> {
@@ -72,16 +55,26 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
     }
 
     async update(id: string, relyingParty: RelyingParty): Promise<RelyingParty> { // TODO see the result of openapi and the payloads to determine how we update an asset
+        await this.findById(id)
 
-        return Promise.reject(Error('Not yet implemented'))
+        let logoResult = null
+        if (relyingParty.logo && typeof relyingParty.logo === 'string') { // TODO we only need to support a string id
+            logoResult = await this.assetRepository.findById(relyingParty.logo)
+        }
 
-        // await this.findById(id)
-        // const result = await (await this.databaseService.getConnection())
-        //     .update(relyingParties)
-        //     .set(relyingParty)
-        //     .returning();
-        //
-        // return result[0]
+        const [result] = await (await this.databaseService.getConnection())
+            .update(relyingParties)
+            .set({
+                ...relyingParty,
+                logo: logoResult ? logoResult.id : null
+            })
+            .returning();
+
+        return {
+            ...result,
+            logo: logoResult,
+            credentialDefinitions: relyingParty.credentialDefinitions
+        };
     }
 
     async findById(id: string): Promise<RelyingParty> {
@@ -106,14 +99,15 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
     async findAll(): Promise<RelyingParty[]> {
         const result = await (await this.databaseService.getConnection()).query.relyingParties.findMany({
             with: {
-                credentialDefinitions: true,
+                credentialDefinitions: true, // TODO i think we are able to specify a column? maybe we can just return a array of strings?
                 logo: true
             },
-        });
+        })
 
-        console.log(result)
-
-        return [] // TODO fix
+        return result.map((relayingParty) => ({
+            ...relayingParty,
+            credentialDefinitions: relayingParty.credentialDefinitions.map((item) => item.credentialDefinitionId)
+        }))
     }
 }
 

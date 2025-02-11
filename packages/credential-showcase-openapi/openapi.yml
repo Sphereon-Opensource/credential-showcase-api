@@ -51,6 +51,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Workflow'
+        
   /workflows/issuances:
     get:
       tags:
@@ -84,6 +85,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
+  
   /workflows/presentations:
     get:
       tags:
@@ -169,6 +171,7 @@ paths:
           description: Deleted
         '404':
           description: Presentation flow not found
+  
   /workflows/{workflowId}/steps:
     parameters:
       - name: workflowId
@@ -483,7 +486,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Persona'
+                  $ref: '#/components/schemas/PersonasResponse'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Personas
@@ -493,7 +504,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Persona'
+              $ref: '#/components/schemas/PersonaRequest'
         required: true
       responses:
         '201':
@@ -502,6 +513,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Persona'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
   /personas/{personaId}:
     parameters:
       - name: personaId
@@ -521,6 +540,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Persona'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Personas
@@ -530,7 +557,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Persona'
+              $ref: '#/components/schemas/PersonaRequest'
         required: true
       responses:
         '200':
@@ -539,6 +566,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Persona'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Personas
@@ -547,7 +582,15 @@ paths:
       responses:
         '204':
           description: Deleted
-  
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+
   /assets:
     get:
       tags:
@@ -568,8 +611,7 @@ paths:
         '403':
             $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
-                
+            $ref: '#/components/responses/InternalServerError'               
     post:
       tags:
         - Assets
@@ -596,7 +638,6 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
-
   /assets/{assetId}:
     parameters:
       - name: assetId
@@ -975,6 +1016,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Showcase'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Showcases
@@ -993,6 +1042,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Showcase'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
   /showcases/{showcaseId}:
     parameters:
       - name: showcaseId
@@ -1013,8 +1070,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Showcase'
-        '404':
-          description: Showcase not found
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Showcases
@@ -1033,8 +1096,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Showcase'
-        '404':
-          description: Showcase not found
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Showcases
@@ -1042,9 +1111,23 @@ paths:
       operationId: deleteShowcase
       responses:
         '204':
-          description: Deleted
-        '404':
-          description: Showcase not found
+            description: Deleted
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: A message indicating the showcase was deleted
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -1123,6 +1206,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Asset'
+    
     Step:
       type: object
       required:
@@ -1194,6 +1278,7 @@ components:
         propertyName: type
         mapping:
           ARIES_OOB: '#/components/schemas/AriesOOBAction'
+    
     AriesOOBAction:
       allOf:
         - $ref: '#/components/schemas/StepAction'
@@ -1299,6 +1384,45 @@ components:
           $ref: '#/components/schemas/Asset'
           description: Full body image asset for the persona
           example: https://example.com/body.jpg
+    PersonaRequest:
+      type: object
+      required:
+        - name
+        - role
+      properties:
+        name:
+          type: string
+          description: Name of the persona
+          example: John Doe
+        role:
+          type: string
+          description: Role of the persona in the system
+          example: Verifier
+        description:
+          type: string
+          description: Detailed description of the persona
+          example: John Doe is a verifier for the system
+        headshotImage:
+          $ref: '#/components/schemas/Asset'
+          description: Headshot image asset for the persona
+          example: https://example.com/headshot.jpg
+        bodyImage:
+          $ref: '#/components/schemas/Asset'
+          description: Full body image asset for the persona
+          example: https://example.com/body.jpg
+    PersonasResponse:
+      properties:
+        metadata:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Number of personas in the response
+        personas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Persona'
+
     Workflow:
       type: object
       required:
@@ -1334,10 +1458,10 @@ components:
           items:
             $ref: '#/components/schemas/Step'
         personas:
-          type: array
-          description: List of personas involved in the workflow
+          type: object
+          description: List of personas involved in this showcase
           items:
-            $ref: '#/components/schemas/Persona'
+            $ref: '#/components/schemas/PersonasResponse'
     IssuanceFlow:
       allOf:
         - $ref: '#/components/schemas/Workflow'
@@ -1599,6 +1723,7 @@ components:
               description: Identifier of the revocation registry for AnonCreds
               example: registry123
       description: Anonymous Credentials specific revocation information
+    
     Showcase:
       type: object
       required:
@@ -1637,15 +1762,59 @@ components:
           items:
             $ref: '#/components/schemas/CredentialDefinition'
         personas:
-          type: array
+          type: object
           description: List of personas involved in this showcase
           items:
-            $ref: '#/components/schemas/Persona'
+            $ref: '#/components/schemas/PersonasResponse'
         workflows:
           type: array
           description: List of workflows used in this showcase
           items:
             $ref: '#/components/schemas/Workflow'
+    ShowcaseRequest:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            $ref: '#/components/schemas/Scenario'
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+        personas:
+          type: object
+          description: List of personas involved in this showcase
+          items:
+            $ref: '#/components/schemas/PersonasResponse'
+        workflows:
+          type: array
+          description: List of workflows used in this showcase
+          items:
+            $ref: '#/components/schemas/Workflow'
+
     Scenario:
       type: object
       required:
@@ -1676,7 +1845,44 @@ components:
           items:
             type: string
           example: ['issuer-persona-123', 'holder-persona-123']
-
+    ScenarioRequest:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: Name of the scenario
+          example: University Parking Journey
+        description:
+          type: string
+          description: Description of the scenario
+          example: Student obtaining and using parking credentials
+        workflows:
+          type: array
+          description: References to workflows used in this scenario
+          items:
+            type: string
+          example: ['issuance-flow-123', 'presentation-flow-123']
+        personas:
+          type: array
+          description: References to personas involved in this scenario
+          items:
+            type: string
+          example: ['issuer-persona-123', 'holder-persona-123']
+    ScenarioResponse:
+      properties:
+        metadata:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Number of assets in the response
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scenario'
     
   responses:
     'BadRequest':

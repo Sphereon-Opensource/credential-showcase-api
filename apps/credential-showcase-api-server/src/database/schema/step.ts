@@ -21,7 +21,7 @@ export const stepRelations = relations(steps, ({ one, many }) => ({
         references: [workflows.id],
     }),
     actions: many(stepActions),
-    presentationFlow: one(workflows, {
+    workflow: one(workflows, {
         fields: [steps.workflowId],
         references: [workflows.id],
     }),

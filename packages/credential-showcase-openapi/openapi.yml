@@ -67,7 +67,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IssuanceFlow'
+              $ref: '#/components/schemas/IssuanceFlowRequest'
         required: true
       responses:
         '201':
@@ -84,7 +84,6 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
-  
   /workflows/issuances/{issuanceFlowId}:
     get:
       tags: [ "Issuance Flow" ]
@@ -103,6 +102,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '404': 
+            $ref: '#/components/responses/NotFound'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Issuance Flow" ]
       summary: Update an issuance flow (overwrite)
@@ -118,7 +127,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IssuanceFlow'
+              $ref: '#/components/schemas/IssuanceFlowRequest'
       responses:
         '200':
           description: Updated
@@ -126,6 +135,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '404': 
+            $ref: '#/components/responses/NotFound'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Issuance Flow" ]
       summary: Delete an issuance flow
@@ -139,6 +158,16 @@ paths:
       responses:
         '204':
           description: Deleted
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '404': 
+            $ref: '#/components/responses/NotFound'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
 
   /workflows/presentations:
     get:
@@ -152,9 +181,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PresentationFlow'
+                 $ref: '#/components/schemas/PresentationFlowsResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -172,7 +199,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PresentationFlow'
+              $ref: '#/components/schemas/PresentationFlowRequest'
         required: true
       responses:
         '201':
@@ -190,18 +217,16 @@ paths:
         '500':
             $ref: '#/components/responses/InternalServerError'
   /workflows/presentations/{presentationFlowId}:
-    parameters:
-      - name: presentationFlowId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: Unique identifier of the presentation flow
     get:
-      tags:
-        - Presentation Flow
+      tags: [ "Presentation Flow" ]
       summary: Retrieve a single presentation flow
       operationId: getPresentationFlow
+      parameters:
+        - name: presentationFlowId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -215,19 +240,26 @@ paths:
             $ref: '#/components/responses/Unauthorized'
         '403':
             $ref: '#/components/responses/Forbidden'
+        '404': 
+            $ref: '#/components/responses/NotFound'
         '500':
             $ref: '#/components/responses/InternalServerError'
     put:
-      tags:
-        - Presentation Flow
-      summary: Update a presentation flow
+      tags: [ "Presentation Flow" ]
+      summary: Update a presentation flow (overwrite)
       operationId: updatePresentationFlow
+      parameters:
+        - name: presentationFlowId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PresentationFlow'
+              $ref: '#/components/schemas/PresentationFlowRequest'
       responses:
         '200':
           description: Updated
@@ -241,13 +273,20 @@ paths:
             $ref: '#/components/responses/Unauthorized'
         '403':
             $ref: '#/components/responses/Forbidden'
+        '404': 
+            $ref: '#/components/responses/NotFound'
         '500':
             $ref: '#/components/responses/InternalServerError'
     delete:
-      tags:
-        - Presentation Flow
+      tags: [ "Presentation Flow" ]
       summary: Delete a presentation flow
       operationId: deletePresentationFlow
+      parameters:
+        - name: presentationFlowId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '204':
           description: Deleted
@@ -257,9 +296,11 @@ paths:
             $ref: '#/components/responses/Unauthorized'
         '403':
             $ref: '#/components/responses/Forbidden'
+        '404': 
+            $ref: '#/components/responses/NotFound'
         '500':
             $ref: '#/components/responses/InternalServerError'
-  
+
   /workflows/{workflowId}/steps:
     parameters:
       - name: workflowId
@@ -662,9 +703,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PersonasResponse'
+                $ref: '#/components/schemas/PersonasResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1283,6 +1322,7 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
+  
   /showcases:
     get:
       tags:
@@ -1510,10 +1550,8 @@ components:
           $ref: '#/components/schemas/StepType'
         subFlow:
           $ref: '#/components/schemas/Workflow'
-          description: Optional sub-workflow for this step
         actions:
           type: array
-          description: List of actions associated with this step
           items:
             $ref: '#/components/schemas/StepAction'
         asset:
@@ -1617,11 +1655,6 @@ components:
           properties:
             proofRequest:
               $ref: '#/components/schemas/AriesProofRequest'
-              description: Proof request details for the Aries out-of-band action
-              example:
-                attributes:
-                  name:
-                    value: John Doe
     AriesProofRequest:
       type: object
       properties:
@@ -1708,12 +1741,8 @@ components:
           example: John Doe is a verifier for the system
         headshotImage:
           $ref: '#/components/schemas/Asset'
-          description: Headshot image asset for the persona
-          example: https://example.com/headshot.jpg
         bodyImage:
           $ref: '#/components/schemas/Asset'
-          description: Full body image asset for the persona
-          example: https://example.com/body.jpg
     PersonaRequest:
       type: object
       required:
@@ -1734,12 +1763,8 @@ components:
           example: John Doe is a verifier for the system
         headshotImage:
           $ref: '#/components/schemas/Asset'
-          description: Headshot image asset for the persona
-          example: https://example.com/headshot.jpg
         bodyImage:
           $ref: '#/components/schemas/Asset'
-          description: Full body image asset for the persona
-          example: https://example.com/body.jpg
     PersonasResponse:
       properties:
         personas:
@@ -1770,11 +1795,6 @@ components:
           enum: [ISSUANCE, PRESENTATION]
           description: Type of workflow
           example: ISSUANCE
-        credentialDefinitions:
-          type: array
-          description: References to credential definitions used in this workflow
-          items:
-            $ref: '#/components/schemas/CredentialDefinition'
         steps:
           type: array
           description: Ordered list of steps in the workflow
@@ -1789,7 +1809,7 @@ components:
       type: object
       required:
         - name
-        - type
+        - description
       properties:
         name:
           type: string
@@ -1799,17 +1819,6 @@ components:
           type: string
           description: Detailed description of the workflow
           example: This workflow issues credentials to users
-        type:
-          type: string
-          enum: [ISSUANCE, PRESENTATION]
-          description: Type of workflow
-          example: ISSUANCE
-        credentialDefinitions:
-          type: array
-          description: References to credential definitions used in this workflow
-          items:
-            type: string
-            example: 123e4567-e89b-12d3-a456-426614174123
         steps:
           type: array
           description: Ordered list of steps in the workflow
@@ -1828,13 +1837,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/IssuanceFlow'
-
     IssuanceFlow:
       allOf:
         - $ref: '#/components/schemas/Workflow'
         - type: object
           required:
-            - issuerId
+            - issuer
           properties:
             issuer:
               $ref: '#/components/schemas/Issuer'
@@ -1844,27 +1852,40 @@ components:
         - $ref: '#/components/schemas/WorkflowRequest'
         - type: object
           required:
-            - issuerId
+            - issuer
           properties:
             issuer:
-              $ref: '#/components/schemas/Issuer'
+              type: string
+              example: "313e4567-e89b-12d3-a456-426614174469"
       description: Workflow specialization for credential issuance
     
+    PresentationFlowsResponse:
+      properties:
+        presentationFlows:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationFlow'
     PresentationFlow:
       allOf:
         - $ref: '#/components/schemas/Workflow'
         - type: object
           required:
-            - relyingPartyId
+            - relyingParty
           properties:
-            relyingPartyId:
-              type: string
-              description: Identifier of the relying party for this flow
-              example: relyingParty123
             relyingParty:
               $ref: '#/components/schemas/RelyingParty'
       description: Workflow specialization for credential presentation
-    
+    PresentationFlowRequest:
+      allOf:
+        - $ref: '#/components/schemas/WorkflowRequest'
+        - type: object
+          required:
+            - relyingParty
+          properties:
+            relyingParty:
+              type: string
+              example: "313e4567-e89b-12d3-a456-426614174469"
+
     IssuerType:
       type: string
       enum:
@@ -1895,21 +1916,16 @@ components:
           example: This issuer issues credentials to users
         type:
           $ref: '#/components/schemas/IssuerType'
-          description: Type of issuer
-          example: ARIES
         organization:
           type: string
           description: Organization the issuer belongs to
           example: Acme Corporation
         logo:
           $ref: '#/components/schemas/Asset'
-          description: Logo asset for the issuer
-          example: https://example.com/logo.jpg
         credentialDefinitions:
           type: array
-          description: List of credential definitions this issuer can issue
           items:
-            $ref: '#/components/schemas/CredentialDefinitionsResponse'
+            $ref: '#/components/schemas/CredentialDefinition'
     RelyingParty:
       type: object
       required:
@@ -1930,16 +1946,12 @@ components:
           example: This relying party verifies credentials from issuers
         type:
           $ref: '#/components/schemas/RelyingPartyType'
-          description: Type of relying party
-          example: ARIES
         organization:
           type: string
           description: Organization the relying party belongs to
           example: Acme Corporation
         logo:
           $ref: '#/components/schemas/Asset'
-          description: Logo asset for the relying party
-          example: https://example.com/logo.jpg
         credentialDefinitions:
           type: array
           description: List of credential definitions this relying party accepts
@@ -1997,8 +2009,6 @@ components:
             - $ref: '#/components/schemas/AnonCredRevocation'
         icon:
           $ref: '#/components/schemas/Asset'
-          description: Icon asset for the credential definition
-          example: https://example.com/icon.jpg
     CredentialDefinitionRequest:
       type: object
       required:
@@ -2016,8 +2026,6 @@ components:
           example: '1.0'
         type:
           $ref: '#/components/schemas/CredentialType'
-          description: Type of credential
-          example: ANONCRED
         attributes:
           type: array
           description: List of attributes in the credential definition
@@ -2093,9 +2101,7 @@ components:
           example: John Doe
         type:
           $ref: '#/components/schemas/CredentialAttributeType'
-          description: Data type of the attribute
-          example: STRING
-   
+
     CredentialRepresentation:
       type: object
       required:
@@ -2166,49 +2172,6 @@ components:
           type: string
           description: Unique identifier for the showcase
           example: showcase-123
-        name:
-          type: string
-          description: Name of the showcase
-          example: Credential Showcase BCGov
-        description:
-          type: string
-          description: Description of the showcase
-          example: Collection of credential usage scenarios
-        status:
-          type: string
-          enum: [pending, active, archived]
-          description: Current status of the showcase
-          example: pending
-        hidden:
-          type: boolean
-          description: Whether the showcase is hidden from public view
-          default: false
-        scenarios:
-          type: array
-          description: List of scenarios in this showcase
-          items:
-            $ref: '#/components/schemas/Scenario'
-        credentials:
-          type: array
-          description: List of credential definitions used in this showcase
-          items:
-            $ref: '#/components/schemas/CredentialDefinitionsResponse'
-        personas:
-          type: object
-          description: List of personas involved in this showcase
-          items:
-            $ref: '#/components/schemas/PersonasResponse'
-        workflows:
-          type: array
-          description: List of workflows used in this showcase
-          items:
-            $ref: '#/components/schemas/Workflow'
-    ShowcaseRequest:
-      type: object
-      required:
-        - name
-        - description
-      properties:
         name:
           type: string
           description: Name of the showcase

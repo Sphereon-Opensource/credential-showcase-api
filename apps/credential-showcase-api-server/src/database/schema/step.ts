@@ -10,8 +10,8 @@ export const steps = pgTable('step', {
     title: varchar({ length: 255 }).notNull(),
     order: integer().notNull(),
     type: StepTypePg('step_type').notNull(),
-    subFlow: uuid('sub_flow').references(() => workflows.id).notNull(),
-    workflowId: uuid('workflow_id').references(() => workflows.id,{ onDelete: 'cascade' }),
+    subFlow: uuid('sub_flow').references(() => workflows.id),
+    workflowId: uuid('workflow_id').references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
     image: uuid().references(() => assets.id).notNull(),
 });
 

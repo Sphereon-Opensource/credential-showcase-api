@@ -50,8 +50,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Workflow'
-        
+                  $ref: '#/components/schemas/Workflow'        
   /workflows/issuances:
     get:
       tags:
@@ -85,7 +84,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
-  
   /workflows/presentations:
     get:
       tags:
@@ -384,7 +382,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CredentialDefinition'
+                  $ref: '#/components/schemas/CredentialDefinitionsResponse'
     post:
       tags:
         - Credential Definitions
@@ -394,7 +392,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CredentialDefinition'
+              $ref: '#/components/schemas/CredentialDefinitionRequest'
         required: true
       responses:
         '201':
@@ -431,7 +429,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CredentialDefinition'
+              $ref: '#/components/schemas/CredentialDefinitionRequest'
         required: true
       responses:
         '200':
@@ -859,7 +857,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CredentialDefinition'
+                  $ref: '#/components/schemas/CredentialDefinitionsResponse'
   /roles/relying-parties:
     get:
       tags:
@@ -959,7 +957,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CredentialDefinition'
+                  $ref: '#/components/schemas/CredentialDefinitionsResponse'
     post:
       tags:
         - Relying Party Role
@@ -971,7 +969,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CredentialDefinition'
+              $ref: '#/components/schemas/CredentialDefinitionRequest'
       responses:
         '201':
           description: Created
@@ -1547,7 +1545,7 @@ components:
           type: array
           description: List of credential definitions this issuer can issue
           items:
-            $ref: '#/components/schemas/CredentialDefinition'
+            $ref: '#/components/schemas/CredentialDefinitionsResponse'
     RelyingParty:
       type: object
       required:
@@ -1582,7 +1580,7 @@ components:
           type: array
           description: List of credential definitions this relying party accepts
           items:
-            $ref: '#/components/schemas/CredentialDefinition'
+            $ref: '#/components/schemas/CredentialDefinitionsResponse'
     CredentialType:
       type: string
       enum:
@@ -1650,6 +1648,69 @@ components:
           $ref: '#/components/schemas/Asset'
           description: Icon asset for the credential definition
           example: https://example.com/icon.jpg
+    CredentialDefinitionRequest:
+      type: object
+      required:
+        - name
+        - version
+        - type
+      properties:
+        name:
+          type: string
+          description: Name of the credential definition
+          example: Credential Definition Name
+        version:
+          type: string
+          description: Version of the credential definition
+          example: '1.0'
+        type:
+          $ref: '#/components/schemas/CredentialType'
+          description: Type of credential
+          example: ANONCRED
+        attributes:
+          type: array
+          description: List of attributes in the credential definition
+          example:
+            - name: name
+              type: STRING
+          items:
+            $ref: '#/components/schemas/CredentialAttribute'
+        representations:
+          type: array
+          description: List of representations for this credential definition
+          example:
+            - id: credentialRepresentation123
+              type: CREDENTIAL_DEFINITION
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/CredentialRepresentation'
+              - $ref: '#/components/schemas/OCARepresentation'
+        revocation:
+          oneOf:
+            - $ref: '#/components/schemas/RevocationInfo'
+            - $ref: '#/components/schemas/AnonCredRevocation'
+          description: Revocation information for the credential
+          example:
+            title: Revocation Information
+            description: This credential is revocable
+        icon:
+          $ref: '#/components/schemas/Asset'
+          description: Icon asset for the credential definition
+          example: https://example.com/icon.jpg
+    CredentialDefinitionsResponse:
+      properties:
+        metadata:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Number of personas in the response
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+
+    
     CredentialAttribute:
       type: object
       required:
@@ -1760,7 +1821,7 @@ components:
           type: array
           description: List of credential definitions used in this showcase
           items:
-            $ref: '#/components/schemas/CredentialDefinition'
+            $ref: '#/components/schemas/CredentialDefinitionsResponse'
         personas:
           type: object
           description: List of personas involved in this showcase
@@ -1803,7 +1864,7 @@ components:
           type: array
           description: List of credential definitions used in this showcase
           items:
-            $ref: '#/components/schemas/CredentialDefinition'
+            $ref: '#/components/schemas/CredentialDefinitionsResponse'
         personas:
           type: object
           description: List of personas involved in this showcase

@@ -39,6 +39,7 @@ classDiagram
         +type : StepType
         subFlow: Workflow
         actions: List~StepAction~
+        asset: Asset
     }
     class StepAction {
         +type: String
@@ -131,7 +132,7 @@ classDiagram
     class CredentialAttribute {
         +name : String
         +value : String
-        type: CredentialAttributeType
+        +type: CredentialAttributeType
     }
     class CredentialType {
         <<enumeration>>

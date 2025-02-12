@@ -38,3 +38,8 @@ export enum StepType {
     SERVICE = "SERVICE",
     WORKFLOW = "WORKFLOW",
 }
+
+export enum WorkflowType {
+    ISSUANCE = "ISSUANCE",
+    PRESENTATION = "PRESENTATION",
+}

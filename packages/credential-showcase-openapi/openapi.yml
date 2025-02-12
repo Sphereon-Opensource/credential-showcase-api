@@ -35,77 +35,8 @@ tags:
 security:
   - OAuth2: []
   - OIDC: []
-paths:
-  /workflows:
-    get:
-      tags:
-        - Workflows
-      summary: List all workflows
-      operationId: listWorkflows
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WorkflowsResponse'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-    post:
-      tags:
-        - Workflows
-      summary: Create a new workflow
-      operationId: createWorkflow
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WorkflowRequest'
-        required: true
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Workflow'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-    delete:
-      tags:
-        - Workflows
-      summary: Delete a workflow
-      operationId: deleteWorkflow
-      parameters:
-        - name: workflowId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: No Content
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
 
+paths:
   /workflows/issuances:
     get:
       tags:
@@ -118,9 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IssuanceFlow'
+                 $ref: '#/components/schemas/IssuanceFlowsResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -155,6 +84,62 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
+  
+  /workflows/issuances/{issuanceFlowId}:
+    get:
+      tags: [ "Issuance Flow" ]
+      summary: Retrieve a single issuance flow
+      operationId: getIssuanceFlow
+      parameters:
+        - name: issuanceFlowId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuanceFlow'
+    put:
+      tags: [ "Issuance Flow" ]
+      summary: Update an issuance flow (overwrite)
+      operationId: updateIssuanceFlow
+      parameters:
+        - name: issuanceFlowId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssuanceFlow'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuanceFlow'
+    delete:
+      tags: [ "Issuance Flow" ]
+      summary: Delete an issuance flow
+      operationId: deleteIssuanceFlow
+      parameters:
+        - name: issuanceFlowId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+
   /workflows/presentations:
     get:
       tags:
@@ -1093,6 +1078,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CredentialDefinitionsResponse'
+  
   /roles/relying-parties:
     get:
       tags:
@@ -1835,13 +1821,14 @@ components:
           items:
             type: string
             example: 123e4567-e89b-12d3-a456-426614174456
-    WorkflowsResponse:
+
+    IssuanceFlowsResponse:
       properties:
-        workflows:
+        issuanceFlows:
           type: array
           items:
-            $ref: '#/components/schemas/Workflow'
-    
+            $ref: '#/components/schemas/IssuanceFlow'
+
     IssuanceFlow:
       allOf:
         - $ref: '#/components/schemas/Workflow'
@@ -1849,22 +1836,20 @@ components:
           required:
             - issuerId
           properties:
-            issuerId:
-              type: string
-              description: Identifier of the issuer for this flow
-              example: issuer123
             issuer:
               $ref: '#/components/schemas/Issuer'
-              description: Details of the issuer
-              example:
-                id: issuer123
-                name: Issuer Name
-          example:
-            issuerId: issuer123
-            issuer:
-              id: issuer123
-              name: Issuer Name
       description: Workflow specialization for credential issuance
+    IssuanceFlowRequest:
+      allOf:
+        - $ref: '#/components/schemas/WorkflowRequest'
+        - type: object
+          required:
+            - issuerId
+          properties:
+            issuer:
+              $ref: '#/components/schemas/Issuer'
+      description: Workflow specialization for credential issuance
+    
     PresentationFlow:
       allOf:
         - $ref: '#/components/schemas/Workflow'
@@ -1878,11 +1863,8 @@ components:
               example: relyingParty123
             relyingParty:
               $ref: '#/components/schemas/RelyingParty'
-              description: Details of the relying party
-              example:
-                id: relyingParty123
-                name: Relying Party Name
       description: Workflow specialization for credential presentation
+    
     IssuerType:
       type: string
       enum:
@@ -2381,4 +2363,4 @@ components:
                 example: 'An unexpected error occurred'
               error_id:
                 type: string
-              example: 'e123456'
+                example: 'e123456'

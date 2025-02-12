@@ -9,14 +9,16 @@ classDiagram
         +name : String
         +description : String
         +status : String
-        hidden : Boolean = false,
         +workflows: List~String~
         +personas: List~String~
         +credentials: List~String~
+        hidden : Boolean = false
     }
     class Workflow {
         +name : String
         +description : String
+        +steps: List~Steps~
+        +personas: List~Persona~
     }
     class IssuanceFlow {
         issuer: Issuer
@@ -139,7 +141,7 @@ classDiagram
     DATE
    }
     Showcase <|-- Workflow : specialization (workflow)
-    Showcase <|-- Persona : specialization (persona)
+    Showcase <|-- Persona
     Workflow <|-- IssuanceFlow : specialization (onboarding)
     Workflow <|-- PresentationFlow : specialization (scenario)
     Workflow "1" *-- "1..*" Step : contains
@@ -168,4 +170,4 @@ classDiagram
     Workflow "0..*" o-- "1..*" Persona : involves
     IssuanceFlow "0..*" o-- "1" Issuer : includes
     PresentationFlow "0..*" o-- "1" RelyingParty : includes
-```
+

@@ -1621,60 +1621,7 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
-  /assets/{assetId}/content:
-    parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Assets
-      summary: Get asset content
-      operationId: getAssetContent
-      responses:
-        '200':
-          description: Asset content returned successfully
-          content:
-            '*/*':
-              schema:
-                type: string
-                format: binary
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-    put:
-      tags:
-        - Assets
-      summary: Upload asset content
-      operationId: uploadAssetContent
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: Content uploaded successfully
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-  
+
   /roles/issuers:
     get:
       tags:
@@ -1791,25 +1738,25 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
-  /roles/issuers/{issuerId}/credential-definitions:
-    parameters:
-      - name: issuerId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Issuer Role
-      summary: List credential definitions for an issuer
-      operationId: listIssuerCredentialDefinitions
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CredentialDefinitionsResponse'
+  # /roles/issuers/{issuerId}/credential-definitions:
+  #   parameters:
+  #     - name: issuerId
+  #       in: path
+  #       required: true
+  #       schema:
+  #         type: string
+  #   get:
+  #     tags:
+  #       - Issuer Role
+  #     summary: List credential definitions for an issuer
+  #     operationId: listIssuerCredentialDefinitions
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/CredentialDefinitionsResponse'
   
   /roles/relying-parties:
     get:
@@ -1927,90 +1874,90 @@ paths:
             $ref: '#/components/responses/Forbidden'
         '500':
             $ref: '#/components/responses/InternalServerError'
-  /roles/relying-parties/{relyingPartyId}/credential-definitions:
-    parameters:
-      - name: relyingPartyId
-        in: path
-        required: true
-        schema:
-          type: string
-    get:
-      tags:
-        - Relying Party Role
-      summary: List accepted credential definitions for a relying party
-      operationId: listRelyingPartyCredentialDefinitions
-      description: Retrieve the list of credential definitions that this relying party accepts for verification
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CredentialDefinitionsResponse'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'          
-    post:
-      tags:
-        - Relying Party Role
-      summary: Add accepted credential definition to a relying party
-      operationId: addRelyingPartyCredentialDefinition
-      description: Add a credential definition to the list of credentials that this relying party accepts
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CredentialDefinitionRequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CredentialDefinition'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-  /roles/relying-parties/{relyingPartyId}/credential-definitions/{definitionId}:
-    parameters:
-      - name: relyingPartyId
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: definitionId
-        in: path
-        required: true
-        schema:
-          type: string
-    delete:
-      tags:
-        - Relying Party Role
-      summary: Remove an accepted credential definition from a relying party
-      operationId: removeRelyingPartyCredentialDefinition
-      description: Remove a credential definition from the list of credentials that this relying party accepts
-      responses:
-        '204':
-          description: Deleted
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
+  # /roles/relying-parties/{relyingPartyId}/credential-definitions:
+  #   parameters:
+  #     - name: relyingPartyId
+  #       in: path
+  #       required: true
+  #       schema:
+  #         type: string
+  #   get:
+  #     tags:
+  #       - Relying Party Role
+  #     summary: List accepted credential definitions for a relying party
+  #     operationId: listRelyingPartyCredentialDefinitions
+  #     description: Retrieve the list of credential definitions that this relying party accepts for verification
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/CredentialDefinitionsResponse'
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'          
+  #   post:
+  #     tags:
+  #       - Relying Party Role
+  #     summary: Add accepted credential definition to a relying party
+  #     operationId: addRelyingPartyCredentialDefinition
+  #     description: Add a credential definition to the list of credentials that this relying party accepts
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/CredentialDefinitionRequest'
+  #     responses:
+  #       '201':
+  #         description: Created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/CredentialDefinition'
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
+  # /roles/relying-parties/{relyingPartyId}/credential-definitions/{definitionId}:
+  #   parameters:
+  #     - name: relyingPartyId
+  #       in: path
+  #       required: true
+  #       schema:
+  #         type: string
+  #     - name: definitionId
+  #       in: path
+  #       required: true
+  #       schema:
+  #         type: string
+  #   delete:
+  #     tags:
+  #       - Relying Party Role
+  #     summary: Remove an accepted credential definition from a relying party
+  #     operationId: removeRelyingPartyCredentialDefinition
+  #     description: Remove a credential definition from the list of credentials that this relying party accepts
+  #     responses:
+  #       '204':
+  #         description: Deleted
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
   
   /showcases:
     get:
@@ -2166,7 +2113,7 @@ components:
         id:
           type: string
           description: Unique identifier for the asset in the database
-          example: asset123
+          example: 123e4567-e89b-12d3-a456-426614174469
         mediaType:
           type: string
           description: Type of asset (e.g., image, document, icon)
@@ -2294,19 +2241,22 @@ components:
         - WORKFLOW
       description: Type of step in the workflow
       example: HUMAN_TASK  
+
     StepAction:
       type: object
       required:
-        - type
+        - actionType
+        - title
+        - text
       properties:
         id:
           type: string
           description: Unique identifier for the action
-          example: action123
-        type:
+          example: 123e4567-ef2d-12d3-abcd-426614174456
+        actionType:
           type: string
-          description: Type of action (e.g., CONNECT_WALLET, ARIES_OOB)
-          example: CONNECT_WALLET
+          description: Type of action
+          example: EXAMPLE_ACTION
         title:
           type: string
           description: Title of the action
@@ -2316,18 +2266,17 @@ components:
           description: Descriptive text for the action
           example: Connect your wallet to continue
       discriminator:
-        propertyName: type
+        propertyName: actionType
         mapping:
-          ARIES_OOB: '#/components/schemas/AriesOOBAction' 
+          ARIES_OOB: '#/components/schemas/AriesOOBAction'
+
     StepActionRequest:
       type: object
       required:
-        - type
+        - actionType
+        - title
+        - text
       properties:
-        type:
-          type: string
-          description: Type of action (e.g., CONNECT_WALLET, ARIES_OOB)
-          example: CONNECT_WALLET
         title:
           type: string
           description: Title of the action
@@ -2336,6 +2285,9 @@ components:
           type: string
           description: Descriptive text for the action
           example: Connect your wallet to continue
+        actionType:
+          type: string
+          example: HUMAN_TASK
       discriminator:
         propertyName: type
         mapping:
@@ -2463,9 +2415,11 @@ components:
           description: Detailed description of the persona
           example: John Doe is a verifier for the system
         headshotImage:
-          $ref: '#/components/schemas/Asset'
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174456
         bodyImage:
-          $ref: '#/components/schemas/Asset'
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174877
     PersonasResponse:
       properties:
         personas:
@@ -2607,7 +2561,7 @@ components:
         id:
           type: string
           description: Unique identifier for the issuer
-          example: issuer123
+          example: 123e4567-e89b-12d3-abcd-426614174456
         name:
           type: string
           description: Name of the issuer
@@ -2650,11 +2604,12 @@ components:
           example: Acme Corporation
         logo:
           type: string
-          description: 123e4567-e89b-12d3-a456-426614174469
+          example: 123e4567-e89b-12d3-a456-426614174469
         credentialDefinitions:
           type: array
           items:
-            $ref: '#/components/schemas/CredentialDefinitionRequest'   
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
     IssuersResponse:
       properties:
         issuers:
@@ -2714,11 +2669,12 @@ components:
           example: Acme Corporation
         logo:
           type: string
-          description: 123e4567-e89b-12d3-a456-426614174469
+          example: 123e4567-e89b-12d3-a456-426614174469
         credentialDefinitions:
           type: array
           items:
-            $ref: '#/components/schemas/CredentialDefinitionRequest'
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
 
     RelyingPartiesResponse:
       properties:
@@ -2741,6 +2697,7 @@ components:
         - BOOLEAN
         - DATE
       description: Types of credential attributes
+      example: STRING
     
     CredentialDefinition:
       type: object
@@ -2798,18 +2755,13 @@ components:
           $ref: '#/components/schemas/CredentialType'
         attributes:
           type: array
-          description: List of attributes in the credential definition
-          example:
-            - name: name
-              type: STRING
           items:
             $ref: '#/components/schemas/CredentialAttributeRequest'
         representations:
           type: array
           description: List of representations for this credential definition
           example:
-            - id: credentialRepresentation123
-              type: CREDENTIAL_DEFINITION
+            - type: CREDENTIAL_DEFINITION
           items:
             oneOf:
               - $ref: '#/components/schemas/CredentialRepresentation'
@@ -2823,7 +2775,8 @@ components:
             title: Revocation Information
             description: This credential is revocable
         icon:
-          $ref: '#/components/schemas/Asset'
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174469
     CredentialDefinitionsResponse:
       properties:
         credentialDefinitions:
@@ -2878,7 +2831,7 @@ components:
         id:
           type: string
           description: Unique identifier for the credential representation
-          example: credentialRepresentation123
+          example: 123e4567-e89b-12d3-abcd-426614174456
     OCARepresentation:
       allOf:
         - $ref: '#/components/schemas/CredentialRepresentation'
@@ -2894,7 +2847,7 @@ components:
             schemaId:
               type: string
               description: Schema identifier in the OCA format
-              example: schema123
+              example: 123e4567-e89b-12d3-a456-426614174123
             ocaBundleUrl:
               type: string
               description: URL to the OCA bundle for this representation
@@ -2927,7 +2880,7 @@ components:
             registryId:
               type: string
               description: Identifier of the revocation registry for AnonCreds
-              example: registry123
+              example: 123e4567-e89b-12d3-a456-426614174123
       description: Anonymous Credentials specific revocation information
     
     Showcase:
@@ -2939,7 +2892,7 @@ components:
         id:
           type: string
           description: Unique identifier for the showcase
-          example: showcase-123
+          example: 123e4567-e89b-12d3-a456-426614174456
         name:
           type: string
           description: Name of the showcase
@@ -2987,7 +2940,7 @@ components:
         id:
           type: string
           description: Unique identifier for the scenario
-          example: scenario-123
+          example: 123e4567-e89b-12d3-a456-426614174456
         name:
           type: string
           description: Name of the scenario
@@ -3001,13 +2954,13 @@ components:
           description: References to workflows used in this scenario
           items:
             type: string
-          example: ['issuance-flow-123', 'presentation-flow-123']
+          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
         personas:
           type: array
           description: References to personas involved in this scenario
           items:
             type: string
-          example: ['issuer-persona-123', 'holder-persona-123']
+          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
     ScenarioRequest:
       type: object
       required:
@@ -3027,13 +2980,13 @@ components:
           description: References to workflows used in this scenario
           items:
             type: string
-          example: ['issuance-flow-123', 'presentation-flow-123']
+          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
         personas:
           type: array
           description: References to personas involved in this scenario
           items:
             type: string
-          example: ['issuer-persona-123', 'holder-persona-123']
+          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
     ScenarioResponse:
       properties:
         assets:

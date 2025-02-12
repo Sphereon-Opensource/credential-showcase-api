@@ -1687,9 +1687,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuersResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1708,7 +1706,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Issuer'
+              $ref: '#/components/schemas/IssuerRequest'
       responses:
         '201':
           description: Created
@@ -1761,7 +1759,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Issuer'
+              $ref: '#/components/schemas/IssuerRequest'
       responses:
         '200':
           description: Updated
@@ -1811,9 +1809,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CredentialDefinitionsResponse'
+                $ref: '#/components/schemas/CredentialDefinitionsResponse'
   
   /roles/relying-parties:
     get:
@@ -1827,9 +1823,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartiesResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1848,7 +1842,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RelyingParty'
+              $ref: '#/components/schemas/RelyingPartyRequest'
       responses:
         '201':
           description: Created
@@ -1901,7 +1895,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RelyingParty'
+              $ref: '#/components/schemas/RelyingPartyRequest'
       responses:
         '200':
           description: Updated
@@ -1952,9 +1946,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CredentialDefinitionsResponse'
+                $ref: '#/components/schemas/CredentialDefinitionsResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -2301,8 +2293,7 @@ components:
         - SERVICE
         - WORKFLOW
       description: Type of step in the workflow
-      example: HUMAN_TASK
-    
+      example: HUMAN_TASK  
     StepAction:
       type: object
       required:
@@ -2606,6 +2597,7 @@ components:
       enum:
         - ARIES
       description: Types of supported relying parties
+    
     Issuer:
       type: object
       required:
@@ -2636,6 +2628,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CredentialDefinition'
+    IssuerRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          description: Name of the issuer
+          example: Issuer Name
+        description:
+          type: string
+          description: Detailed description of the issuer
+          example: This issuer issues credentials to users
+        type:
+          $ref: '#/components/schemas/IssuerType'
+        organization:
+          type: string
+          description: Organization the issuer belongs to
+          example: Acme Corporation
+        logo:
+          type: string
+          description: 123e4567-e89b-12d3-a456-426614174469
+        credentialDefinitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialDefinitionRequest'   
+    IssuersResponse:
+      properties:
+        issuers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issuer'
+            
     RelyingParty:
       type: object
       required:
@@ -2645,7 +2671,7 @@ components:
         id:
           type: string
           description: Unique identifier for the relying party
-          example: relyingParty123
+          example: 76543210-e89b-12d3-a456-426614174469
         name:
           type: string
           description: Name of the relying party
@@ -2664,9 +2690,43 @@ components:
           $ref: '#/components/schemas/Asset'
         credentialDefinitions:
           type: array
-          description: List of credential definitions this relying party accepts
           items:
-            $ref: '#/components/schemas/CredentialDefinitionsResponse'
+            $ref: '#/components/schemas/CredentialDefinition'
+    RelyingPartyRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          description: Name of the relying party
+          example: Relying Party Name
+        description:
+          type: string
+          description: Detailed description of the relying party
+          example: This relying party verifies credentials from issuers
+        type:
+          $ref: '#/components/schemas/RelyingPartyType'
+        organization:
+          type: string
+          description: Organization the relying party belongs to
+          example: Acme Corporation
+        logo:
+          type: string
+          description: 123e4567-e89b-12d3-a456-426614174469
+        credentialDefinitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialDefinitionRequest'
+
+    RelyingPartiesResponse:
+      properties:
+        relyingParties:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelyingParty'
+
     CredentialType:
       type: string
       enum:

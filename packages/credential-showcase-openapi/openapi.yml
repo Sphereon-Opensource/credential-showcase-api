@@ -1959,133 +1959,133 @@ paths:
   #       '500':
   #           $ref: '#/components/responses/InternalServerError'
   
-  /showcases:
-    get:
-      tags:
-        - Showcases
-      summary: List all showcases
-      operationId: listShowcases
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Showcase'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-    post:
-      tags:
-        - Showcases
-      summary: Create a new showcase
-      operationId: createShowcase
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Showcase'
-        required: true
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Showcase'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-  /showcases/{showcaseId}:
-    parameters:
-      - name: showcaseId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: Unique identifier of the showcase
-    get:
-      tags:
-        - Showcases
-      summary: Get a specific showcase
-      operationId: getShowcase
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Showcase'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-    put:
-      tags:
-        - Showcases
-      summary: Update a showcase
-      operationId: updateShowcase
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Showcase'
-      responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Showcase'
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
-    delete:
-      tags:
-        - Showcases
-      summary: Delete a showcase
-      operationId: deleteShowcase
-      responses:
-        '204':
-            description: Deleted
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      description: A message indicating the showcase was deleted
-        '400':
-            $ref: '#/components/responses/BadRequest'
-        '401':
-            $ref: '#/components/responses/Unauthorized'
-        '403':
-            $ref: '#/components/responses/Forbidden'
-        '500':
-            $ref: '#/components/responses/InternalServerError'
+  # /showcases:
+  #   get:
+  #     tags:
+  #       - Showcases
+  #     summary: List all showcases
+  #     operationId: listShowcases
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/Showcase'
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
+  #   post:
+  #     tags:
+  #       - Showcases
+  #     summary: Create a new showcase
+  #     operationId: createShowcase
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Showcase'
+  #       required: true
+  #     responses:
+  #       '201':
+  #         description: Created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Showcase'
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
+  # /showcases/{showcaseId}:
+  #   parameters:
+  #     - name: showcaseId
+  #       in: path
+  #       required: true
+  #       schema:
+  #         type: string
+  #       description: Unique identifier of the showcase
+  #   get:
+  #     tags:
+  #       - Showcases
+  #     summary: Get a specific showcase
+  #     operationId: getShowcase
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Showcase'
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
+  #   put:
+  #     tags:
+  #       - Showcases
+  #     summary: Update a showcase
+  #     operationId: updateShowcase
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Showcase'
+  #     responses:
+  #       '200':
+  #         description: Updated
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Showcase'
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
+  #   delete:
+  #     tags:
+  #       - Showcases
+  #     summary: Delete a showcase
+  #     operationId: deleteShowcase
+  #     responses:
+  #       '204':
+  #           description: Deleted
+  #           content:
+  #             application/json:
+  #               schema:
+  #                 type: object
+  #                 properties:
+  #                   message:
+  #                     type: string
+  #                     description: A message indicating the showcase was deleted
+  #       '400':
+  #           $ref: '#/components/responses/BadRequest'
+  #       '401':
+  #           $ref: '#/components/responses/Unauthorized'
+  #       '403':
+  #           $ref: '#/components/responses/Forbidden'
+  #       '500':
+  #           $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -2883,116 +2883,116 @@ components:
               example: 123e4567-e89b-12d3-a456-426614174123
       description: Anonymous Credentials specific revocation information
     
-    Showcase:
-      type: object
-      required:
-        - name
-        - description
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the showcase
-          example: 123e4567-e89b-12d3-a456-426614174456
-        name:
-          type: string
-          description: Name of the showcase
-          example: Credential Showcase BCGov
-        description:
-          type: string
-          description: Description of the showcase
-          example: Collection of credential usage scenarios
-        status:
-          type: string
-          enum: [pending, active, archived]
-          description: Current status of the showcase
-          example: pending
-        hidden:
-          type: boolean
-          description: Whether the showcase is hidden from public view
-          default: false
-        scenarios:
-          type: array
-          description: List of scenarios in this showcase
-          items:
-            $ref: '#/components/schemas/Scenario'
-        credentials:
-          type: array
-          description: List of credential definitions used in this showcase
-          items:
-            $ref: '#/components/schemas/CredentialDefinitionsResponse'
-        personas:
-          type: object
-          description: List of personas involved in this showcase
-          items:
-            $ref: '#/components/schemas/PersonasResponse'
-        workflows:
-          type: array
-          description: List of workflows used in this showcase
-          items:
-            $ref: '#/components/schemas/Workflow'
+    # Showcase:
+    #   type: object
+    #   required:
+    #     - name
+    #     - description
+    #   properties:
+    #     id:
+    #       type: string
+    #       description: Unique identifier for the showcase
+    #       example: 123e4567-e89b-12d3-a456-426614174456
+    #     name:
+    #       type: string
+    #       description: Name of the showcase
+    #       example: Credential Showcase BCGov
+    #     description:
+    #       type: string
+    #       description: Description of the showcase
+    #       example: Collection of credential usage scenarios
+    #     status:
+    #       type: string
+    #       enum: [pending, active, archived]
+    #       description: Current status of the showcase
+    #       example: pending
+    #     hidden:
+    #       type: boolean
+    #       description: Whether the showcase is hidden from public view
+    #       default: false
+    #     scenarios:
+    #       type: array
+    #       description: List of scenarios in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/Scenario'
+    #     credentials:
+    #       type: array
+    #       description: List of credential definitions used in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/CredentialDefinitionsResponse'
+    #     personas:
+    #       type: object
+    #       description: List of personas involved in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/PersonasResponse'
+    #     workflows:
+    #       type: array
+    #       description: List of workflows used in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/Workflow'
 
-    Scenario:
-      type: object
-      required:
-        - name
-        - description
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the scenario
-          example: 123e4567-e89b-12d3-a456-426614174456
-        name:
-          type: string
-          description: Name of the scenario
-          example: University Parking Journey
-        description:
-          type: string
-          description: Description of the scenario
-          example: Student obtaining and using parking credentials
-        workflows:
-          type: array
-          description: References to workflows used in this scenario
-          items:
-            type: string
-          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-        personas:
-          type: array
-          description: References to personas involved in this scenario
-          items:
-            type: string
-          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-    ScenarioRequest:
-      type: object
-      required:
-        - name
-        - description
-      properties:
-        name:
-          type: string
-          description: Name of the scenario
-          example: University Parking Journey
-        description:
-          type: string
-          description: Description of the scenario
-          example: Student obtaining and using parking credentials
-        workflows:
-          type: array
-          description: References to workflows used in this scenario
-          items:
-            type: string
-          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-        personas:
-          type: array
-          description: References to personas involved in this scenario
-          items:
-            type: string
-          example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-    ScenarioResponse:
-      properties:
-        assets:
-          type: array
-          items:
-            $ref: '#/components/schemas/Scenario'
+    # Scenario:
+    #   type: object
+    #   required:
+    #     - name
+    #     - description
+    #   properties:
+    #     id:
+    #       type: string
+    #       description: Unique identifier for the scenario
+    #       example: 123e4567-e89b-12d3-a456-426614174456
+    #     name:
+    #       type: string
+    #       description: Name of the scenario
+    #       example: University Parking Journey
+    #     description:
+    #       type: string
+    #       description: Description of the scenario
+    #       example: Student obtaining and using parking credentials
+    #     workflows:
+    #       type: array
+    #       description: References to workflows used in this scenario
+    #       items:
+    #         type: string
+    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
+    #     personas:
+    #       type: array
+    #       description: References to personas involved in this scenario
+    #       items:
+    #         type: string
+    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
+    # ScenarioRequest:
+    #   type: object
+    #   required:
+    #     - name
+    #     - description
+    #   properties:
+    #     name:
+    #       type: string
+    #       description: Name of the scenario
+    #       example: University Parking Journey
+    #     description:
+    #       type: string
+    #       description: Description of the scenario
+    #       example: Student obtaining and using parking credentials
+    #     workflows:
+    #       type: array
+    #       description: References to workflows used in this scenario
+    #       items:
+    #         type: string
+    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
+    #     personas:
+    #       type: array
+    #       description: References to personas involved in this scenario
+    #       items:
+    #         type: string
+    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
+    # ScenarioResponse:
+    #   properties:
+    #     assets:
+    #       type: array
+    #       items:
+    #         $ref: '#/components/schemas/Scenario'
     
   responses:
     'BadRequest':

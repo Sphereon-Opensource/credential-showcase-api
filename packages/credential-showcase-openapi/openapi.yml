@@ -9,16 +9,10 @@ servers:
   - url: https://api.example.com/v1
 
 tags:
-  - name: Workflows
-    description: Base endpoints for managing workflows
   - name: Issuance Flow
     description: Endpoints related to credential issuance flows
   - name: Presentation Flow
     description: Endpoints related to credential presentation flows
-  - name: Steps
-    description: Endpoints for managing workflow steps
-  - name: Step Actions
-    description: Endpoints for managing step actions
   - name: Issuer Role
     description: Endpoints for managing the Issuer role
   - name: Relying Party Role
@@ -3045,6 +3039,3 @@ components:
               message:
                 type: string
                 example: 'An unexpected error occurred'
-              error_id:
-                type: string
-                example: 'e123456'

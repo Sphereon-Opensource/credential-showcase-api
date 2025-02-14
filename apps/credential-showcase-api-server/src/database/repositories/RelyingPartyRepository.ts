@@ -34,15 +34,15 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
             const relyingPartiesToCredentialDefinitionsResult = await tx.insert(relyingPartiesToCredentialDefinitions)
                 .values(relyingParty.credentialDefinitions.map((credentialDefinitionId: string) => ({
-                    relyingPartyId: relyingPartyResult.id,
-                    credentialDefinitionId
+                    relyingParty: relyingPartyResult.id, //relyingPartyId
+                    credentialDefinition: credentialDefinitionId //credentialDefinitionId
                 })))
                 .returning();
 
             return {
                 ...relyingPartyResult,
                 logo: logoResult,
-                credentialDefinitions: relyingPartiesToCredentialDefinitionsResult.map((item) => item.credentialDefinitionId)
+                credentialDefinitions: relyingPartiesToCredentialDefinitionsResult.map((item) => item.credentialDefinition) //credentialDefinitionId
             };
         })
     }
@@ -92,7 +92,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
         return {
             ...result,
-            credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinitionId)
+            credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinition) //credentialDefinitionId
         }
     }
 
@@ -106,7 +106,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
         return result.map((relayingParty) => ({
             ...relayingParty,
-            credentialDefinitions: relayingParty.credentialDefinitions.map((item) => item.credentialDefinitionId)
+            credentialDefinitions: relayingParty.credentialDefinitions.map(item => item.credentialDefinition) //credentialDefinitionId
         }))
     }
 }

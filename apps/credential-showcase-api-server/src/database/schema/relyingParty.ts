@@ -3,6 +3,7 @@ import { relations } from 'drizzle-orm';
 import { RelyingPartyTypePg } from './relyingPartyType';
 import { assets } from './asset';
 import { relyingPartiesToCredentialDefinitions } from './relyingPartiesToCredentialDefinitions';
+import { workflows } from './workflow';
 
 export const relyingParties = pgTable('relyingParty', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
@@ -18,5 +19,6 @@ export const relyingPartyRelations = relations(relyingParties, ({ one, many }) =
     logo: one(assets, {
         fields: [relyingParties.logo],
         references: [assets.id],
-    })
+    }),
+    workflows: many(workflows),
 }));

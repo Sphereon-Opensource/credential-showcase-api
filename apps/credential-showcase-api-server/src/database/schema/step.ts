@@ -8,21 +8,21 @@ import { assets } from './asset';
 export const steps = pgTable('step', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
     title: varchar({ length: 255 }).notNull(),
-    order: integer().notNull(),
+    order: integer().notNull(), // TODO we should make this unique?
     type: StepTypePg('step_type').notNull(),
-    subFlow: uuid('sub_flow').references(() => workflows.id),
-    workflowId: uuid('workflow_id').references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
-    image: uuid().references(() => assets.id).notNull(),
+    //subFlow: uuid('sub_flow').references(() => workflows.id),
+    workflow: uuid().references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
+    image: uuid().references(() => assets.id).notNull(), // TODO or named asset?
 });
 
 export const stepRelations = relations(steps, ({ one, many }) => ({
-    subFlow: one(workflows, {
-        fields: [steps.subFlow],
-        references: [workflows.id],
-    }),
+    // subFlow: one(workflows, {
+    //     fields: [steps.subFlow],
+    //     references: [workflows.id],
+    // }),
     actions: many(stepActions),
     workflow: one(workflows, {
-        fields: [steps.workflowId],
+        fields: [steps.workflow],
         references: [workflows.id],
     }),
     image: one(assets, {

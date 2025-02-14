@@ -4,8 +4,12 @@ import {
     assets,
     credentialAttributes,
     credentialDefinitions,
-    credentialRepresentations, relyingParties,
-    revocationInfo
+    credentialRepresentations,
+    relyingParties,
+    revocationInfo,
+    stepActions,
+    steps,
+    workflows
 } from '../../database/schema';
 import {CredentialAttributeType} from '../rest';
 
@@ -70,3 +74,21 @@ export type NewRelyingParty = Omit<typeof relyingParties.$inferInsert, 'logo'> &
     organization?: string
     logo?: NewAsset | string
 };
+
+export type IssuanceFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer'> & {
+    steps: Step[]
+    relyingParty?: RelyingParty | null //TODO issuer, remove null
+    issuer?: RelyingParty | null //TODO issuer, remove null
+};
+export type NewIssuanceFlow = typeof workflows.$inferInsert & { relyingParty: string, steps: NewStep[] }; //issuer
+
+export type Step = Omit<typeof steps.$inferSelect, 'image'> & {
+    actions: StepAction[]
+    image: Asset
+};
+export type NewStep = Omit<typeof steps.$inferInsert, 'workflow'> & {
+    actions: NewStepAction[]
+};
+
+export type StepAction = typeof stepActions.$inferSelect;
+export type NewStepAction = Omit<typeof stepActions.$inferInsert, 'step'>;

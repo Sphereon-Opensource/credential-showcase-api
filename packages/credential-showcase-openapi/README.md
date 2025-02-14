@@ -1,49 +1,23 @@
 ## credential-showcase-openapi
 
-### Install the dependencies (Mac or Linux)
+### Environment setup
+Make sure following software is installed on your PC.
 
-SDK Man
+* [OpenJDK 17](https://jdk.java.net/java-se-ri/17).
+* [Maven 3.8.1](https://maven.apache.org/download.cgi) or later.
 
-```shell
-curl -s "https://get.sdkman.io" | bash
+### Generate API/Models
+
+The following command will generate the models in `src/models`.
 ```
-after installing sdkman, source the bashrc file
-
-```shell
-source "/Users/<username>/.sdkman/bin/sdkman-init.sh"
-```
-
-**If the sdk command is not available restart the terminal or run source .bashrc/.zshrc in the terminal**
-
-Java
-
-Install the JDK
-```shell
-sdk install java 17.0.13-ms
-```
-
-Maven
-
-```shell
-sdk install maven 3.9.9
-```
-
-### Maven profiles
-
-- typescript-fetch-models
-
-### Generate the TypeScript models
-
-```shell
-mvn clean install -P typescript-fetch-models
+mvn -U clean install
 ```
 
 **Profile id defaults to typescript-fetch-models and may be ignored at the moment**
 
 ### Using the models
 
-The models will be generated in `<root-folder>/packages/credential-showcase-openapi`, therefore,
-they may be imported into another submodule as a workspace dependency by: 
+The models will be generated in `src/models`, therefore, they may be imported into another submodule as a workspace dependency by: 
 
 adding the lines below to the respective files
 ###### package.json

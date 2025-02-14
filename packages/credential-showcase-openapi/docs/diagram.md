@@ -5,9 +5,20 @@ config:
   layout: elk
 ---
 classDiagram
+    class Showcase {
+        +name : String
+        +description : String
+        +status : String
+        +workflows: List~String~
+        +personas: List~String~
+        +credentials: List~String~
+        hidden : Boolean = false
+    }
     class Workflow {
         +name : String
         +description : String
+        +steps: List~Steps~
+        +personas: List~Persona~
     }
     class IssuanceFlow {
         issuer: Issuer
@@ -19,9 +30,10 @@ classDiagram
         +title : String
         +description : String
         +order : int
-        +type: StepType
+        +type : StepType
         subFlow: Workflow
         actions: List~StepAction~
+        asset: Asset
     }
     class StepAction {
         +type: String
@@ -114,7 +126,7 @@ classDiagram
     class CredentialAttribute {
         +name : String
         +value : String
-        type: CredentialAttributeType
+        +type: CredentialAttributeType
     }
     class CredentialType {
         <<enumeration>>
@@ -128,6 +140,8 @@ classDiagram
     BOOLEAN
     DATE
    }
+    Showcase <|-- Workflow : specialization (workflow)
+    Showcase <|-- Persona
     Workflow <|-- IssuanceFlow : specialization (onboarding)
     Workflow <|-- PresentationFlow : specialization (scenario)
     Workflow "1" *-- "1..*" Step : contains
@@ -156,4 +170,4 @@ classDiagram
     Workflow "0..*" o-- "1..*" Persona : involves
     IssuanceFlow "0..*" o-- "1" Issuer : includes
     PresentationFlow "0..*" o-- "1" RelyingParty : includes
-```
+

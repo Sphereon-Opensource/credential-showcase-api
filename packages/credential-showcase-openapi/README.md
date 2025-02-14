@@ -7,7 +7,13 @@ SDK Man
 ```shell
 curl -s "https://get.sdkman.io" | bash
 ```
-**If the sdk command is not available restart the terminal or run source .bashrc**
+after installing sdkman, source the bashrc file
+
+```shell
+source "/Users/<username>/.sdkman/bin/sdkman-init.sh"
+```
+
+**If the sdk command is not available restart the terminal or run source .bashrc/.zshrc in the terminal**
 
 Java
 
@@ -29,7 +35,7 @@ sdk install maven 3.9.9
 ### Generate the TypeScript models
 
 ```shell
-mvn clean install -P <profile_id>
+mvn clean install -P typescript-fetch-models
 ```
 
 **Profile id defaults to typescript-fetch-models and may be ignored at the moment**

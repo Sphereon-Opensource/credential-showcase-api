@@ -11,7 +11,14 @@ import {
 } from 'routing-controllers'
 import { Service } from 'typedi'
 import AssetService from '../services/AssetService';
-import { Asset, NewAsset } from '../types';
+import {
+    Asset, //AssetResponse
+    AssetFromJSONTyped,
+    AssetsRequest,
+    AssetsResponse,
+    AssetsResponseFromJSONTyped
+} from '../../../../packages/credential-showcase-openapi'
+import {newAssetFrom} from '../mappers/assetMapper';
 
 @JsonController('/assets')
 @Service()
@@ -19,29 +26,35 @@ class AssetController {
     constructor(private assetService: AssetService) { }
 
     @Get('/')
-    public async getAll() {
-        return this.assetService.getAssets()
+    public async getAll(): Promise<AssetsResponse> {
+        const result = await this.assetService.getAssets()
+        return AssetsResponseFromJSONTyped({ assets: result }, true)
     }
 
     @Get('/:id')
-    getOne(@Param('id') id: string) {
-        return this.assetService.getAsset(id);
+    public async getOne(@Param('id') id: string): Promise<Asset> {
+        const result = await this.assetService.getAsset(id);
+        return AssetFromJSONTyped(result, true)
     }
 
     @HttpCode(201)
     @Post('/')
-    post(@Body() asset: NewAsset) {
-        return this.assetService.createAsset(asset);
+    public async post(@Body() assetRequest: AssetsRequest): Promise<Asset> {
+        const newAsset = newAssetFrom(assetRequest)
+        const result = await this.assetService.createAsset(newAsset);
+        return AssetFromJSONTyped(result, true)
     }
 
     @Put('/:id')
-    put(@Param('id') id: string, @Body() asset: Asset) {
-        return this.assetService.updateAsset(id, asset)
+    public async put(@Param('id') id: string, @Body() assetRequest: AssetsRequest): Promise<Asset> {
+        const newAsset = newAssetFrom(assetRequest)
+        const result = await this.assetService.updateAsset(id, newAsset)
+        return AssetFromJSONTyped(result, true)
     }
 
     @OnUndefined(204)
     @Delete('/:id')
-    delete(@Param('id') id: string) {
+    public async delete(@Param('id') id: string) {
         return this.assetService.deleteAsset(id);
     }
 }

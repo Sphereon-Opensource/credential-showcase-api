@@ -51,6 +51,10 @@ test/*.js
 
 .turbo
 
+# Ignore Open API generated packages
+packages/credential-showcase-openapi/src
+packages/**/dist
+packages/**/target
 /packages/*/dist
 /apps/*/dist
 

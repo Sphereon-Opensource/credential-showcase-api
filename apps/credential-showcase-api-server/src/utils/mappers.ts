@@ -8,7 +8,7 @@ export const newAssetFrom = (asset: AssetRequest): NewAsset => {
     }
 }
 
-export const assetFrom = (asset: Asset): AssetDTO => {
+export const assetDTOFrom = (asset: Asset): AssetDTO => {
     const result = {
         ...asset,
         content: asset.content.toString()

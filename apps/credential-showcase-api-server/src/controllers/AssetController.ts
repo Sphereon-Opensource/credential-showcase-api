@@ -18,7 +18,7 @@ import {
     AssetsResponseFromJSONTyped
 } from 'credential-showcase-openapi'
 import AssetService from '../services/AssetService';
-import { assetFrom, newAssetFrom } from '../utils/mappers';
+import { assetDTOFrom, newAssetFrom } from '../utils/mappers';
 
 @JsonController('/assets')
 @Service()
@@ -28,27 +28,27 @@ class AssetController {
     @Get('/')
     public async getAll(): Promise<AssetsResponse> {
         const result = await this.assetService.getAssets()
-        const assets = result.map(asset => assetFrom(asset))
+        const assets = result.map(asset => assetDTOFrom(asset))
         return AssetsResponseFromJSONTyped({ assets }, true)
     }
 
     @Get('/:id')
     public async getOne(@Param('id') id: string): Promise<AssetResponse> {
         const result = await this.assetService.getAsset(id);
-        return AssetResponseFromJSONTyped({ asset: assetFrom(result) }, true)
+        return AssetResponseFromJSONTyped({ asset: assetDTOFrom(result) }, true)
     }
 
     @HttpCode(201)
     @Post('/')
     public async post(@Body() assetRequest: AssetRequest): Promise<AssetResponse> {
         const result = await this.assetService.createAsset(newAssetFrom(assetRequest));
-        return AssetResponseFromJSONTyped({ asset: assetFrom(result) }, true)
+        return AssetResponseFromJSONTyped({ asset: assetDTOFrom(result) }, true)
     }
 
     @Put('/:id')
     public async put(@Param('id') id: string, @Body() assetRequest: AssetRequest): Promise<AssetResponse> {
         const result = await this.assetService.updateAsset(id, newAssetFrom(assetRequest))
-        return AssetResponseFromJSONTyped({ asset: assetFrom(result) }, true)
+        return AssetResponseFromJSONTyped({ asset: assetDTOFrom(result) }, true)
     }
 
     @OnUndefined(204)

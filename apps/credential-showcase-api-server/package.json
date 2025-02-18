@@ -11,6 +11,7 @@
     "migration:generate": "drizzle-kit generate --config=drizzle.config.ts --name=credential-showcase-api"
   },
   "dependencies": {
+    "credential-showcase-openapi" : "workspace:*",
     "dotenv-flow": "^4.1.0",
     "drizzle-orm": "^0.39.1",
     "express": "^4.21.2",
@@ -23,7 +24,6 @@
     "@electric-sql/pglite": "^0.2.16",
     "@types/dotenv-flow": "^3.3.3",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.13.1",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.4",
     "ts-node": "^10.9.2"

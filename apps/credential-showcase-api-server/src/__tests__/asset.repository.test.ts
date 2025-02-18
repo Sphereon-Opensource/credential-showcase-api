@@ -1,17 +1,21 @@
 import 'reflect-metadata';
-import { PgDatabase } from 'drizzle-orm/pg-core';
+import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
 import { DatabaseService } from '../services/DatabaseService';
 import AssetRepository from '../database/repositories/AssetRepository';
+import * as schema from '../database/schema';
 import { NewAsset } from '../types';
+import {NodePgDatabase} from 'drizzle-orm/node-postgres';
 
 describe('Database asset repository tests', (): void => {
+    let client: PGlite;
     let repository: AssetRepository;
 
     beforeEach(async (): Promise<void> => {
-        const database: PgDatabase<any> = drizzle();
+        client = new PGlite();
+        const database = drizzle(client, { schema }) as unknown as NodePgDatabase<Record<string, never>>;
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
         const mockDatabaseService = {
             getConnection: jest.fn().mockResolvedValue(database),
@@ -20,7 +24,8 @@ describe('Database asset repository tests', (): void => {
         repository = Container.get(AssetRepository);
     })
 
-    afterEach((): void => {
+    afterEach(async (): Promise<void> => {
+        await client.close();
         jest.resetAllMocks();
         Container.reset();
     });
@@ -39,7 +44,7 @@ describe('Database asset repository tests', (): void => {
         expect(savedAsset.mediaType).toEqual(asset.mediaType)
         expect(savedAsset.fileName).toEqual(asset.fileName)
         expect(savedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(savedAsset.content)).toStrictEqual(asset.content);
+        expect(savedAsset.content).toStrictEqual(asset.content);
     })
 
     it('Should get asset by id from database', async (): Promise<void> => {
@@ -59,7 +64,7 @@ describe('Database asset repository tests', (): void => {
         expect(fromDb!.mediaType).toEqual(asset.mediaType)
         expect(fromDb!.fileName).toEqual(asset.fileName)
         expect(fromDb!.description).toEqual(asset.description)
-        expect(Buffer.from(fromDb!.content)).toStrictEqual(asset.content);
+        expect(fromDb!.content).toStrictEqual(asset.content);
     })
 
     it('Should get all assets from database', async (): Promise<void> => {
@@ -122,6 +127,6 @@ describe('Database asset repository tests', (): void => {
         expect(updatedAsset.mediaType).toEqual(asset.mediaType)
         expect(updatedAsset.fileName).toEqual(newFileName)
         expect(updatedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(updatedAsset.content)).toStrictEqual(asset.content);
+        expect(updatedAsset.content).toStrictEqual(asset.content);
     })
 })

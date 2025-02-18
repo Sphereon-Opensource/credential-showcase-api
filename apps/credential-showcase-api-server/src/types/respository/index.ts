@@ -15,3 +15,10 @@ export type PersonaRepositoryDefinition = {
     update(id: string, persona: Persona): Promise<Persona>;
     delete(id: string): Promise<void>;
 }
+export type RepositoryDefinition<T, U> = {
+    findById(id: string): Promise<T>;
+    findAll(): Promise<T[]>;
+    create(item: U): Promise<T>;
+    update(id: string, item: U): Promise<T>;
+    delete(id: string): Promise<void>;
+};

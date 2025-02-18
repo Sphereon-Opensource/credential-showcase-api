@@ -3,19 +3,19 @@ import { Service } from 'typedi';
 import { DatabaseService } from '../../services/DatabaseService';
 import { NotFoundError } from '../../errors/NotFoundError';
 import { assets } from '../schema';
-import { Asset, AssetRepositoryDefinition, NewAsset } from '../../types';
+import { Asset, NewAsset, RepositoryDefinition } from '../../types';
 
 @Service()
-class AssetRepository implements AssetRepositoryDefinition {
+class AssetRepository implements RepositoryDefinition<Asset, NewAsset> {
     constructor(private readonly databaseService: DatabaseService) {}
 
     async create(asset: NewAsset): Promise<Asset> {
-        const result = await (await this.databaseService.getConnection())
+        const [result] = await (await this.databaseService.getConnection())
             .insert(assets)
             .values(asset)
             .returning();
 
-        return result[0]
+        return result
     }
 
     async delete(id: string): Promise<void> {
@@ -25,27 +25,28 @@ class AssetRepository implements AssetRepositoryDefinition {
             .where(eq(assets.id, id))
     }
 
-    async update(id: string, asset: Asset): Promise<Asset> { // TODO see the result of openapi and the payloads to determine how we update an asset
+    async update(id: string, asset: NewAsset): Promise<Asset> {
         await this.findById(id)
-        const result = await (await this.databaseService.getConnection())
+        const [result] = await (await this.databaseService.getConnection())
             .update(assets)
             .set(asset)
+            .where(eq(assets.id, id))
             .returning();
 
-        return result[0]
+        return result
     }
 
     async findById(id: string): Promise<Asset> {
-        const result = await (await this.databaseService.getConnection())
+        const [result] = await (await this.databaseService.getConnection())
             .select()
             .from(assets)
             .where(eq(assets.id, id));
 
-        if (result.length === 0 && !result[0]) {
+        if (!result) {
             return Promise.reject(new NotFoundError(`No asset found for id: ${id}`))
         }
 
-        return result[0]
+        return result
     }
 
     async findAll(): Promise<Asset[]> {

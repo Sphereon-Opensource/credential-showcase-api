@@ -3,10 +3,10 @@ import { Service } from 'typedi';
 import { DatabaseService } from '../../services/DatabaseService';
 import { NotFoundError } from '../../errors/NotFoundError';
 import { assets } from '../schema';
-import { Asset, AssetRepositoryDefinition, NewAsset } from '../../types';
+import { Asset, NewAsset, RepositoryDefinition } from '../../types';
 
 @Service()
-class AssetRepository implements AssetRepositoryDefinition {
+class AssetRepository implements RepositoryDefinition<Asset, NewAsset> {
     constructor(private readonly databaseService: DatabaseService) {}
 
     async create(asset: NewAsset): Promise<Asset> {
@@ -25,11 +25,12 @@ class AssetRepository implements AssetRepositoryDefinition {
             .where(eq(assets.id, id))
     }
 
-    async update(id: string, asset: Asset): Promise<Asset> { // TODO see the result of openapi and the payloads to determine how we update an asset
+    async update(id: string, asset: NewAsset): Promise<Asset> {
         await this.findById(id)
         const [result] = await (await this.databaseService.getConnection())
             .update(assets)
             .set(asset)
+            .where(eq(assets.id, id))
             .returning();
 
         return result

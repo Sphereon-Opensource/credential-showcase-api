@@ -39,7 +39,7 @@ describe('Database asset repository tests', (): void => {
         expect(savedAsset.mediaType).toEqual(asset.mediaType)
         expect(savedAsset.fileName).toEqual(asset.fileName)
         expect(savedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(savedAsset.content)).toStrictEqual(asset.content);
+        expect(savedAsset.content).toStrictEqual(asset.content);
     })
 
     it('Should get asset by id from database', async (): Promise<void> => {
@@ -59,7 +59,7 @@ describe('Database asset repository tests', (): void => {
         expect(fromDb!.mediaType).toEqual(asset.mediaType)
         expect(fromDb!.fileName).toEqual(asset.fileName)
         expect(fromDb!.description).toEqual(asset.description)
-        expect(Buffer.from(fromDb!.content)).toStrictEqual(asset.content);
+        expect(fromDb!.content).toStrictEqual(asset.content);
     })
 
     it('Should get all assets from database', async (): Promise<void> => {
@@ -122,6 +122,6 @@ describe('Database asset repository tests', (): void => {
         expect(updatedAsset.mediaType).toEqual(asset.mediaType)
         expect(updatedAsset.fileName).toEqual(newFileName)
         expect(updatedAsset.description).toEqual(asset.description)
-        expect(Buffer.from(updatedAsset.content)).toStrictEqual(asset.content);
+        expect(updatedAsset.content).toStrictEqual(asset.content);
     })
 })

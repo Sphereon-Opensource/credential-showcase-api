@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "prettier": "prettier --write \"{packages,__tests__,!dist}/**/*.{ts,js,json,md}\"",
     "test:ci": "jest --config=jest.json",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=jest.json --coverage=true --detectOpenHandles"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=jest.json --coverage=true --detectOpenHandles",
+    "clean": "turbo clean"
   },
   "publishConfig": {
     "access": "public"

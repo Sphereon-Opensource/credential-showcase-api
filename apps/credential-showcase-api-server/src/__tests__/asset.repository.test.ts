@@ -1,17 +1,20 @@
 import 'reflect-metadata';
-import { PgDatabase } from 'drizzle-orm/pg-core';
+import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
 import { DatabaseService } from '../services/DatabaseService';
 import AssetRepository from '../database/repositories/AssetRepository';
+import * as schema from '../database/schema';
 import { NewAsset } from '../types';
 
 describe('Database asset repository tests', (): void => {
+    let client: PGlite;
     let repository: AssetRepository;
 
     beforeEach(async (): Promise<void> => {
-        const database: PgDatabase<any> = drizzle();
+        client = new PGlite();
+        const database: any = drizzle(client, { schema });
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
         const mockDatabaseService = {
             getConnection: jest.fn().mockResolvedValue(database),
@@ -20,7 +23,8 @@ describe('Database asset repository tests', (): void => {
         repository = Container.get(AssetRepository);
     })
 
-    afterEach((): void => {
+    afterEach(async (): Promise<void> => {
+        await client.close();
         jest.resetAllMocks();
         Container.reset();
     });

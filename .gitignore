@@ -57,3 +57,7 @@ packages/**/dist
 packages/**/target
 /packages/*/dist
 /apps/*/dist
+
+**/.env
+**/.env.*
+!**/.env.example

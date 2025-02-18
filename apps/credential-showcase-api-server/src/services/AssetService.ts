@@ -10,7 +10,7 @@ class AssetService {
         return this.assetRepository.findAll()
     };
 
-    public getAsset = async (id: string): Promise<Asset | null> => {
+    public getAsset = async (id: string): Promise<Asset> => {
         return this.assetRepository.findById(id)
     };
 
@@ -18,7 +18,7 @@ class AssetService {
         return this.assetRepository.create(asset)
     };
 
-    public updateAsset = async (id: string, asset: Asset): Promise<Asset> => {
+    public updateAsset = async (id: string, asset: NewAsset): Promise<Asset> => {
         return this.assetRepository.update(id, asset)
     };
 

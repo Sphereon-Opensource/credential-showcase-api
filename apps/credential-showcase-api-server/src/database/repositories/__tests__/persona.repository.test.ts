@@ -1,9 +1,9 @@
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
-import { NewPersona } from '../types'
-import PersonaRepository from '../database/repositories/PersonaRepository'
+import { NewPersona } from '../../../types'
+import PersonaRepository from '../PersonaRepository'
 import { Container } from 'typedi'
-import { DatabaseService } from '../services/DatabaseService'
+import { DatabaseService } from '../../../services/DatabaseService'
 
 describe('Database persona repository tests', (): void => {
   let repository: PersonaRepository
@@ -108,7 +108,11 @@ describe('Database persona repository tests', (): void => {
     expect(savedPersona).toBeDefined()
 
     const newRole = 'senior tester'
-    const updatedPersona = await repository.update(savedPersona.id, { ...savedPersona, role: newRole })
+    const updatedPersona = await repository.update(savedPersona.id, {
+      name: savedPersona.name,
+      role: newRole,
+      description: savedPersona.description || undefined
+    })
 
     expect(updatedPersona).toBeDefined()
     expect(updatedPersona.name).toEqual(persona.name)

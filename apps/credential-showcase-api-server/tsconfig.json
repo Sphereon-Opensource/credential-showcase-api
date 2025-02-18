@@ -3,12 +3,17 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "baseUrl": "."
   },
   "references": [
     {
       "path": "../../packages/credential-showcase-openapi"
     }
   ],
+  "include": ["src/**/*"],
   "exclude": ["**/__tests__/**/*", "**/dist/**/*", "**/drizzle.config.ts"]
 }

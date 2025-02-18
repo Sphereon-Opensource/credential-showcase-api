@@ -3,10 +3,10 @@ import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import { DatabaseService } from '../services/DatabaseService';
-import AssetRepository from '../database/repositories/AssetRepository';
-import * as schema from '../database/schema';
-import { NewAsset } from '../types';
+import { DatabaseService } from '../../../services/DatabaseService';
+import AssetRepository from '../AssetRepository';
+import * as schema from '../../schema';
+import { NewAsset } from '../../../types';
 import {NodePgDatabase} from 'drizzle-orm/node-postgres';
 
 describe('Database asset repository tests', (): void => {

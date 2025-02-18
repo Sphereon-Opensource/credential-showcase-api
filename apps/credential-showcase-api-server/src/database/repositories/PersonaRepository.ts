@@ -1,10 +1,12 @@
 import { eq } from 'drizzle-orm'
 
-import { Persona, NewPersona, PersonaRepositoryDefinition } from '../../types'
+import { Persona, NewPersona, RepositoryDefinition } from '../../types'
 import { personas } from '../schema'
 import { DatabaseService } from '../../services/DatabaseService'
+import { Service } from 'typedi'
 
-class PersonaRepository implements PersonaRepositoryDefinition {
+@Service()
+class PersonaRepository implements RepositoryDefinition<Persona, NewPersona> {
 
   constructor(private readonly databaseService: DatabaseService) {}
 
@@ -24,7 +26,7 @@ class PersonaRepository implements PersonaRepositoryDefinition {
       .where(eq(personas.id, id))
   }
 
-  async update(id: string, persona: Persona): Promise<Persona> {
+  async update(id: string, persona: NewPersona): Promise<Persona> {
     await this.findById(id)
     const result = await (await this.databaseService.getConnection())
       .update(personas)

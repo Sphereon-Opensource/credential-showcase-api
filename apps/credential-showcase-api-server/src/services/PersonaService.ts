@@ -18,7 +18,7 @@ class PersonaService {
     return this.personaRepository.create(persona)
   };
 
-  public updatePersona = async (id: string, persona: Persona): Promise<Persona> => {
+  public updatePersona = async (id: string, persona: NewPersona): Promise<Persona> => {
     return this.personaRepository.update(id, persona)
   };
 

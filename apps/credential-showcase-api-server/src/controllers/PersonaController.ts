@@ -10,7 +10,7 @@ import {
   Put
 } from 'routing-controllers'
 import { Service } from 'typedi'
-import { NewPersona, Persona } from '../types'
+import { NewPersona } from '../types'
 import PersonaService from '../services/PersonaService'
 
 @JsonController('/personas')
@@ -24,26 +24,24 @@ class PersonaController {
   }
 
   @Get('/:id')
-  getOne(@Param('id') id: string) {
+  public async getOne(@Param('id') id: string) {
     return this.personaService.getPersona(id)
-
-    // TODO 404
   }
 
   @HttpCode(201)
   @Post('/')
-  post(@Body() persona: NewPersona) {
+  public async post(@Body() persona: NewPersona) {
     return this.personaService.createPersona(persona);
   }
 
   @Put('/:id')
-  put(@Param('id') id: string, @Body() persona: Persona) {
+  public async put(@Param('id') id: string, @Body() persona: NewPersona) {
     return this.personaService.updatePersona(id, persona)
   }
 
   @OnUndefined(204)
   @Delete('/:id')
-  delete(@Param('id') id: string) {
+  public async delete(@Param('id') id: string) {
     return this.personaService.deletePersona(id);
   }
 }

@@ -63,14 +63,14 @@ describe('Database relying party repository tests', (): void => {
                 }
             ],
             representations: [
-                { // TODO AnonCredRevocation
+                { // TODO SHOWCASE-81 OCARepresentation
 
                 },
-                { // TODO AnonCredRevocation
+                { // TODO SHOWCASE-81 OCARepresentation
 
                 }
             ],
-            revocation: { // TODO OCARepresentation
+            revocation: { // TODO SHOWCASE-80 AnonCredRevocation
                 title: 'example_revocation_title',
                 description: 'example_revocation_description'
             }

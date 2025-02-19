@@ -3,11 +3,11 @@ import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import { DatabaseService } from '../../../services/DatabaseService';
 import AssetRepository from '../AssetRepository';
 import * as schema from '../../schema';
-import { NewAsset } from '../../../types';
 import {NodePgDatabase} from 'drizzle-orm/node-postgres';
+import DatabaseService from '../../../services/DatabaseService';
+import { NewAsset } from '../../../types';
 
 describe('Database asset repository tests', (): void => {
     let client: PGlite;
@@ -15,7 +15,7 @@ describe('Database asset repository tests', (): void => {
 
     beforeEach(async (): Promise<void> => {
         client = new PGlite();
-        const database = drizzle(client, { schema }) as unknown as NodePgDatabase<Record<string, never>>;
+        const database = drizzle(client, { schema }) as unknown as NodePgDatabase;
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
         const mockDatabaseService = {
             getConnection: jest.fn().mockResolvedValue(database),
@@ -60,7 +60,7 @@ describe('Database asset repository tests', (): void => {
 
         const fromDb = await repository.findById(savedAsset.id)
 
-        expect(fromDb).not.toBeNull()
+        expect(fromDb).toBeDefined()
         expect(fromDb!.mediaType).toEqual(asset.mediaType)
         expect(fromDb!.fileName).toEqual(asset.fileName)
         expect(fromDb!.description).toEqual(asset.description)
@@ -68,24 +68,17 @@ describe('Database asset repository tests', (): void => {
     })
 
     it('Should get all assets from database', async (): Promise<void> => {
-        const asset1: NewAsset = {
+        const asset: NewAsset = {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
             content: Buffer.from('some binary data'),
         };
 
-        const savedAsset1 = await repository.create(asset1)
+        const savedAsset1 = await repository.create(asset)
         expect(savedAsset1).toBeDefined()
 
-        const asset2: NewAsset = {
-            mediaType: 'image/png',
-            fileName: 'image.png',
-            description: 'some image',
-            content: Buffer.from('some binary data'),
-        };
-
-        const savedAsset2 = await repository.create(asset2)
+        const savedAsset2 = await repository.create(asset)
         expect(savedAsset2).toBeDefined()
 
         const fromDb = await repository.findAll()

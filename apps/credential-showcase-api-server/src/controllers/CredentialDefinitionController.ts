@@ -8,8 +8,8 @@ import {
     Param,
     Post,
     Put
-} from 'routing-controllers'
-import { Service } from 'typedi'
+} from 'routing-controllers';
+import { Service } from 'typedi';
 import {
     CredentialDefinitionRequest,
     CredentialDefinitionResponse,

@@ -8,15 +8,15 @@ import {
     Param,
     Post,
     Put
-} from 'routing-controllers'
-import { Service } from 'typedi'
+} from 'routing-controllers';
+import { Service } from 'typedi';
 import {
     AssetResponse,
     AssetResponseFromJSONTyped,
     AssetRequest,
     AssetsResponse,
     AssetsResponseFromJSONTyped
-} from 'credential-showcase-openapi'
+} from 'credential-showcase-openapi';
 import AssetService from '../services/AssetService';
 import { assetDTOFrom, newAssetFrom } from '../utils/mappers';
 

@@ -1,9 +1,9 @@
-import { eq } from 'drizzle-orm';
+import {eq, inArray} from 'drizzle-orm';
 import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
 import { NotFoundError } from '../../errors';
-import { relyingParties, relyingPartiesToCredentialDefinitions } from '../schema';
+import { credentialDefinitions, relyingParties, relyingPartiesToCredentialDefinitions } from '../schema';
 import { RelyingParty, NewRelyingParty, RepositoryDefinition } from '../../types';
 
 @Service()
@@ -14,12 +14,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
     ) {}
 
     async create(relyingParty: NewRelyingParty): Promise<RelyingParty> {
-        let logoResult = null
-        if (relyingParty.logo) {
-            logoResult = (typeof relyingParty.logo === 'string') // TODO logo in spec is of type string, so maybe drop,the new
-                ? await this.assetRepository.findById(relyingParty.logo)
-                : await this.assetRepository.create(relyingParty.logo)
-        }
+        const logoResult = relyingParty.logo ? await this.assetRepository.findById(relyingParty.logo) : null
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<RelyingParty> => {
             const [relyingPartyResult] = (await tx.insert(relyingParties)
@@ -34,15 +29,25 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
             const relyingPartiesToCredentialDefinitionsResult = await tx.insert(relyingPartiesToCredentialDefinitions)
                 .values(relyingParty.credentialDefinitions.map((credentialDefinitionId: string) => ({
-                    relyingPartyId: relyingPartyResult.id,
-                    credentialDefinitionId
+                    relyingParty: relyingPartyResult.id,
+                    credentialDefinition: credentialDefinitionId
                 })))
                 .returning();
+
+            const credentialDefinitionsResult = await tx.query.credentialDefinitions.findMany({
+                where: inArray(credentialDefinitions.id, relyingPartiesToCredentialDefinitionsResult.map(item => item.credentialDefinition)),
+                with: {
+                    attributes: true,
+                    representations: true,
+                    revocation: true,
+                    icon: true
+                },
+            })
 
             return {
                 ...relyingPartyResult,
                 logo: logoResult,
-                credentialDefinitions: relyingPartiesToCredentialDefinitionsResult.map((item) => item.credentialDefinitionId)
+                credentialDefinitions: credentialDefinitionsResult
             };
         })
     }
@@ -54,34 +59,65 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
             .where(eq(relyingParties.id, id))
     }
 
-    async update(id: string, relyingParty: RelyingParty): Promise<RelyingParty> { // TODO see the result of openapi and the payloads to determine how we update an asset
+    async update(id: string, relyingParty: NewRelyingParty): Promise<RelyingParty> {
         await this.findById(id)
 
-        let logoResult = null
-        if (relyingParty.logo && typeof relyingParty.logo === 'string') { // TODO we only need to support a string id
-            logoResult = await this.assetRepository.findById(relyingParty.logo)
-        }
+        const logoResult = relyingParty.logo ? await this.assetRepository.findById(relyingParty.logo) : null
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<RelyingParty> => {
+            const [relyingPartyResult] = await tx.update(relyingParties)
+                .set({
+                    name: relyingParty.name,
+                    type: relyingParty.type,
+                    description: relyingParty.description,
+                    organization: relyingParty.organization,
+                    logo: logoResult ? logoResult.id : null
+                })
+                .where(eq(relyingParties.id, id))
+                .returning();
 
-        const [result] = await (await this.databaseService.getConnection())
-            .update(relyingParties)
-            .set({
-                ...relyingParty,
-                logo: logoResult ? logoResult.id : null
+            await tx.delete(relyingPartiesToCredentialDefinitions).where(eq(relyingPartiesToCredentialDefinitions.relyingParty, id))
+
+            const relyingPartiesToCredentialDefinitionsResult = await tx.insert(relyingPartiesToCredentialDefinitions)
+                .values(relyingParty.credentialDefinitions.map((credentialDefinitionId: string) => ({
+                    relyingParty: relyingPartyResult.id,
+                    credentialDefinition: credentialDefinitionId
+                })))
+                .returning();
+
+            const credentialDefinitionsResult = await tx.query.credentialDefinitions.findMany({
+                where: inArray(credentialDefinitions.id, relyingPartiesToCredentialDefinitionsResult.map(item => item.credentialDefinition)),
+                with: {
+                    attributes: true,
+                    representations: true,
+                    revocation: true,
+                    icon: true
+                },
             })
-            .returning();
 
-        return {
-            ...result,
-            logo: logoResult,
-            credentialDefinitions: relyingParty.credentialDefinitions
-        };
+            return {
+                ...relyingPartyResult,
+                logo: logoResult,
+                credentialDefinitions: credentialDefinitionsResult
+            };
+        })
     }
 
     async findById(id: string): Promise<RelyingParty> {
         const result = await (await this.databaseService.getConnection()).query.relyingParties.findFirst({
             where: eq(relyingParties.id, id),
             with: {
-                credentialDefinitions: true,
+                credentialDefinitions: {
+                    with: {
+                        credentialDefinition: {
+                            with: {
+                                icon: true,
+                                attributes: true,
+                                representations: true,
+                                revocation: true
+                            }
+                        }
+                    }
+                },
                 logo: true
             },
         })
@@ -92,21 +128,32 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
         return {
             ...result,
-            credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinitionId)
+            credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinition)
         }
     }
 
     async findAll(): Promise<RelyingParty[]> {
         const result = await (await this.databaseService.getConnection()).query.relyingParties.findMany({
             with: {
-                credentialDefinitions: true, // TODO i think we are able to specify a column? maybe we can just return a array of strings?
+                credentialDefinitions: {
+                    with: {
+                        credentialDefinition: {
+                            with: {
+                                icon: true,
+                                attributes: true,
+                                representations: true,
+                                revocation: true
+                            }
+                        }
+                    }
+                },
                 logo: true
             },
         })
 
         return result.map((relayingParty) => ({
             ...relayingParty,
-            credentialDefinitions: relayingParty.credentialDefinitions.map((item) => item.credentialDefinitionId)
+            credentialDefinitions: relayingParty.credentialDefinitions.map(item => item.credentialDefinition)
         }))
     }
 }

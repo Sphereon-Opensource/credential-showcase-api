@@ -1790,7 +1790,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartyResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1817,7 +1817,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartyResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1843,7 +1843,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartyResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2625,8 +2625,11 @@ components:
     RelyingParty:
       type: object
       required:
+        - id
         - name
+        - description
         - type
+        - credentialDefinitions
       properties:
         id:
           type: string
@@ -2657,6 +2660,8 @@ components:
       required:
         - name
         - type
+        - description
+        - credentialDefinitions
       properties:
         name:
           type: string
@@ -2682,11 +2687,17 @@ components:
             example: 123e4567-e89b-12d3-a456-426614174469
 
     RelyingPartiesResponse:
+      type: object
       properties:
         relyingParties:
           type: array
           items:
             $ref: '#/components/schemas/RelyingParty'
+    RelyingPartyResponse:
+      type: object
+      properties:
+        relyingParty:
+          $ref: '#/components/schemas/RelyingParty'
 
     CredentialType:
       type: string

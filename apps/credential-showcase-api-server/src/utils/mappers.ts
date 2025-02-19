@@ -1,12 +1,14 @@
 import {
     Asset as AssetDTO,
     CredentialDefinition as CredentialDefinitionDTO,
+    RelyingParty as RelyingPartyDTO,
     AssetRequest,
 } from 'credential-showcase-openapi';
 import {
     Asset,
     NewAsset,
     CredentialDefinition,
+    RelyingParty
 } from '../types';
 
 export const newAssetFrom = (asset: AssetRequest): NewAsset => {
@@ -30,5 +32,14 @@ export const credentialDefinitionDTOFrom = (credentialDefinition: CredentialDefi
         ...credentialDefinition,
         revocation: credentialDefinition.revocation ? credentialDefinition.revocation : undefined,
         icon: assetDTOFrom(credentialDefinition.icon),
+    }
+}
+
+export const relyingPartyDTOFrom = (relyingParty: RelyingParty): RelyingPartyDTO => {
+    return {
+        ...relyingParty,
+        organization: relyingParty.organization ? relyingParty.organization : undefined,
+        logo: relyingParty.logo ? assetDTOFrom(relyingParty.logo) : undefined,
+        credentialDefinitions: relyingParty.credentialDefinitions.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
     }
 }

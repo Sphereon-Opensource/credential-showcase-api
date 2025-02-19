@@ -36,17 +36,17 @@ export type NewCredentialAttribute = Omit<typeof credentialAttributes.$inferInse
 export type CredentialRepresentation = Omit<typeof credentialRepresentations.$inferSelect, 'credentialDefinition'>;
 export type NewCredentialRepresentation = Omit<typeof credentialRepresentations.$inferInsert, 'credentialDefinition'>
 
-export type RevocationInfo = Omit<typeof revocationInfo.$inferSelect, 'credentialDefinitionId'>;
-export type NewRevocationInfo = Omit<typeof revocationInfo.$inferInsert, 'credentialDefinitionId'>
+export type RevocationInfo = Omit<typeof revocationInfo.$inferSelect, 'credentialDefinition'>;
+export type NewRevocationInfo = Omit<typeof revocationInfo.$inferInsert, 'credentialDefinition'>
 
 export type RelyingParty = Omit<typeof relyingParties.$inferSelect, 'logo'> & {
-    credentialDefinitions: string[]
+    credentialDefinitions: CredentialDefinition[]//string[]
     logo: Asset | null
 };
 export type NewRelyingParty = Omit<typeof relyingParties.$inferInsert, 'logo'> & {
     credentialDefinitions: string[]
-    organization?: string
-    logo?: NewAsset | string
+    organization?: string | null
+    logo?: string | null
 };
 
 export enum CredentialType {
@@ -61,3 +61,6 @@ export enum CredentialAttributeType {
     DATE = 'DATE',
 }
 
+export enum RelyingPartyType {
+    ARIES = 'ARIES',
+}

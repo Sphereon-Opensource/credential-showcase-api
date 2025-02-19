@@ -5,7 +5,8 @@ import { CredentialTypePg } from './credentialType';
 import { credentialAttributes } from './credentialAttribute';
 import { credentialRepresentations } from './credentialRepresentation';
 import { revocationInfo } from './revocationInfo';
-import { relyingPartiesToCredentialDefinitions } from './relyingPartiesToCredentialDefinitions';import { CredentialType } from '../../types';
+import { relyingPartiesToCredentialDefinitions } from './relyingPartiesToCredentialDefinitions';
+import { CredentialType } from '../../types';
 
 export const credentialDefinitions = pgTable('credentialDefinition', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),

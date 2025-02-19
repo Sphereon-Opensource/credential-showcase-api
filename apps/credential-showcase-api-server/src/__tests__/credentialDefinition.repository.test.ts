@@ -34,7 +34,8 @@ describe('Database credential definition repository tests', (): void => {
         asset = await assetRepository.create(newAsset)
     })
 
-    afterEach((): void => {
+    afterEach(async (): Promise<void> => {
+        await client.close();
         jest.resetAllMocks();
         Container.reset();
     });

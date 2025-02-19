@@ -1,1 +1,7 @@
 export * from './asset'
+export * from './credentialDefinition'
+export * from './credentialRepresentation'
+export * from './credentialAttribute'
+export * from './revocationInfo'
+export * from './credentialAttributeType'
+export * from './credentialType'

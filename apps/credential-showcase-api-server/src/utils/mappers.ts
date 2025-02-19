@@ -1,5 +1,13 @@
-import { Asset as AssetDTO, AssetRequest } from 'credential-showcase-openapi';
-import { Asset, NewAsset } from '../types';
+import {
+    Asset as AssetDTO,
+    CredentialDefinition as CredentialDefinitionDTO,
+    AssetRequest,
+} from 'credential-showcase-openapi';
+import {
+    Asset,
+    NewAsset,
+    CredentialDefinition,
+} from '../types';
 
 export const newAssetFrom = (asset: AssetRequest): NewAsset => {
     return {
@@ -9,32 +17,18 @@ export const newAssetFrom = (asset: AssetRequest): NewAsset => {
 }
 
 export const assetDTOFrom = (asset: Asset): AssetDTO => {
-    const result = {
+    return {
         ...asset,
+        fileName: asset.fileName ? asset.fileName : undefined,
+        description: asset.description ? asset.description : undefined,
         content: asset.content.toString()
     }
-
-    return replaceNullWithUndefined(result)
 }
 
-export const replaceNullWithUndefined = (obj: any): any => {
-    if (obj === null) {
-        return undefined
+export const credentialDefinitionDTOFrom = (credentialDefinition: CredentialDefinition): CredentialDefinitionDTO => {
+    return {
+        ...credentialDefinition,
+        revocation: credentialDefinition.revocation ? credentialDefinition.revocation : undefined,
+        icon: assetDTOFrom(credentialDefinition.icon),
     }
-
-    if (typeof obj !== 'object' || obj instanceof Date) {
-        return obj
-    }
-
-    if (Array.isArray(obj)) {
-        return obj.map((value: any) => replaceNullWithUndefined(value))
-    }
-
-    const result: any = {}
-    for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            result[key] = replaceNullWithUndefined(obj[key])
-        }
-    }
-    return result
 }

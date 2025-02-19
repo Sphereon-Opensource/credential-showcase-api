@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { createExpressServer, useContainer } from 'routing-controllers';
 import Container from 'typedi';
 import AssetController from './controllers/AssetController';
+import CredentialDefinitionController from './controllers/CredentialDefinitionController';
 import { ExpressErrorHandler } from './middleware/ExpressErrorHandler';
 
 require('dotenv-flow').config();
@@ -10,7 +11,10 @@ require('dotenv-flow').config();
 useContainer(Container);
 
 const app = createExpressServer({
-    controllers: [AssetController],
+    controllers: [
+        AssetController,
+        CredentialDefinitionController
+    ],
     middlewares: [ExpressErrorHandler],
     defaultErrorHandler: false,
 });

@@ -3,10 +3,11 @@ import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Pool } from 'pg';
 import { Service } from 'typedi';
+import * as schema from '../database/schema';
 
 @Service()
 export class DatabaseService {
-    private db?: NodePgDatabase;
+    private db?: NodePgDatabase<typeof schema>;
 
     private getDbUrl(): string {
         return (
@@ -15,10 +16,10 @@ export class DatabaseService {
         );
     }
 
-    public async getConnection(): Promise<NodePgDatabase> {
+    public async getConnection(): Promise<NodePgDatabase<typeof schema>> {
         if (!this.db) {
             const pool = new Pool({ connectionString: this.getDbUrl() });
-            this.db = drizzle(pool);
+            this.db = drizzle(pool, { schema });
 
             const migrationsFolder = path.resolve(__dirname, '../database/migrations');
             await migrate(this.db, { migrationsFolder });
@@ -27,3 +28,5 @@ export class DatabaseService {
         return this.db;
     }
 }
+
+export default DatabaseService

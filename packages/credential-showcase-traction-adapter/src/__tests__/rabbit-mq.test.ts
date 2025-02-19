@@ -60,7 +60,7 @@ describe('RabbitMQ Hello World Test', () => {
       })
 
       receiver.on(ReceiverEvents.receiverError, (context) => {
-        reject(context.receiver?.error || new Error('Receiver encountered an error'))
+        reject(context.receiver?.error || Error('Receiver encountered an error'))
       })
     })
 

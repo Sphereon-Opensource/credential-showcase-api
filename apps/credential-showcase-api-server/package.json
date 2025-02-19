@@ -17,7 +17,7 @@
     "express": "^4.21.2",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
-    "routing-controllers": "^0.10.4",
+    "routing-controllers": "^0.11.0",
     "typedi": "^0.10.0"
   },
   "devDependencies": {

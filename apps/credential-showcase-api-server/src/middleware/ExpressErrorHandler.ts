@@ -1,11 +1,12 @@
-import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
+import { Middleware, ExpressErrorMiddlewareInterface, HttpError, UnauthorizedError } from 'routing-controllers';
 import { Service } from 'typedi';
+import { Response } from 'express';
 import { NotFoundError } from '../errors/NotFoundError';
 
 @Service()
 @Middleware({ type: 'after' })
 export class ExpressErrorHandler implements ExpressErrorMiddlewareInterface {
-    error(error: any, request: any, response: any, next: (err: any) => any): void {
+    error(error: HttpError | UnauthorizedError, request: Request, response: Response): void {
         if (error instanceof NotFoundError) {
             response.status(404).json({
                 message: error.message ?? 'Not Found',

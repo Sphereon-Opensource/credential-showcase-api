@@ -1280,7 +1280,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CredentialDefinition'
+                $ref: '#/components/schemas/CredentialDefinitionResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1307,7 +1307,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CredentialDefinition'
+                $ref: '#/components/schemas/CredentialDefinitionResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1333,7 +1333,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CredentialDefinition'
+                $ref: '#/components/schemas/CredentialDefinitionResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2101,6 +2101,7 @@ components:
     Asset:
       type: object
       required:
+        - id
         - mediaType
         - content
       properties:
@@ -2706,9 +2707,13 @@ components:
     CredentialDefinition:
       type: object
       required:
+        - id
         - name
         - version
         - type
+        - icon
+        - attributes
+        - representations
       properties:
         id:
           type: string
@@ -2746,6 +2751,9 @@ components:
         - name
         - version
         - type
+        - icon
+        - attributes
+        - representations
       properties:
         name:
           type: string
@@ -2782,12 +2790,18 @@ components:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174469
     CredentialDefinitionsResponse:
+      type: object
       properties:
         credentialDefinitions:
           type: array
           description: "List of credential definitions"
           items:
             $ref: '#/components/schemas/CredentialDefinition'
+    CredentialDefinitionResponse:
+      type: object
+      properties:
+        credentialDefinition:
+          $ref: '#/components/schemas/CredentialDefinition'
 
     CredentialAttribute:
       type: object

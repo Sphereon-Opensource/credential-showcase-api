@@ -4,11 +4,11 @@ import { drizzle } from 'drizzle-orm/pglite';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import DatabaseService from '../services/DatabaseService';
-import AssetRepository from '../database/repositories/AssetRepository';
-import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
-import * as schema from '../database/schema';
-import { Asset, NewAsset, CredentialAttributeType, CredentialType, NewCredentialDefinition } from '../types';
+import DatabaseService from '../../../services/DatabaseService';
+import AssetRepository from '../AssetRepository';
+import CredentialDefinitionRepository from '../CredentialDefinitionRepository';
+import * as schema from '../../schema';
+import { Asset, NewAsset, CredentialAttributeType, CredentialType, NewCredentialDefinition } from '../../../types';
 
 describe('Database credential definition repository tests', (): void => {
     let client: PGlite;

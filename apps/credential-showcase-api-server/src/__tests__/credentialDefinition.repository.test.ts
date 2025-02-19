@@ -13,7 +13,7 @@ import { Asset, NewAsset, CredentialAttributeType, CredentialType, NewCredential
 describe('Database credential definition repository tests', (): void => {
     let client: PGlite;
     let credentialDefinitionRepository: CredentialDefinitionRepository;
-    let asset: Asset
+    let asset: Asset;
 
     beforeEach(async (): Promise<void> => {
         client = new PGlite();
@@ -313,7 +313,7 @@ describe('Database credential definition repository tests', (): void => {
     })
 
     it('Should throw error when updating credential definition with invalid icon id', async (): Promise<void> => {
-        const unknownIconId = 'a197e5b2-e4e5-4788-83b1-ecaa0e99ed3a'
+        const unknownIconId = 'a197e5b2-e4e5-4788-83b1-ecaa0e99ed3a';
         const credentialDefinition: NewCredentialDefinition = {
             name: 'example_name',
             version: 'example_version',
@@ -348,7 +348,7 @@ describe('Database credential definition repository tests', (): void => {
         const savedCredentialDefinition = await credentialDefinitionRepository.create(credentialDefinition)
         expect(savedCredentialDefinition).toBeDefined()
 
-        const updatedCredentialDefinition = {
+        const updatedCredentialDefinition: NewCredentialDefinition = {
             ...savedCredentialDefinition,
             icon: unknownIconId
         }

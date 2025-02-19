@@ -2,7 +2,7 @@ import {
     assets,
     credentialAttributes,
     credentialDefinitions,
-    credentialRepresentations,
+    credentialRepresentations, relyingParties,
     revocationInfo
 } from '../../database/schema';
 
@@ -19,7 +19,6 @@ export type CredentialDefinition = Omit<typeof credentialDefinitions.$inferSelec
     representations: CredentialRepresentation[]
     revocation?: RevocationInfo | null
 }
-
 export type NewCredentialDefinition = Omit<typeof credentialDefinitions.$inferInsert, 'type'> & {
     type: CredentialType
     attributes: NewCredentialAttribute[]
@@ -40,6 +39,16 @@ export type NewCredentialRepresentation = Omit<typeof credentialRepresentations.
 export type RevocationInfo = Omit<typeof revocationInfo.$inferSelect, 'credentialDefinition'>;
 export type NewRevocationInfo = Omit<typeof revocationInfo.$inferInsert, 'credentialDefinition'>
 
+export type RelyingParty = Omit<typeof relyingParties.$inferSelect, 'logo'> & {
+    credentialDefinitions: CredentialDefinition[]
+    logo: Asset | null
+};
+export type NewRelyingParty = Omit<typeof relyingParties.$inferInsert, 'logo'> & {
+    credentialDefinitions: string[]
+    organization?: string | null
+    logo?: string | null
+};
+
 export enum CredentialType {
     ANONCRED = 'ANONCRED',
 }
@@ -50,4 +59,8 @@ export enum CredentialAttributeType {
     FLOAT = 'FLOAT',
     BOOLEAN = 'BOOLEAN',
     DATE = 'DATE',
+}
+
+export enum RelyingPartyType {
+    ARIES = 'ARIES',
 }

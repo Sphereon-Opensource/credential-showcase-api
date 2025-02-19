@@ -4,6 +4,7 @@ import Container from 'typedi';
 import AssetController from './controllers/AssetController';
 import CredentialDefinitionController from './controllers/CredentialDefinitionController';
 import { ExpressErrorHandler } from './middleware/ExpressErrorHandler';
+import RelyingPartyController from './controllers/RelyingPartyController';
 
 require('dotenv-flow').config();
 
@@ -13,7 +14,8 @@ useContainer(Container);
 const app = createExpressServer({
     controllers: [
         AssetController,
-        CredentialDefinitionController
+        CredentialDefinitionController,
+        RelyingPartyController
     ],
     middlewares: [ExpressErrorHandler],
     defaultErrorHandler: false,

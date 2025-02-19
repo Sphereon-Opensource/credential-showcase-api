@@ -40,7 +40,7 @@ export type RevocationInfo = Omit<typeof revocationInfo.$inferSelect, 'credentia
 export type NewRevocationInfo = Omit<typeof revocationInfo.$inferInsert, 'credentialDefinition'>
 
 export type RelyingParty = Omit<typeof relyingParties.$inferSelect, 'logo'> & {
-    credentialDefinitions: CredentialDefinition[]//string[]
+    credentialDefinitions: CredentialDefinition[]
     logo: Asset | null
 };
 export type NewRelyingParty = Omit<typeof relyingParties.$inferInsert, 'logo'> & {

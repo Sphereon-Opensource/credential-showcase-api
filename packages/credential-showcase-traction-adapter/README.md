@@ -5,7 +5,7 @@
 **License:** Apache-2.0  
 **Author:** 4Sure
 
-## 📢 Module Overview
+## 📝 Module Overview
 
 The **Credential Showcase Traction Adapter** bridges the **Interactive Digital Credential Showcase Builder** with **Traction/ACA-Py**, providing a scalable, asynchronous integration between technology-agnostic data models and credential-specific implementations.
 

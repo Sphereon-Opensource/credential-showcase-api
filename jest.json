@@ -16,6 +16,9 @@
     "!**/node_modules/**",
     "!**/packages/**/index.ts"
   ],
+  "coveragePathIgnorePatterns": [
+    "packages/credential-showcase-openapi"
+  ],
   "coverageReporters": [
     "text",
     "lcov",

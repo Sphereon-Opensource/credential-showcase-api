@@ -1,6 +1,6 @@
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
 import { Service } from 'typedi';
-import { NotFoundError } from '../errors/NotFoundError';
+import { NotFoundError } from '../errors';
 
 @Service()
 @Middleware({ type: 'after' })

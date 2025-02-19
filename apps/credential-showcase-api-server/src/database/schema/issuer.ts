@@ -1,14 +1,23 @@
-import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core'
-import { assets } from './asset'
-import { pgSchema } from 'drizzle-orm/pg-core/schema'
-
-export const issuerType = pgSchema('public').enum('IssuerType', ['ARIES'])
+import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { IssuerTypePg } from './issuerType';
+import { assets } from './asset';
+import { issuersToCredentialDefinitions } from './issuersToCredentialDefinitions';
+import { IssuerType } from '../../types';
 
 export const issuers = pgTable('issuer', {
-  id: uuid('id').notNull().primaryKey().defaultRandom(),
-  name: varchar('name', { length: 255 }).notNull(),
-  description: varchar({ length: 255 }),
-  type: issuerType('type').notNull(),
-  organization: varchar('organization', { length: 255 }),
-  logoId: uuid('logo_id').references(() => assets.id),
+    id: uuid('id').notNull().primaryKey().defaultRandom(),
+    name: varchar({ length: 255 }).notNull(),
+    type: IssuerTypePg('issuer_type').notNull().$type<IssuerType>(),
+    description: varchar({ length: 255 }).notNull(),
+    organization: varchar({ length: 255 }),
+    logo: uuid().references(() => assets.id),
 })
+
+export const issuerRelations = relations(issuers, ({ one, many }) => ({
+    credentialDefinitions: many(issuersToCredentialDefinitions),
+    logo: one(assets, {
+        fields: [issuers.logo],
+        references: [assets.id],
+    })
+}));

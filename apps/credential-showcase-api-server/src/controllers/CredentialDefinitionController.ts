@@ -10,8 +10,16 @@ import {
     Put
 } from 'routing-controllers'
 import { Service } from 'typedi'
+import {
+    CredentialDefinitionRequest,
+    CredentialDefinitionResponse,
+    CredentialDefinitionResponseFromJSONTyped,
+    CredentialDefinitionsResponse,
+    CredentialDefinitionsResponseFromJSONTyped,
+    CredentialDefinitionRequestToJSONTyped
+} from 'credential-showcase-openapi';
 import CredentialDefinitionService from '../services/CredentialDefinitionService';
-import { CredentialDefinition, NewCredentialDefinition } from '../types';
+import { credentialDefinitionDTOFrom } from '../utils/mappers';
 
 @JsonController('/credential-definitions')
 @Service()
@@ -19,29 +27,34 @@ class CredentialDefinitionController {
     constructor(private credentialDefinitionService: CredentialDefinitionService) { }
 
     @Get('/')
-    public async getAll() {
-        return this.credentialDefinitionService.getCredentialDefinitions()
+    public async getAll(): Promise<CredentialDefinitionsResponse> {
+        const result = await this.credentialDefinitionService.getCredentialDefinitions()
+        const credentialDefinitions = result.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
+        return CredentialDefinitionsResponseFromJSONTyped({ credentialDefinitions }, false)
     }
 
     @Get('/:id')
-    getOne(@Param('id') id: string) {
-        return this.credentialDefinitionService.getCredentialDefinition(id);
+    public async getOne(@Param('id') id: string): Promise<CredentialDefinitionResponse> {
+        const result = await this.credentialDefinitionService.getCredentialDefinition(id);
+        return CredentialDefinitionResponseFromJSONTyped({ credentialDefinition: credentialDefinitionDTOFrom(result) }, false)
     }
 
     @HttpCode(201)
     @Post('/')
-    post(@Body() credentialDefinition: NewCredentialDefinition) {
-        return this.credentialDefinitionService.createCredentialDefinition(credentialDefinition);
+    public async post(@Body() credentialDefinitionRequest: CredentialDefinitionRequest): Promise<CredentialDefinitionResponse> {
+        const result = await this.credentialDefinitionService.createCredentialDefinition(CredentialDefinitionRequestToJSONTyped(credentialDefinitionRequest));
+        return CredentialDefinitionResponseFromJSONTyped({ credentialDefinition: credentialDefinitionDTOFrom(result) }, false)
     }
 
     @Put('/:id')
-    put(@Param('id') id: string, @Body() credentialDefinition: CredentialDefinition) {
-        return this.credentialDefinitionService.updateCredentialDefinition(id, credentialDefinition)
+    public async put(@Param('id') id: string, @Body() credentialDefinitionRequest: CredentialDefinitionRequest): Promise<CredentialDefinitionResponse> {
+        const result = await this.credentialDefinitionService.updateCredentialDefinition(id, CredentialDefinitionRequestToJSONTyped(credentialDefinitionRequest))
+        return CredentialDefinitionResponseFromJSONTyped({ credentialDefinition: credentialDefinitionDTOFrom(result) }, false)
     }
 
     @OnUndefined(204)
     @Delete('/:id')
-    delete(@Param('id') id: string) {
+    public async delete(@Param('id') id: string): Promise<void> {
         return this.credentialDefinitionService.deleteCredentialDefinition(id);
     }
 }

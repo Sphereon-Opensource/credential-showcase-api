@@ -1,3 +1,5 @@
+import {CredentialAttributeType} from '../schema';
+
 // TODO replace all these types with the models from the openapi spec
 
 export type CredentialAttribute = {
@@ -15,18 +17,6 @@ export type RevocationInfo = {
 
 export type CredentialRepresentation = {
     id: string
-}
-
-export enum CredentialType {
-    ANONCRED = "ANONCRED",
-}
-
-export enum CredentialAttributeType {
-    STRING = "STRING",
-    INTEGER = "INTEGER",
-    FLOAT = "FLOAT",
-    BOOLEAN = "BOOLEAN",
-    DATE = "DATE",
 }
 
 export enum RelyingPartyType {

@@ -11,6 +11,7 @@
     "migration:generate": "drizzle-kit generate --config=drizzle.config.ts --name=credential-showcase-api"
   },
   "dependencies": {
+    "credential-showcase-openapi" : "workspace:*",
     "dotenv-flow": "^4.1.0",
     "drizzle-orm": "^0.39.1",
     "express": "^4.21.2",

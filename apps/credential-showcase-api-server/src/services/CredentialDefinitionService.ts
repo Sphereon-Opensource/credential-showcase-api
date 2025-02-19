@@ -10,15 +10,15 @@ class CredentialDefinitionService {
         return this.credentialDefinitionRepository.findAll()
     };
 
-    public getCredentialDefinition = async (id: string): Promise<CredentialDefinition | null> => {
+    public getCredentialDefinition = async (id: string): Promise<CredentialDefinition> => {
         return this.credentialDefinitionRepository.findById(id)
     };
 
-    public createCredentialDefinition = async (asset: NewCredentialDefinition): Promise<CredentialDefinition> => {
-        return this.credentialDefinitionRepository.create(asset)
+    public createCredentialDefinition = async (credentialDefinition: NewCredentialDefinition): Promise<CredentialDefinition> => {
+        return this.credentialDefinitionRepository.create(credentialDefinition)
     };
 
-    public updateCredentialDefinition = async (id: string, credentialDefinition: CredentialDefinition): Promise<CredentialDefinition> => {
+    public updateCredentialDefinition = async (id: string, credentialDefinition: NewCredentialDefinition): Promise<CredentialDefinition> => {
         return this.credentialDefinitionRepository.update(id, credentialDefinition)
     };
 

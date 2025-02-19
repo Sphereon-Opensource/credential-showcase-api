@@ -41,6 +41,9 @@ importers:
 
   apps/credential-showcase-api-server:
     dependencies:
+      credential-showcase-openapi:
+        specifier: workspace:*
+        version: link:../../packages/credential-showcase-openapi
       dotenv-flow:
         specifier: ^4.1.0
         version: 4.1.0
@@ -72,9 +75,6 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
-      '@types/node':
-        specifier: ^22.13.1
-        version: 22.13.1
       '@types/pg':
         specifier: ^8.11.11
         version: 8.11.11

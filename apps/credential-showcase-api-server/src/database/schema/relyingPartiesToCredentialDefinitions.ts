@@ -4,21 +4,21 @@ import { relyingParties } from './relyingParty';
 import { credentialDefinitions } from './credentialDefinition';
 
 export const relyingPartiesToCredentialDefinitions = pgTable('relyingPartiesToCredentialDefinitions', {
-        relyingPartyId: uuid('relying_party_id').references(() => relyingParties.id, { onDelete: 'cascade' }).notNull(),
-        credentialDefinitionId: uuid('credential_definition_id').references(() => credentialDefinitions.id, { onDelete: 'cascade' }).notNull(),
+        relyingParty: uuid('relying_party_id').references(() => relyingParties.id, { onDelete: 'cascade' }).notNull(),
+        credentialDefinition: uuid('credential_definition_id').references(() => credentialDefinitions.id, { onDelete: 'cascade' }).notNull(),
     },
     (t) => [
-        primaryKey({ columns: [t.relyingPartyId, t.credentialDefinitionId] })
+        primaryKey({ columns: [t.relyingParty, t.credentialDefinition] })
     ],
 );
 
 export const relyingPartiesToCredentialDefinitionsRelations = relations(relyingPartiesToCredentialDefinitions, ({ one }) => ({
     credentialDefinition: one(credentialDefinitions, {
-        fields: [relyingPartiesToCredentialDefinitions.credentialDefinitionId],
+        fields: [relyingPartiesToCredentialDefinitions.credentialDefinition],
         references: [credentialDefinitions.id],
     }),
     relyingParty: one(relyingParties, {
-        fields: [relyingPartiesToCredentialDefinitions.relyingPartyId],
+        fields: [relyingPartiesToCredentialDefinitions.relyingParty],
         references: [relyingParties.id],
     }),
 }));

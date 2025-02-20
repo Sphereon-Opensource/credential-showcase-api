@@ -10,8 +10,16 @@ import {
     Put
 } from 'routing-controllers';
 import { Service } from 'typedi';
+import {
+    RelyingPartyRequest,
+    RelyingPartyRequestToJSONTyped,
+    RelyingPartiesResponse,
+    RelyingPartiesResponseFromJSONTyped,
+    RelyingPartyResponse,
+    RelyingPartyResponseFromJSONTyped,
+} from 'credential-showcase-openapi';
 import RelyingPartyService from '../services/RelyingPartyService';
-import { RelyingParty, NewRelyingParty } from '../types';
+import { relyingPartyDTOFrom } from '../utils/mappers';
 
 @JsonController('/roles/relying-parties')
 @Service()
@@ -19,29 +27,35 @@ class RelyingPartyController {
     constructor(private relyingPartyService: RelyingPartyService) { }
 
     @Get('/')
-    public async getAll() {
-        return this.relyingPartyService.getRelyingParties()
+    public async getAll(): Promise<RelyingPartiesResponse> {
+        const result = await this.relyingPartyService.getRelyingParties()
+        const relyingParties = result.map(relyingParty => relyingPartyDTOFrom(relyingParty))
+        return RelyingPartiesResponseFromJSONTyped({ relyingParties }, false)
+
     }
 
     @Get('/:id')
-    getOne(@Param('id') id: string) {
-        return this.relyingPartyService.getRelyingParty(id);
+    public async getOne(@Param('id') id: string): Promise<RelyingPartyResponse> {
+        const result = await this.relyingPartyService.getRelyingParty(id);
+        return RelyingPartyResponseFromJSONTyped({ relyingParty: relyingPartyDTOFrom(result) }, false)
     }
 
     @HttpCode(201)
     @Post('/')
-    post(@Body() asset: NewRelyingParty) {
-        return this.relyingPartyService.createRelyingParty(asset);
+    public async post(@Body() relyingPartyRequest: RelyingPartyRequest): Promise<RelyingPartyResponse> {
+        const result = await this.relyingPartyService.createRelyingParty(RelyingPartyRequestToJSONTyped(relyingPartyRequest));
+        return RelyingPartyResponseFromJSONTyped({ relyingParty: relyingPartyDTOFrom(result) }, false)
     }
 
     @Put('/:id')
-    put(@Param('id') id: string, @Body() relyingParty: RelyingParty) {
-        return this.relyingPartyService.updateRelyingParty(id, relyingParty)
+    public async put(@Param('id') id: string, @Body() relyingPartyRequest: RelyingPartyRequest): Promise<RelyingPartyResponse> {
+        const result = await this.relyingPartyService.updateRelyingParty(id, RelyingPartyRequestToJSONTyped(relyingPartyRequest))
+        return RelyingPartyResponseFromJSONTyped({ relyingParty: relyingPartyDTOFrom(result) }, false)
     }
 
     @OnUndefined(204)
     @Delete('/:id')
-    delete(@Param('id') id: string) {
+    public async delete(@Param('id') id: string): Promise<void> {
         return this.relyingPartyService.deleteRelyingParty(id);
     }
 }

@@ -18,7 +18,7 @@ class RelyingPartyService {
         return this.relyingPartyRepository.create(relyingParty)
     };
 
-    public updateRelyingParty = async (id: string, relyingParty: RelyingParty): Promise<RelyingParty> => {
+    public updateRelyingParty = async (id: string, relyingParty: NewRelyingParty): Promise<RelyingParty> => {
         return this.relyingPartyRepository.update(id, relyingParty)
     };
 

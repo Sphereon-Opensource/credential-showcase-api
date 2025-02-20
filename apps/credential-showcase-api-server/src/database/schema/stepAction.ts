@@ -8,7 +8,7 @@ export const stepActions = pgTable('stepAction', {
     type: varchar({ length: 255 }).notNull(),
     title: varchar({ length: 255 }).notNull(),
     text: varchar({ length: 255 }).notNull(),
-    step: uuid('step_id').references(() => steps.id,{ onDelete: 'cascade' }).notNull()
+    step: uuid().references(() => steps.id,{ onDelete: 'cascade' }).notNull()
 });
 
 export const stepActionRelations = relations(stepActions, ({ one }) => ({

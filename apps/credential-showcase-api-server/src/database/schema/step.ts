@@ -4,15 +4,16 @@ import { StepTypePg } from './stepType';
 import { workflows } from './workflow';
 import { stepActions } from './stepAction';
 import { assets } from './asset';
+import { StepType } from '../../types';
 
 export const steps = pgTable('step', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
     title: varchar({ length: 255 }).notNull(),
     order: integer().notNull(), // TODO we should make this unique?
-    type: StepTypePg('step_type').notNull(),
+    type: StepTypePg('step_type').notNull().$type<StepType>(),
     //subFlow: uuid('sub_flow').references(() => workflows.id),
     workflow: uuid().references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
-    image: uuid().references(() => assets.id).notNull(), // TODO or named asset?
+    asset: uuid().references(() => assets.id).notNull(),
 });
 
 export const stepRelations = relations(steps, ({ one, many }) => ({
@@ -26,7 +27,7 @@ export const stepRelations = relations(steps, ({ one, many }) => ({
         references: [workflows.id],
     }),
     image: one(assets, {
-        fields: [steps.image],
+        fields: [steps.asset],
         references: [assets.id],
     }),
 }));

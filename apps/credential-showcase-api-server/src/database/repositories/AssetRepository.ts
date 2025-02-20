@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { Service } from 'typedi';
-import { DatabaseService } from '../../services/DatabaseService';
-import { NotFoundError } from '../../errors/NotFoundError';
+import DatabaseService from '../../services/DatabaseService';
+import { NotFoundError } from '../../errors';
 import { assets } from '../schema';
 import { Asset, NewAsset, RepositoryDefinition } from '../../types';
 

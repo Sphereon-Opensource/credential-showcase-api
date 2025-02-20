@@ -11,9 +11,9 @@ import {
     NewStepAction,
     RepositoryDefinition,
     Step,
-    StepAction
+    StepAction,
+    WorkflowType
 } from '../../types';
-import { WorkflowType } from '../../types/rest';
 
 @Service()
 class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIssuanceFlow> {

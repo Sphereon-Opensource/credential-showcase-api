@@ -1,18 +1,29 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, varchar, uuid } from 'drizzle-orm/pg-core';
 import { steps } from './step';
+import { issuers } from './issuer';
+import { relyingParties } from './relyingParty';
 import { WorkflowTypePg } from './workflowType';
+import { WorkflowType } from '../../types';
 
 export const workflows = pgTable('workflow', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
     name: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 255 }).notNull(),
-    workflowType: WorkflowTypePg('workflow_type').notNull()
+    workflowType: WorkflowTypePg('workflow_type').notNull().$type<WorkflowType>(),
+    issuer: uuid().references(() => issuers.id).notNull(),
+    relyingParty: uuid('relying_party').references(() => relyingParties.id).notNull()
 })
 
 export const workflowRelations = relations(workflows, ({ one, many }) => ({
     //personas: many(personas), // TODO implement personas from SHOWCASE-37
-    steps: many(steps)
-    // TODO add issuer
-    // TODO add relying party
+    steps: many(steps),
+    issuer: one(issuers, {
+        fields: [workflows.issuer],
+        references: [issuers.id],
+    }),
+    relyingParty: one(relyingParties, {
+        fields: [workflows.issuer],
+        references: [relyingParties.id],
+    }),
 }));

@@ -1,4 +1,4 @@
-import {eq, inArray} from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
@@ -151,9 +151,9 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
             },
         })
 
-        return result.map((relayingParty) => ({
-            ...relayingParty,
-            credentialDefinitions: relayingParty.credentialDefinitions.map(item => item.credentialDefinition)
+        return result.map(relyingParty => ({
+            ...relyingParty,
+            credentialDefinitions: relyingParty.credentialDefinitions.map(item => item.credentialDefinition)
         }))
     }
 }

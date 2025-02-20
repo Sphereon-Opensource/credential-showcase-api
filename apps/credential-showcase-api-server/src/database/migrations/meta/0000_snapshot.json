@@ -1,5 +1,5 @@
 {
-  "id": "3cba8add-5704-4da4-ae43-269794d42814",
+  "id": "ce3a60ae-f318-4b4b-bb3e-0fcd7253f539",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -76,10 +76,10 @@
           "type": "CredentialAttributeType",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "credential_definition_id": {
-          "name": "credential_definition_id",
+        "credential_definition": {
+          "name": "credential_definition",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -87,12 +87,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "credentialAttribute_credential_definition_id_credentialDefinition_id_fk": {
-          "name": "credentialAttribute_credential_definition_id_credentialDefinition_id_fk",
+        "credentialAttribute_credential_definition_credentialDefinition_id_fk": {
+          "name": "credentialAttribute_credential_definition_credentialDefinition_id_fk",
           "tableFrom": "credentialAttribute",
           "tableTo": "credentialDefinition",
           "columnsFrom": [
-            "credential_definition_id"
+            "credential_definition"
           ],
           "columnsTo": [
             "id"
@@ -177,8 +177,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "credential_definition_id": {
-          "name": "credential_definition_id",
+        "credential_definition": {
+          "name": "credential_definition",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -186,12 +186,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "credentialRepresentation_credential_definition_id_credentialDefinition_id_fk": {
-          "name": "credentialRepresentation_credential_definition_id_credentialDefinition_id_fk",
+        "credentialRepresentation_credential_definition_credentialDefinition_id_fk": {
+          "name": "credentialRepresentation_credential_definition_credentialDefinition_id_fk",
           "tableFrom": "credentialRepresentation",
           "tableTo": "credentialDefinition",
           "columnsFrom": [
-            "credential_definition_id"
+            "credential_definition"
           ],
           "columnsTo": [
             "id"
@@ -229,8 +229,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "credential_definition_id": {
-          "name": "credential_definition_id",
+        "credential_definition": {
+          "name": "credential_definition",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -238,12 +238,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "revocationInfo_credential_definition_id_credentialDefinition_id_fk": {
-          "name": "revocationInfo_credential_definition_id_credentialDefinition_id_fk",
+        "revocationInfo_credential_definition_credentialDefinition_id_fk": {
+          "name": "revocationInfo_credential_definition_credentialDefinition_id_fk",
           "tableFrom": "revocationInfo",
           "tableTo": "credentialDefinition",
           "columnsFrom": [
-            "credential_definition_id"
+            "credential_definition"
           ],
           "columnsTo": [
             "id"
@@ -254,11 +254,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "revocationInfo_credential_definition_id_unique": {
-          "name": "revocationInfo_credential_definition_id_unique",
+        "revocationInfo_credential_definition_unique": {
+          "name": "revocationInfo_credential_definition_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "credential_definition_id"
+            "credential_definition"
           ]
         }
       },
@@ -335,14 +335,14 @@
       "name": "relyingPartiesToCredentialDefinitions",
       "schema": "",
       "columns": {
-        "relying_party_id": {
-          "name": "relying_party_id",
+        "relying_party": {
+          "name": "relying_party",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "credential_definition_id": {
-          "name": "credential_definition_id",
+        "credential_definition": {
+          "name": "credential_definition",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -350,12 +350,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "relyingPartiesToCredentialDefinitions_relying_party_id_relyingParty_id_fk": {
-          "name": "relyingPartiesToCredentialDefinitions_relying_party_id_relyingParty_id_fk",
+        "relyingPartiesToCredentialDefinitions_relying_party_relyingParty_id_fk": {
+          "name": "relyingPartiesToCredentialDefinitions_relying_party_relyingParty_id_fk",
           "tableFrom": "relyingPartiesToCredentialDefinitions",
           "tableTo": "relyingParty",
           "columnsFrom": [
-            "relying_party_id"
+            "relying_party"
           ],
           "columnsTo": [
             "id"
@@ -363,12 +363,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "relyingPartiesToCredentialDefinitions_credential_definition_id_credentialDefinition_id_fk": {
-          "name": "relyingPartiesToCredentialDefinitions_credential_definition_id_credentialDefinition_id_fk",
+        "relyingPartiesToCredentialDefinitions_credential_definition_credentialDefinition_id_fk": {
+          "name": "relyingPartiesToCredentialDefinitions_credential_definition_credentialDefinition_id_fk",
           "tableFrom": "relyingPartiesToCredentialDefinitions",
           "tableTo": "credentialDefinition",
           "columnsFrom": [
-            "credential_definition_id"
+            "credential_definition"
           ],
           "columnsTo": [
             "id"
@@ -378,11 +378,11 @@
         }
       },
       "compositePrimaryKeys": {
-        "relyingPartiesToCredentialDefinitions_relying_party_id_credential_definition_id_pk": {
-          "name": "relyingPartiesToCredentialDefinitions_relying_party_id_credential_definition_id_pk",
+        "relyingPartiesToCredentialDefinitions_relying_party_credential_definition_pk": {
+          "name": "relyingPartiesToCredentialDefinitions_relying_party_credential_definition_pk",
           "columns": [
-            "relying_party_id",
-            "credential_definition_id"
+            "relying_party",
+            "credential_definition"
           ]
         }
       },
@@ -391,144 +391,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.step": {
-      "name": "step",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "order": {
-          "name": "order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "step_type": {
-          "name": "step_type",
-          "type": "StepType",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sub_flow": {
-          "name": "sub_flow",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "workflow_id": {
-          "name": "workflow_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "step_sub_flow_workflow_id_fk": {
-          "name": "step_sub_flow_workflow_id_fk",
-          "tableFrom": "step",
-          "tableTo": "workflow",
-          "columnsFrom": [
-            "sub_flow"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "step_workflow_id_workflow_id_fk": {
-          "name": "step_workflow_id_workflow_id_fk",
-          "tableFrom": "step",
-          "tableTo": "workflow",
-          "columnsFrom": [
-            "workflow_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.stepAction": {
-      "name": "stepAction",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "type": {
-          "name": "type",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "text": {
-          "name": "text",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "step_id": {
-          "name": "step_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "stepAction_step_id_step_id_fk": {
-          "name": "stepAction_step_id_step_id_fk",
-          "tableFrom": "stepAction",
-          "tableTo": "step",
-          "columnsFrom": [
-            "step_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.workflow": {
-      "name": "workflow",
+    "public.issuer": {
+      "name": "issuer",
       "schema": "",
       "columns": {
         "id": {
@@ -544,23 +408,109 @@
           "primaryKey": false,
           "notNull": true
         },
+        "issuer_type": {
+          "name": "issuer_type",
+          "type": "IssuerType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
         "description": {
           "name": "description",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "workflow_type": {
-          "name": "workflow_type",
-          "type": "WorkflowType",
-          "typeSchema": "public",
+        "organization": {
+          "name": "organization",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "logo": {
+          "name": "logo",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "issuer_logo_asset_id_fk": {
+          "name": "issuer_logo_asset_id_fk",
+          "tableFrom": "issuer",
+          "tableTo": "asset",
+          "columnsFrom": [
+            "logo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.issuersToCredentialDefinitions": {
+      "name": "issuersToCredentialDefinitions",
+      "schema": "",
+      "columns": {
+        "issuer": {
+          "name": "issuer",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credential_definition": {
+          "name": "credential_definition",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "foreignKeys": {
+        "issuersToCredentialDefinitions_issuer_issuer_id_fk": {
+          "name": "issuersToCredentialDefinitions_issuer_issuer_id_fk",
+          "tableFrom": "issuersToCredentialDefinitions",
+          "tableTo": "issuer",
+          "columnsFrom": [
+            "issuer"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "issuersToCredentialDefinitions_credential_definition_credentialDefinition_id_fk": {
+          "name": "issuersToCredentialDefinitions_credential_definition_credentialDefinition_id_fk",
+          "tableFrom": "issuersToCredentialDefinitions",
+          "tableTo": "credentialDefinition",
+          "columnsFrom": [
+            "credential_definition"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "issuersToCredentialDefinitions_issuer_credential_definition_pk": {
+          "name": "issuersToCredentialDefinitions_issuer_credential_definition_pk",
+          "columns": [
+            "issuer",
+            "credential_definition"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -586,28 +536,18 @@
         "ANONCRED"
       ]
     },
-    "public.RelyingPartyType": {
-      "name": "RelyingPartyType",
+    "public.IssuerType": {
+      "name": "IssuerType",
       "schema": "public",
       "values": [
         "ARIES"
       ]
     },
-    "public.StepType": {
-      "name": "StepType",
+    "public.RelyingPartyType": {
+      "name": "RelyingPartyType",
       "schema": "public",
       "values": [
-        "HUMAN_TASK",
-        "SERVICE",
-        "WORKFLOW"
-      ]
-    },
-    "public.WorkflowType": {
-      "name": "WorkflowType",
-      "schema": "public",
-      "values": [
-        "ISSUANCE",
-        "PRESENTATION"
+        "ARIES"
       ]
     }
   },

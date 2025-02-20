@@ -6,6 +6,7 @@ import AssetController from './controllers/AssetController';
 import CredentialDefinitionController from './controllers/CredentialDefinitionController';
 import RelyingPartyController from './controllers/RelyingPartyController';
 import IssuerController from './controllers/IssuerController';
+import IssuanceFlowController from './controllers/IssuanceFlowController';
 
 require('dotenv-flow').config();
 
@@ -17,7 +18,8 @@ const app = createExpressServer({
         AssetController,
         CredentialDefinitionController,
         RelyingPartyController,
-        IssuerController
+        IssuerController,
+        IssuanceFlowController
     ],
     middlewares: [ExpressErrorHandler],
     defaultErrorHandler: false,

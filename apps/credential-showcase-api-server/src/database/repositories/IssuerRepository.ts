@@ -108,7 +108,7 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
       with: {
         credentialDefinitions: {
           with: {
-            credentialDefinition: {
+            cd: {
               with: {
                 icon: true,
                 attributes: true,
@@ -128,7 +128,7 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
 
     return {
       ...result,
-      credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinition)
+      credentialDefinitions: result.credentialDefinitions.map((item) => item.cd)
     }
   }
 
@@ -137,7 +137,7 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
       with: {
         credentialDefinitions: {
           with: {
-            credentialDefinition: {
+            cd: {
               with: {
                 icon: true,
                 attributes: true,
@@ -153,7 +153,7 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
 
     return result.map(issuer => ({
       ...issuer,
-      credentialDefinitions: issuer.credentialDefinitions.map(item => item.credentialDefinition)
+      credentialDefinitions: issuer.credentialDefinitions.map(item => item.cd)
     }))
   }
 }

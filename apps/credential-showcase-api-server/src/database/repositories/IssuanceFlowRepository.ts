@@ -105,7 +105,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             .where(eq(workflows.id, issuanceFlowId))
     }
 
-    async update(issuanceFlowId: string, issuanceFlow: IssuanceFlow): Promise<IssuanceFlow> { // TODO see the result of openapi and the payloads to determine how we update an asset
+    async update(issuanceFlowId: string, issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> { // TODO see the result of openapi and the payloads to determine how we update an asset
         await this.findById(issuanceFlowId)
         const [result] = await (await this.databaseService.getConnection())
             .update(workflows)
@@ -131,24 +131,6 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                     with: {
                         actions: true,
                         image: true
-                    }
-                },
-                // @ts-ignore
-                relyingParty: { // TODO remove as we only need the issuer here
-                    with: {
-                        credentialDefinitions: {
-                            with: {
-                                cd: {
-                                    with: {
-                                        icon: true,
-                                        attributes: true,
-                                        representations: true,
-                                        revocation: true
-                                    }
-                                }
-                            }
-                        },
-                        logo: true
                     }
                 },
                 issuer: {
@@ -198,24 +180,6 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                         image: true
                     }
                 },
-                // @ts-ignore
-                relyingParty: { // TODO remove as we only need the issuer here
-                    with: {
-                        credentialDefinitions: {
-                            with: {
-                                cd: {
-                                    with: {
-                                        icon: true,
-                                        attributes: true,
-                                        representations: true,
-                                        revocation: true
-                                    }
-                                }
-                            }
-                        },
-                        logo: true
-                    }
-                },
                 issuer: {
                     with: {
                         credentialDefinitions: {
@@ -249,7 +213,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
     async createStep(issuanceFlowId: string, step: NewStep): Promise<Step> {
         await this.findById(issuanceFlowId)
-        const imageResult = await this.assetRepository.findById(step.image)
+        const imageResult = await this.assetRepository.findById(step.asset)
         const [result] = await (await this.databaseService.getConnection())
             .insert(steps)
             .values({ ...step, workflow: issuanceFlowId })

@@ -38,11 +38,6 @@
     "**/__tests__/**/*.test.*",
     "!dist/*"
   ],
-  "globals": {
-    "ts-jest": {
-      "tsconfig": "./packages/tsconfig-base.json"
-    }
-  },
   "testEnvironment": "node",
   "automock": false,
   "verbose": true

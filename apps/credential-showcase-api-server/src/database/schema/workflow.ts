@@ -11,8 +11,8 @@ export const workflows = pgTable('workflow', {
     name: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 255 }).notNull(),
     workflowType: WorkflowTypePg('workflow_type').notNull().$type<WorkflowType>(),
-    issuer: uuid().references(() => issuers.id).notNull(),
-    relyingParty: uuid('relying_party').references(() => relyingParties.id).notNull()
+    issuer: uuid().references(() => issuers.id),
+    relyingParty: uuid('relying_party').references(() => relyingParties.id)
 })
 
 export const workflowRelations = relations(workflows, ({ one, many }) => ({

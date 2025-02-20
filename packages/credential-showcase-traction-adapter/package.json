@@ -7,10 +7,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
-    "build:clean": "tsc --build --clean && tsc --build",
-    "prettier": "prettier --write \"{packages,__tests__,!dist}/**/*.{ts,js,json,md}\"",
-    "test:ci": "jest --config=jest.json",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --config=jest.json --coverage=true --detectOpenHandles"
+    "build:clean": "tsc --build --clean && tsc --build"
   },
   "dependencies": {
     "express": "^4.21.2",
@@ -22,16 +19,7 @@
     "testcontainers": "^10.18.0",
     "@testcontainers/rabbitmq": "^10.18.0",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.13.1",
-    "cross-env": "^7.0.3",
-    "jest": "^29.7.0",
-    "jest-environment-node": "^29.7.0",
-    "jest-fetch-mock": "^3.0.3",
-    "prettier": "^3.4.2",
-    "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
-    "turbo": "^2.4.0",
-    "typescript": "5.7.3"
+    "@types/node": "^22.13.1"
   },
   "files": [
     "dist/**/*",

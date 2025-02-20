@@ -23,7 +23,7 @@ export const workflowRelations = relations(workflows, ({ one, many }) => ({
         references: [issuers.id],
     }),
     relyingParty: one(relyingParties, {
-        fields: [workflows.issuer],
+        fields: [workflows.relyingParty],
         references: [relyingParties.id],
     }),
 }));

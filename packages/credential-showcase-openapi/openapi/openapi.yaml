@@ -43,15 +43,15 @@ paths:
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/IssuanceFlowsResponse'
+                $ref: '#/components/schemas/IssuanceFlowsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Issuance Flow
@@ -71,13 +71,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /workflows/issuances/{issuanceFlowId}:
     get:
       tags: [ "Issuance Flow" ]
@@ -97,15 +97,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
-        '404': 
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Issuance Flow" ]
       summary: Update an issuance flow (overwrite)
@@ -130,15 +130,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssuanceFlow'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
-        '404': 
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Issuance Flow" ]
       summary: Delete an issuance flow
@@ -153,19 +153,19 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
-        '404': 
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /workflows/issuances/{issuanceFlowId}/steps:
     get:
-      tags: 
+      tags:
         - "Issuance Flow"
       summary: List steps in an issuance flow
       operationId: listIssuanceFlowSteps
@@ -183,15 +183,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags: [ "Issuance Flow" ]
       summary: Add a step to an issuance flow
@@ -216,15 +216,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Step'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /workflows/issuances/{issuanceFlowId}/steps/{stepId}:
     get:
       tags: [ "Issuance Flow" ]
@@ -249,15 +249,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Step'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Issuance Flow" ]
       summary: Overwrite a step in an issuance flow
@@ -287,15 +287,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Step'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Issuance Flow" ]
       summary: Delete a step in an issuance flow
@@ -315,15 +315,15 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /workflows/issuances/{issuanceFlowId}/steps/{stepId}/actions:
     get:
@@ -349,15 +349,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepActionsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags: [ "Issuance Flow" ]
       summary: Create an action in a step
@@ -387,15 +387,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepAction'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /workflows/issuances/{issuanceFlowId}/steps/{stepId}/actions/{actionId}:
     get:
       tags: [ "Issuance Flow" ]
@@ -425,15 +425,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepAction'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Issuance Flow" ]
       summary: Overwrite an action
@@ -468,15 +468,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepAction'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Issuance Flow" ]
       summary: Delete an action
@@ -501,15 +501,15 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /workflows/presentations:
     get:
@@ -523,15 +523,15 @@ paths:
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/PresentationFlowsResponse'
+                $ref: '#/components/schemas/PresentationFlowsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Presentation Flow
@@ -551,13 +551,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/PresentationFlow'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /workflows/presentations/{presentationFlowId}:
     get:
       tags: [ "Presentation Flow" ]
@@ -577,15 +577,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/PresentationFlow'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
-        '404': 
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Presentation Flow" ]
       summary: Update a presentation flow (overwrite)
@@ -610,15 +610,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/PresentationFlow'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
-        '404': 
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Presentation Flow" ]
       summary: Delete a presentation flow
@@ -633,19 +633,19 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
-        '404': 
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
-  
+          $ref: '#/components/responses/InternalServerError'
+
   /workflows/presentations/{presentationFlowId}/steps:
     get:
-      tags: 
+      tags:
         - "Presentation Flow"
       summary: List steps in a presentation flow
       operationId: listPresentationFlowSteps
@@ -663,15 +663,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags: [ "Presentation Flow" ]
       summary: Add a step to a presentation flow
@@ -696,15 +696,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Step'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /workflows/presentations/{presentationFlowId}/steps/{stepId}:
     get:
       tags: [ "Presentation Flow" ]
@@ -729,15 +729,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Step'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Presentation Flow" ]
       summary: Overwrite a step in a presentation flow
@@ -767,15 +767,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Step'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Presentation Flow" ]
       summary: Delete a step in a presentation flow
@@ -795,15 +795,15 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /workflows/presentations/{presentationFlowId}/steps/{stepId}/actions:
     get:
@@ -829,15 +829,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepActionsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags: [ "Presentation Flow" ]
       summary: Create an action in a step
@@ -867,15 +867,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepAction'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /workflows/presentations/{presentationFlowId}/steps/{stepId}/actions/{actionId}:
     get:
       tags: [ "Presentation Flow" ]
@@ -905,15 +905,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepAction'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags: [ "Presentation Flow" ]
       summary: Overwrite an action
@@ -948,15 +948,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StepAction'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags: [ "Presentation Flow" ]
       summary: Delete an action
@@ -981,15 +981,15 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '404':
-            $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   # /workflows/{workflowId}/steps:
   #   parameters:
@@ -1097,7 +1097,7 @@ paths:
   #         description: Step successfully deleted
   #       '404':
   #         description: Workflow or step not found
-  
+
   # /workflows/{workflowId}/steps/{stepId}/actions:
   #   parameters:
   #     - name: workflowId
@@ -1241,7 +1241,7 @@ paths:
   #     responses:
   #       '204':
   #         description: Deleted
- 
+
   /credential-definitions:
     get:
       tags:
@@ -1256,13 +1256,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CredentialDefinitionsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Credential Definitions
@@ -1280,15 +1280,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CredentialDefinition'
+                $ref: '#/components/schemas/CredentialDefinitionResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /credential-definitions/{definitionId}:
     parameters:
       - name: definitionId
@@ -1307,15 +1307,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CredentialDefinition'
+                $ref: '#/components/schemas/CredentialDefinitionResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Credential Definitions
@@ -1333,15 +1333,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CredentialDefinition'
+                $ref: '#/components/schemas/CredentialDefinitionResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Credential Definitions
@@ -1374,14 +1374,14 @@ paths:
                     - $ref: '#/components/schemas/CredentialRepresentation'
                     - $ref: '#/components/schemas/OCARepresentation'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
-  
+          $ref: '#/components/responses/InternalServerError'
+
   /personas:
     get:
       tags:
@@ -1396,13 +1396,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/PersonasResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Personas
@@ -1422,13 +1422,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Persona'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /personas/{personaId}:
     parameters:
       - name: personaId
@@ -1449,13 +1449,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Persona'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Personas
@@ -1475,13 +1475,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Persona'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Personas
@@ -1491,13 +1491,13 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /assets:
     get:
@@ -1513,13 +1513,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/AssetsResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'               
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Assets
@@ -1529,7 +1529,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetsRequest'
+              $ref: '#/components/schemas/AssetRequest'
         required: true
       responses:
         '201':
@@ -1537,15 +1537,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Asset'
+                $ref: '#/components/schemas/AssetResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /assets/{assetId}:
     parameters:
       - name: assetId
@@ -1564,15 +1564,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Asset'
+                $ref: '#/components/schemas/AssetResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Assets
@@ -1582,7 +1582,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetsRequest'
+              $ref: '#/components/schemas/AssetRequest'
         required: true
       responses:
         '200':
@@ -1590,15 +1590,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Asset'
+                $ref: '#/components/schemas/AssetResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Assets
@@ -1608,13 +1608,13 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /roles/issuers:
     get:
@@ -1630,13 +1630,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssuersResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Issuer Role
@@ -1654,15 +1654,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuerResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /roles/issuers/{issuerId}:
     parameters:
       - name: issuerId
@@ -1681,15 +1681,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuerResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Issuer Role
@@ -1707,15 +1707,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuerResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Issuer Role
@@ -1725,13 +1725,13 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   # /roles/issuers/{issuerId}/credential-definitions:
   #   parameters:
   #     - name: issuerId
@@ -1751,7 +1751,7 @@ paths:
   #           application/json:
   #             schema:
   #               $ref: '#/components/schemas/CredentialDefinitionsResponse'
-  
+
   /roles/relying-parties:
     get:
       tags:
@@ -1766,13 +1766,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/RelyingPartiesResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - Relying Party Role
@@ -1790,15 +1790,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartyResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   /roles/relying-parties/{relyingPartyId}:
     parameters:
       - name: relyingPartyId
@@ -1817,15 +1817,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartyResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - Relying Party Role
@@ -1843,15 +1843,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelyingParty'
+                $ref: '#/components/schemas/RelyingPartyResponse'
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - Relying Party Role
@@ -1861,13 +1861,13 @@ paths:
         '204':
           description: Deleted
         '400':
-            $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '401':
-            $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-            $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '500':
-            $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
   # /roles/relying-parties/{relyingPartyId}/credential-definitions:
   #   parameters:
   #     - name: relyingPartyId
@@ -1895,7 +1895,7 @@ paths:
   #       '403':
   #           $ref: '#/components/responses/Forbidden'
   #       '500':
-  #           $ref: '#/components/responses/InternalServerError'          
+  #           $ref: '#/components/responses/InternalServerError'
   #   post:
   #     tags:
   #       - Relying Party Role
@@ -1952,7 +1952,7 @@ paths:
   #           $ref: '#/components/responses/Forbidden'
   #       '500':
   #           $ref: '#/components/responses/InternalServerError'
-  
+
   # /showcases:
   #   get:
   #     tags:
@@ -2101,8 +2101,9 @@ components:
     Asset:
       type: object
       required:
+        - id
         - mediaType
-        - contents
+        - content
       properties:
         id:
           type: string
@@ -2112,7 +2113,7 @@ components:
           type: string
           description: Type of asset (e.g., image, document, icon)
           example: image/jpeg
-        contents:
+        content:
           type: string
           description: Binary data of the asset
           example: base64 encoded binary data
@@ -2124,17 +2125,17 @@ components:
           type: string
           description: Description of the asset
           example: A beautiful image of a cat
-    AssetsRequest:
+    AssetRequest:
       type: object
       required:
         - mediaType
-        - contents
+        - content
       properties:
         mediaType:
           type: string
           description: Type of asset (e.g., image, document, icon)
           example: image/jpeg
-        contents:
+        content:
           type: string
           description: Binary data of the asset
           example: base64 encoded binary data
@@ -2147,12 +2148,22 @@ components:
           description: Description of the asset
           example: A beautiful image of a cat
     AssetsResponse:
+      type: object
+      required:
+        - assets
       properties:
         assets:
           type: array
           items:
             $ref: '#/components/schemas/Asset'
-    
+    AssetResponse:
+      type: object
+      required:
+        - asset
+      properties:
+        asset:
+          $ref: '#/components/schemas/Asset'
+
     Step:
       type: object
       required:
@@ -2234,7 +2245,7 @@ components:
         - SERVICE
         - WORKFLOW
       description: Type of step in the workflow
-      example: HUMAN_TASK  
+      example: HUMAN_TASK
 
     StepAction:
       type: object
@@ -2283,7 +2294,7 @@ components:
           type: string
           example: HUMAN_TASK
       discriminator:
-        propertyName: type
+        propertyName: actionType
         mapping:
           ARIES_OOB: '#/components/schemas/AriesOOBAction'
     StepActionsResponse:
@@ -2363,7 +2374,7 @@ components:
           items:
             type: string
           description: List of restrictions on the predicate
-    
+
     Persona:
       type: object
       required:
@@ -2507,7 +2518,7 @@ components:
               type: string
               example: "313e4567-e89b-12d3-a456-426614174469"
       description: Workflow specialization for credential issuance
-    
+
     PresentationFlowsResponse:
       properties:
         presentationFlows:
@@ -2545,12 +2556,15 @@ components:
       enum:
         - ARIES
       description: Types of supported relying parties
-    
+
     Issuer:
       type: object
       required:
+        - id
         - name
+        - description
         - type
+        - credentialDefinitions
       properties:
         id:
           type: string
@@ -2580,7 +2594,9 @@ components:
       type: object
       required:
         - name
+        - description
         - type
+        - credentialDefinitions
       properties:
         name:
           type: string
@@ -2605,17 +2621,27 @@ components:
             type: string
             example: 123e4567-e89b-12d3-a456-426614174469
     IssuersResponse:
+      type: object
       properties:
         issuers:
           type: array
           items:
             $ref: '#/components/schemas/Issuer'
-            
+    IssuerResponse:
+      type: object
+      properties:
+        issuer:
+          $ref: '#/components/schemas/Issuer'
+
+
     RelyingParty:
       type: object
       required:
+        - id
         - name
+        - description
         - type
+        - credentialDefinitions
       properties:
         id:
           type: string
@@ -2646,6 +2672,8 @@ components:
       required:
         - name
         - type
+        - description
+        - credentialDefinitions
       properties:
         name:
           type: string
@@ -2671,11 +2699,17 @@ components:
             example: 123e4567-e89b-12d3-a456-426614174469
 
     RelyingPartiesResponse:
+      type: object
       properties:
         relyingParties:
           type: array
           items:
             $ref: '#/components/schemas/RelyingParty'
+    RelyingPartyResponse:
+      type: object
+      properties:
+        relyingParty:
+          $ref: '#/components/schemas/RelyingParty'
 
     CredentialType:
       type: string
@@ -2692,13 +2726,17 @@ components:
         - DATE
       description: Types of credential attributes
       example: STRING
-    
+
     CredentialDefinition:
       type: object
       required:
+        - id
         - name
         - version
         - type
+        - icon
+        - attributes
+        - representations
       properties:
         id:
           type: string
@@ -2736,6 +2774,9 @@ components:
         - name
         - version
         - type
+        - icon
+        - attributes
+        - representations
       properties:
         name:
           type: string
@@ -2772,12 +2813,18 @@ components:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174469
     CredentialDefinitionsResponse:
+      type: object
       properties:
         credentialDefinitions:
           type: array
           description: "List of credential definitions"
           items:
             $ref: '#/components/schemas/CredentialDefinition'
+    CredentialDefinitionResponse:
+      type: object
+      properties:
+        credentialDefinition:
+          $ref: '#/components/schemas/CredentialDefinition'
 
     CredentialAttribute:
       type: object
@@ -2799,7 +2846,7 @@ components:
           description: Default or example value of the attribute
           example: John Doe
         type:
-          $ref: '#/components/schemas/CredentialAttributeType'          
+          $ref: '#/components/schemas/CredentialAttributeType'
     CredentialAttributeRequest:
       type: object
       required:
@@ -2852,7 +2899,7 @@ components:
       required:
         - title
       properties:
-        id: 
+        id:
           type: string
           description: Id of the revocation information
           example: abcd4567-e89b-12d3-a456-426614174123
@@ -2876,7 +2923,7 @@ components:
               description: Identifier of the revocation registry for AnonCreds
               example: 123e4567-e89b-12d3-a456-426614174123
       description: Anonymous Credentials specific revocation information
-    
+
     # Showcase:
     #   type: object
     #   required:
@@ -2987,7 +3034,7 @@ components:
     #       type: array
     #       items:
     #         $ref: '#/components/schemas/Scenario'
-    
+
   responses:
     'BadRequest':
       description: Bad Request

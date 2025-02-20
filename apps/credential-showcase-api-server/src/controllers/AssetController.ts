@@ -8,17 +8,17 @@ import {
     Param,
     Post,
     Put
-} from 'routing-controllers'
-import { Service } from 'typedi'
-import AssetService from '../services/AssetService';
+} from 'routing-controllers';
+import { Service } from 'typedi';
 import {
-    Asset, //AssetResponse
-    AssetFromJSONTyped,
-    AssetsRequest,
+    AssetResponse,
+    AssetResponseFromJSONTyped,
+    AssetRequest,
     AssetsResponse,
     AssetsResponseFromJSONTyped
-} from '../../../../packages/credential-showcase-openapi'
-import {newAssetFrom} from '../mappers/assetMapper';
+} from 'credential-showcase-openapi';
+import AssetService from '../services/AssetService';
+import { assetDTOFrom, newAssetFrom } from '../utils/mappers';
 
 @JsonController('/assets')
 @Service()
@@ -28,28 +28,27 @@ class AssetController {
     @Get('/')
     public async getAll(): Promise<AssetsResponse> {
         const result = await this.assetService.getAssets()
-        return AssetsResponseFromJSONTyped({ assets: result }, true)
+        const assets = result.map(asset => assetDTOFrom(asset))
+        return AssetsResponseFromJSONTyped({ assets }, false)
     }
 
     @Get('/:id')
-    public async getOne(@Param('id') id: string): Promise<Asset> {
+    public async getOne(@Param('id') id: string): Promise<AssetResponse> {
         const result = await this.assetService.getAsset(id);
-        return AssetFromJSONTyped(result, true)
+        return AssetResponseFromJSONTyped({ asset: assetDTOFrom(result) }, false)
     }
 
     @HttpCode(201)
     @Post('/')
-    public async post(@Body() assetRequest: AssetsRequest): Promise<Asset> {
-        const newAsset = newAssetFrom(assetRequest)
-        const result = await this.assetService.createAsset(newAsset);
-        return AssetFromJSONTyped(result, true)
+    public async post(@Body() assetRequest: AssetRequest): Promise<AssetResponse> {
+        const result = await this.assetService.createAsset(newAssetFrom(assetRequest));
+        return AssetResponseFromJSONTyped({ asset: assetDTOFrom(result) }, false)
     }
 
     @Put('/:id')
-    public async put(@Param('id') id: string, @Body() assetRequest: AssetsRequest): Promise<Asset> {
-        const newAsset = newAssetFrom(assetRequest)
-        const result = await this.assetService.updateAsset(id, newAsset)
-        return AssetFromJSONTyped(result, true)
+    public async put(@Param('id') id: string, @Body() assetRequest: AssetRequest): Promise<AssetResponse> {
+        const result = await this.assetService.updateAsset(id, newAssetFrom(assetRequest))
+        return AssetResponseFromJSONTyped({ asset: assetDTOFrom(result) }, false)
     }
 
     @OnUndefined(204)

@@ -4,12 +4,13 @@ import { StepTypePg } from './stepType';
 import { workflows } from './workflow';
 import { stepActions } from './stepAction';
 import { assets } from './asset';
+import { StepType } from '../../types';
 
 export const steps = pgTable('step', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
     title: varchar({ length: 255 }).notNull(),
     order: integer().notNull(),
-    type: StepTypePg('step_type').notNull(),
+    type: StepTypePg('step_type').notNull().$type<StepType>(),
     subFlow: uuid('sub_flow').references(() => workflows.id),
     workflowId: uuid('workflow_id').references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
     image: uuid().references(() => assets.id).notNull(),

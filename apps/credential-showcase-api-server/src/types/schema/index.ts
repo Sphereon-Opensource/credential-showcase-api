@@ -5,7 +5,10 @@ import {
     credentialRepresentations,
     issuers,
     relyingParties,
-    revocationInfo
+    revocationInfo,
+    workflows,
+    steps,
+    stepActions
 } from '../../database/schema';
 
 // $inferSelect does not respect nullability of fields and the type has every field as required

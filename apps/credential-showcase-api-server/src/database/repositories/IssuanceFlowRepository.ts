@@ -1,9 +1,10 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
+import IssuerRepository from './IssuerRepository';
 import { NotFoundError } from '../../errors';
-import { stepActions, steps, workflows } from '../schema';
+import { assets, stepActions, steps, workflows } from '../schema';
 import {
     IssuanceFlow,
     NewIssuanceFlow,
@@ -19,15 +20,23 @@ import {
 class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIssuanceFlow> {
     constructor(
         private readonly databaseService: DatabaseService,
-        private readonly assetRepository: AssetRepository
+        private readonly assetRepository: AssetRepository,
+        private readonly issuerRepository: IssuerRepository
     ) {}
 
     // ISSUANCE FLOW
 
     async create(issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> {
+        const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
+
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
             const [issuanceFlowResult] = await tx.insert(workflows)
-                .values(issuanceFlow)
+                .values({
+                    name: issuanceFlow.name,
+                    description: issuanceFlow.description,
+                    issuer: issuerResult.id,
+                    workflowType: WorkflowType.ISSUANCE
+                })
                 .returning();
 
             const stepsResult = await tx.insert(steps)
@@ -46,56 +55,21 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                 ))
                 .returning();
 
-            // const stepPromises = issuanceFlow.steps.map(async (step: NewStep) => {
-            //     await this.assetRepository.findById(step.image)
-            //     return {
-            //         ...step,
-            //         workflow: issuanceFlowResult.id
-            //     }
-            // })
+            const stepAssetsResult = await tx.query.assets.findMany({
+                where: inArray(assets.id, stepsResult.map(step => step.asset))
+            })
 
-            // const stepsResult = await tx.insert(steps)
-            //     .values(await Promise.all(stepPromises))
-            //     .returning();
-
-
-            // const stepResultPromises = stepsResult.map(async step => {
-            //     return {
-            //         ...step,
-            //         image: await this.assetRepository.findById(step.image),
-            //     }
-            // })
-            //
-            // const xx = await Promise.all(stepResultPromises)
-
-            // @ts-ignore
             return {
                 ...issuanceFlowResult,
-                // @ts-ignore // TODO return image object in steps
-                steps: stepsResult.map((stepResult) => ({
+                steps: stepsResult.map(stepResult => ({
                     ...stepResult,
-                    actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id)
+                    actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
+                    asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
+                        ?? (() => { throw new Error(`Asset not found for step ${stepResult.id}`) })()
                 })),
-                // @ts-ignore
-                relyingParty: null // TODO
+                issuer: issuerResult
             }
         })
-
-
-
-
-        // const [result] = await (await this.databaseService.getConnection())
-        //     .insert(workflows)
-        //     .values(issuanceFlow)
-        //     .returning();
-        //
-        // // TODO
-        // return {
-        //     ...result,
-        //     steps: [],
-        //     // @ts-ignore
-        //     relyingParty: null
-        // }
     }
 
     async delete(issuanceFlowId: string): Promise<void> {
@@ -125,7 +99,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
     async findById(issuanceFlowId: string): Promise<IssuanceFlow> {
         const result = await (await this.databaseService.getConnection()).query.workflows.findFirst({
-            where: eq(workflows.id, issuanceFlowId),
+            where: and(eq(workflows.id, issuanceFlowId), eq(workflows.workflowType, WorkflowType.ISSUANCE)),
             with: {
                 steps: {
                     with: {
@@ -157,22 +131,18 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             return Promise.reject(new NotFoundError(`No issuance flow found for id: ${issuanceFlowId}`))
         }
 
-        // TODO
-        // @ts-ignore
         return {
             ...result,
-            relyingParty: {
-                // @ts-ignore
-                ...result.relyingParty,
-                // @ts-ignore
-                credentialDefinitions: result.relyingParty?.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO needs to be issuer // any
+            issuer: {
+                ...result.issuer as any, // TODO check this typing issue at a later point in time
+                credentialDefinitions: result.issuer!.credentialDefinitions.map(credentialDefinition => credentialDefinition.cd)
             }
-        }
+        };
     }
 
     async findAll(): Promise<IssuanceFlow[]> {
         const result = await (await this.databaseService.getConnection()).query.workflows.findMany({
-            where: eq(workflows.workflowType, WorkflowType.PRESENTATION), // TODO issuance
+            where: eq(workflows.workflowType, WorkflowType.ISSUANCE),
             with: {
                 steps: {
                     with: {
@@ -202,9 +172,9 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
         return result.map((workflow: any) => ({
             ...workflow,
-            relyingParty: {
-                ...workflow.relyingParty,
-                credentialDefinitions: workflow.relyingParty.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO needs to be issuer // any
+            issuer: {
+                ...workflow.issuer,
+                credentialDefinitions: workflow.issuer.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO any
             }
         }));
     }
@@ -214,16 +184,27 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
     async createStep(issuanceFlowId: string, step: NewStep): Promise<Step> {
         await this.findById(issuanceFlowId)
         const imageResult = await this.assetRepository.findById(step.asset)
-        const [result] = await (await this.databaseService.getConnection())
-            .insert(steps)
-            .values({ ...step, workflow: issuanceFlowId })
-            .returning();
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Step> => {
+            const [stepResult] = await tx.insert(steps)
+                .values({
+                    ...step,
+                    workflow: issuanceFlowId
+                })
+                .returning();
 
-        return {
-            ...result,
-            actions: [], // TODO
-            asset: imageResult
-        }
+            const actionsResult = await tx.insert(stepActions)
+                .values(step.actions.map((action: NewStepAction) => ({
+                    ...action,
+                    step: stepResult.id
+                })))
+                .returning();
+
+            return {
+                ...stepResult,
+                actions: actionsResult,
+                asset: imageResult
+            }
+        })
     }
 
     async deleteStep(issuanceFlowId: string, stepId: string): Promise<void> {
@@ -246,30 +227,22 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
     }
 
     async findByStepId(issuanceFlowId: string, stepId: string): Promise<Step> {
-        const [result] = await (await this.databaseService.getConnection())
-            .select()
-            .from(steps)
-            .where(and(eq(steps.id, stepId), eq(steps.workflow, issuanceFlowId)));
+        const result = await (await this.databaseService.getConnection()).query.steps.findFirst({
+            where: and(and(eq(steps.id, stepId), eq(steps.workflow, issuanceFlowId))),
+            with: {
+                actions: true,
+                asset: true
+            }
+        })
 
         if (!result) {
             return Promise.reject(new NotFoundError(`No step found for issuance flow id ${issuanceFlowId} and step id: ${stepId}`))
         }
 
-        //const imageResult = await this.assetRepository.findById(result.image)
-        // @ts-ignore // TODO return image object in steps
-        return {
-            ...result,
-            //image: imageResult
-        }
+        return result
     }
 
     async findAllSteps(issuanceFlowId: string): Promise<Step[]> {
-        // const result = await (await this.databaseService.getConnection())
-        //     .select()
-        //     .from(steps)
-        //     .where(eq(steps.workflow, issuanceFlowId));
-        //
-        // return result
         return (await this.databaseService.getConnection()).query.steps.findMany({
             where: eq(steps.workflow, issuanceFlowId),
             with: {
@@ -315,11 +288,9 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         const [result] = await (await this.databaseService.getConnection())
             .select()
             .from(stepActions)
-            //.innerJoin(steps, eq(stepActions.step, steps.id))
             .where(and(
                 eq(stepActions.id, actionId),
                 eq(stepActions.step, stepId),
-                //eq(steps.workflow, issuanceFlowId)
             ));
 
         if (!result) {

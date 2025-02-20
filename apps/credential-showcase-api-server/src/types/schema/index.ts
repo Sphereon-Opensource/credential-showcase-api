@@ -95,12 +95,14 @@ export enum WorkflowType {
     PRESENTATION = 'PRESENTATION',
 }
 
-export type IssuanceFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer'> & {
+export type IssuanceFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer' | 'workflowType'> & {
     steps: Step[]
-    relyingParty?: RelyingParty | null //TODO issuer, remove null
-    issuer?: RelyingParty | null //TODO issuer, remove null
+    issuer?: Issuer | null
 };
-export type NewIssuanceFlow = typeof workflows.$inferInsert & { relyingParty: string, steps: NewStep[] }; //issuer
+export type NewIssuanceFlow = Omit<typeof workflows.$inferInsert, 'relyingParty' | 'workflowType'> & {
+    issuer: string
+    steps: NewStep[]
+};
 
 export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
     actions: StepAction[]

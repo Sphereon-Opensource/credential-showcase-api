@@ -1,10 +1,12 @@
 import 'reflect-metadata';
-import { drizzle } from 'drizzle-orm/pglite'
+import { PGlite } from '@electric-sql/pglite';
+import { drizzle } from 'drizzle-orm/pglite';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
 import DatabaseService from '../services/DatabaseService';
 import IssuanceFlowRepository from '../database/repositories/IssuanceFlowRepository';
-import RelyingPartyRepository from '../database/repositories/RelyingPartyRepository';
+import IssuerRepository from '../database/repositories/IssuerRepository';
 import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
 import AssetRepository from '../database/repositories/AssetRepository';
 import * as schema from '../database/schema';
@@ -13,31 +15,32 @@ import {
     NewAsset,
     NewCredentialDefinition,
     NewIssuanceFlow,
-    NewRelyingParty,
     NewStep,
     NewStepAction,
-    RelyingParty,
     CredentialAttributeType,
     CredentialType,
-    RelyingPartyType,
     StepType,
-    WorkflowType
+    NewIssuer,
+    IssuerType,
+    Issuer
 } from '../types';
 
 describe('Database issuance flow repository tests', (): void => {
+    let client: PGlite;
     let repository: IssuanceFlowRepository;
-    let relyingParty: RelyingParty
+    let issuer: Issuer
     let asset: Asset
 
     beforeEach(async (): Promise<void> => {
-        const database: any = drizzle({ schema });
+        client = new PGlite();
+        const database = drizzle(client, { schema }) as unknown as NodePgDatabase;
         await migrate(database, { migrationsFolder: './apps/credential-showcase-api-server/src/database/migrations' })
         const mockDatabaseService = {
             getConnection: jest.fn().mockResolvedValue(database),
         };
         Container.set(DatabaseService, mockDatabaseService);
         repository = Container.get(IssuanceFlowRepository);
-        const relyingPartyRepository = Container.get(RelyingPartyRepository);
+        const issuerRepository = Container.get(IssuerRepository);
         const credentialDefinitionRepository = Container.get(CredentialDefinitionRepository);
         const assetRepository = Container.get(AssetRepository);
         const newAsset: NewAsset = {
@@ -78,18 +81,19 @@ describe('Database issuance flow repository tests', (): void => {
             }
         };
         const credentialDefinition = await credentialDefinitionRepository.create(newCredentialDefinition)
-        const newRelyingParty: NewRelyingParty = {
+        const newIssuer: NewIssuer = {
             name: 'example_name',
-            type: RelyingPartyType.ARIES,
+            type: IssuerType.ARIES,
             credentialDefinitions: [credentialDefinition.id],
             description: 'example_description',
             organization: 'example_organization',
             logo: asset.id,
         };
-        relyingParty = await relyingPartyRepository.create(newRelyingParty)
+        issuer = await issuerRepository.create(newIssuer)
     })
 
-    afterEach((): void => {
+    afterEach(async (): Promise<void> => {
+        await client.close();
         jest.resetAllMocks();
         Container.reset();
     });
@@ -98,8 +102,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION, // TODO ISSUANCE
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -136,7 +139,6 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow).toBeDefined()
         expect(savedIssuanceFlow.name).toEqual(issuanceFlow.name)
         expect(savedIssuanceFlow.description).toEqual(issuanceFlow.description)
-        expect(savedIssuanceFlow.workflowType).toEqual(issuanceFlow.workflowType)
         expect(savedIssuanceFlow.steps).toBeDefined();
         expect(savedIssuanceFlow.steps.length).toEqual(2)
         expect(savedIssuanceFlow.steps[0].title).toEqual(issuanceFlow.steps[0].title)
@@ -146,16 +148,14 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow.steps[0].asset.mediaType).toEqual(asset.mediaType)
         expect(savedIssuanceFlow.steps[0].asset.fileName).toEqual(asset.fileName)
         expect(savedIssuanceFlow.steps[0].asset.description).toEqual(asset.description)
-        expect(savedIssuanceFlow.steps[0].asset.content).toStrictEqual(asset.content);
-
+        expect(savedIssuanceFlow.steps[0].asset.content).toStrictEqual(asset.content)
     })
 
     it('Should get issuance flow by id from database', async (): Promise<void> => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION, // TODO ISSUANCE
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -195,7 +195,6 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb).toBeDefined()
         expect(fromDb.name).toEqual(issuanceFlow.name)
         expect(fromDb.description).toEqual(issuanceFlow.description)
-        expect(fromDb.workflowType).toEqual(issuanceFlow.workflowType)
         expect(fromDb.steps).toBeDefined()
         expect(fromDb.steps.length).toEqual(2)
     })
@@ -204,8 +203,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION, // TODO ISSUANCE
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -252,8 +250,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION, // TODO ISSUANCE
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -318,8 +315,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -348,9 +344,14 @@ describe('Database issuance flow repository tests', (): void => {
             asset: asset.id,
             actions: [
                 {
-                    title: 'example_title',
-                    type: 'example_type',
-                    text: 'example_text'
+                    title: 'example_title1',
+                    type: 'example_type1',
+                    text: 'example_text1'
+                },
+                {
+                    title: 'example_title2',
+                    type: 'example_type2',
+                    text: 'example_text2'
                 }
             ]
         };
@@ -365,6 +366,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.steps[1].title).toEqual(step.title)
         expect(fromDb.steps[1].order).toEqual(step.order)
         expect(fromDb.steps[1].type).toEqual(step.type)
+        expect(fromDb.steps[1].actions.length).toEqual(2)
+        expect(fromDb.steps[1].actions[0].id).toBeDefined()
+        expect(fromDb.steps[1].actions[0].title).toEqual(step.actions[0].title)
+        expect(fromDb.steps[1].actions[0].type).toEqual(step.actions[0].type)
+        expect(fromDb.steps[1].actions[0].text).toEqual(step.actions[0].text)
         expect(fromDb.steps[1].asset).toBeDefined()
         expect(fromDb.steps[1].asset.mediaType).toEqual(asset.mediaType)
         expect(fromDb.steps[1].asset.fileName).toEqual(asset.fileName)
@@ -376,8 +382,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -386,9 +391,14 @@ describe('Database issuance flow repository tests', (): void => {
                     asset: asset.id,
                     actions: [
                         {
-                            title: 'example_title',
-                            type: 'example_type',
-                            text: 'example_text'
+                            title: 'example_title1',
+                            type: 'example_type1',
+                            text: 'example_text1'
+                        },
+                        {
+                            title: 'example_title2',
+                            type: 'example_type2',
+                            text: 'example_text2'
                         }
                     ]
                 }
@@ -406,6 +416,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.title).toEqual(issuanceFlow.steps[0].title)
         expect(fromDb.order).toEqual(issuanceFlow.steps[0].order)
         expect(fromDb.type).toEqual(issuanceFlow.steps[0].type)
+        expect(fromDb.actions.length).toEqual(2)
+        expect(fromDb.actions[0].id).toBeDefined()
+        expect(fromDb.actions[0].title).toEqual(issuanceFlow.steps[0].actions[0].title)
+        expect(fromDb.actions[0].type).toEqual(issuanceFlow.steps[0].actions[0].type)
+        expect(fromDb.actions[0].text).toEqual(issuanceFlow.steps[0].actions[0].text)
         expect(fromDb.asset).toBeDefined()
         expect(fromDb.asset.mediaType).toEqual(asset.mediaType)
         expect(fromDb.asset.fileName).toEqual(asset.fileName)
@@ -417,8 +432,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -461,6 +475,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb[0].title).toEqual(issuanceFlow.steps[0].title)
         expect(fromDb[0].order).toEqual(issuanceFlow.steps[0].order)
         expect(fromDb[0].type).toEqual(issuanceFlow.steps[0].type)
+        expect(fromDb[0].actions.length).toEqual(1)
+        expect(fromDb[0].actions[0].id).toBeDefined()
+        expect(fromDb[0].actions[0].title).toEqual(issuanceFlow.steps[0].actions[0].title)
+        expect(fromDb[0].actions[0].type).toEqual(issuanceFlow.steps[0].actions[0].type)
+        expect(fromDb[0].actions[0].text).toEqual(issuanceFlow.steps[0].actions[0].text)
         expect(fromDb[0].asset).toBeDefined()
         expect(fromDb[0].asset.mediaType).toEqual(asset.mediaType)
         expect(fromDb[0].asset.fileName).toEqual(asset.fileName)
@@ -472,8 +491,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -525,8 +543,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -573,8 +590,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -608,8 +624,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',
@@ -650,8 +665,7 @@ describe('Database issuance flow repository tests', (): void => {
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
-            workflowType: WorkflowType.PRESENTATION,
-            relyingParty: relyingParty.id, //issuer
+            issuer: issuer.id,
             steps: [
                 {
                     title: 'example_title',

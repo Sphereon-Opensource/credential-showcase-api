@@ -128,7 +128,7 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
 
     return {
       ...result,
-      credentialDefinitions: result.credentialDefinitions.map((item) => item.cd)
+      credentialDefinitions: result.credentialDefinitions.map(item => item.cd)
     }
   }
 

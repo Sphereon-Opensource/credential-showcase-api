@@ -26,7 +26,7 @@ export const stepRelations = relations(steps, ({ one, many }) => ({
         fields: [steps.workflow],
         references: [workflows.id],
     }),
-    image: one(assets, {
+    asset: one(assets, {
         fields: [steps.asset],
         references: [assets.id],
     }),

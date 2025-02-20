@@ -130,7 +130,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                 steps: {
                     with: {
                         actions: true,
-                        image: true
+                        asset: true
                     }
                 },
                 issuer: {
@@ -177,7 +177,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                 steps: {
                     with: {
                         actions: true,
-                        image: true
+                        asset: true
                     }
                 },
                 issuer: {
@@ -222,7 +222,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         return {
             ...result,
             actions: [], // TODO
-            image: imageResult
+            asset: imageResult
         }
     }
 
@@ -273,7 +273,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         return (await this.databaseService.getConnection()).query.steps.findMany({
             where: eq(steps.workflow, issuanceFlowId),
             with: {
-                image: true,
+                asset: true,
                 actions: true,
             },
         });

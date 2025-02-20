@@ -142,11 +142,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow.steps[0].title).toEqual(issuanceFlow.steps[0].title)
         expect(savedIssuanceFlow.steps[0].order).toEqual(issuanceFlow.steps[0].order)
         expect(savedIssuanceFlow.steps[0].type).toEqual(issuanceFlow.steps[0].type)
-        expect(savedIssuanceFlow.steps[0].image).toBeDefined()
-        expect(savedIssuanceFlow.steps[0].image.mediaType).toEqual(asset.mediaType)
-        expect(savedIssuanceFlow.steps[0].image.fileName).toEqual(asset.fileName)
-        expect(savedIssuanceFlow.steps[0].image.description).toEqual(asset.description)
-        expect(savedIssuanceFlow.steps[0].image.content).toStrictEqual(asset.content);
+        expect(savedIssuanceFlow.steps[0].asset).toBeDefined()
+        expect(savedIssuanceFlow.steps[0].asset.mediaType).toEqual(asset.mediaType)
+        expect(savedIssuanceFlow.steps[0].asset.fileName).toEqual(asset.fileName)
+        expect(savedIssuanceFlow.steps[0].asset.description).toEqual(asset.description)
+        expect(savedIssuanceFlow.steps[0].asset.content).toStrictEqual(asset.content);
 
     })
 
@@ -365,11 +365,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.steps[1].title).toEqual(step.title)
         expect(fromDb.steps[1].order).toEqual(step.order)
         expect(fromDb.steps[1].type).toEqual(step.type)
-        expect(fromDb.steps[1].image).toBeDefined()
-        expect(fromDb.steps[1].image.mediaType).toEqual(asset.mediaType)
-        expect(fromDb.steps[1].image.fileName).toEqual(asset.fileName)
-        expect(fromDb.steps[1].image.description).toEqual(asset.description)
-        expect(fromDb.steps[1].image.content).toStrictEqual(asset.content);
+        expect(fromDb.steps[1].asset).toBeDefined()
+        expect(fromDb.steps[1].asset.mediaType).toEqual(asset.mediaType)
+        expect(fromDb.steps[1].asset.fileName).toEqual(asset.fileName)
+        expect(fromDb.steps[1].asset.description).toEqual(asset.description)
+        expect(fromDb.steps[1].asset.content).toStrictEqual(asset.content);
     })
 
     it('Should get issuance flow step by step id from database', async (): Promise<void> => {
@@ -406,11 +406,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.title).toEqual(issuanceFlow.steps[0].title)
         expect(fromDb.order).toEqual(issuanceFlow.steps[0].order)
         expect(fromDb.type).toEqual(issuanceFlow.steps[0].type)
-        expect(fromDb.image).toBeDefined()
-        expect(fromDb.image.mediaType).toEqual(asset.mediaType)
-        expect(fromDb.image.fileName).toEqual(asset.fileName)
-        expect(fromDb.image.description).toEqual(asset.description)
-        expect(fromDb.image.content).toStrictEqual(asset.content);
+        expect(fromDb.asset).toBeDefined()
+        expect(fromDb.asset.mediaType).toEqual(asset.mediaType)
+        expect(fromDb.asset.fileName).toEqual(asset.fileName)
+        expect(fromDb.asset.description).toEqual(asset.description)
+        expect(fromDb.asset.content).toStrictEqual(asset.content);
     })
 
     it('Should get all issuance flow steps from database', async (): Promise<void> => {
@@ -461,11 +461,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb[0].title).toEqual(issuanceFlow.steps[0].title)
         expect(fromDb[0].order).toEqual(issuanceFlow.steps[0].order)
         expect(fromDb[0].type).toEqual(issuanceFlow.steps[0].type)
-        expect(fromDb[0].image).toBeDefined()
-        expect(fromDb[0].image.mediaType).toEqual(asset.mediaType)
-        expect(fromDb[0].image.fileName).toEqual(asset.fileName)
-        expect(fromDb[0].image.description).toEqual(asset.description)
-        expect(fromDb[0].image.content).toStrictEqual(asset.content);
+        expect(fromDb[0].asset).toBeDefined()
+        expect(fromDb[0].asset.mediaType).toEqual(asset.mediaType)
+        expect(fromDb[0].asset.fileName).toEqual(asset.fileName)
+        expect(fromDb[0].asset.description).toEqual(asset.description)
+        expect(fromDb[0].asset.content).toStrictEqual(asset.content);
     })
 
     it('Should delete issuance flow step from database', async (): Promise<void> => {

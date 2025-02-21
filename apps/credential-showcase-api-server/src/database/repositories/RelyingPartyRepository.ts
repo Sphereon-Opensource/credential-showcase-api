@@ -68,11 +68,12 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
     }
 
     async update(id: string, relyingParty: NewRelyingParty): Promise<RelyingParty> {
+        await this.findById(id)
+
         if (relyingParty.credentialDefinitions.length === 0) {
             return Promise.reject(Error('At least one credential definition is required'));
         }
 
-        await this.findById(id)
         const credentialDefinitionPromises = relyingParty.credentialDefinitions.map(async credentialDefinition => await this.credentialDefinitionRepository.findById(credentialDefinition))
         await Promise.all(credentialDefinitionPromises)
         const logoResult = relyingParty.logo ? await this.assetRepository.findById(relyingParty.logo) : null

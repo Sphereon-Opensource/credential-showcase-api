@@ -69,11 +69,12 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
   }
 
   async update(id: string, issuer: NewIssuer): Promise<Issuer> {
+    await this.findById(id)
+
     if (issuer.credentialDefinitions.length === 0) {
       return Promise.reject(Error('At least one credential definition is required'));
     }
 
-    await this.findById(id)
     const credentialDefinitionPromises = issuer.credentialDefinitions.map(async credentialDefinition => await this.credentialDefinitionRepository.findById(credentialDefinition))
     await Promise.all(credentialDefinitionPromises)
     const logoResult = issuer.logo ? await this.assetRepository.findById(issuer.logo) : null

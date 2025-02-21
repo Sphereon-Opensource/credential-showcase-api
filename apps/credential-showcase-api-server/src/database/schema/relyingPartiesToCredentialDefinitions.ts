@@ -13,11 +13,11 @@ export const relyingPartiesToCredentialDefinitions = pgTable('relyingPartiesToCr
 );
 
 export const relyingPartiesToCredentialDefinitionsRelations = relations(relyingPartiesToCredentialDefinitions, ({ one }) => ({
-    credentialDefinition: one(credentialDefinitions, {
+    cd: one(credentialDefinitions, {
         fields: [relyingPartiesToCredentialDefinitions.credentialDefinition],
         references: [credentialDefinitions.id],
     }),
-    relyingParty: one(relyingParties, {
+    rp: one(relyingParties, {
         fields: [relyingPartiesToCredentialDefinitions.relyingParty],
         references: [relyingParties.id],
     }),

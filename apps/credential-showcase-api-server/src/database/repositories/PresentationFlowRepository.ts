@@ -2,13 +2,13 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
-import IssuerRepository from './IssuerRepository';
+import RelyingPartyRepository from './RelyingPartyRepository';
 import { NotFoundError } from '../../errors';
 import { assets, stepActions, steps, workflows } from '../schema';
 import { sortSteps } from '../../utils/sortUtils';
 import {
-    IssuanceFlow,
-    NewIssuanceFlow,
+    PresentationFlow,
+    NewPresentationFlow,
     NewStep,
     NewStepAction,
     RepositoryDefinition,
@@ -18,41 +18,41 @@ import {
 } from '../../types';
 
 @Service()
-class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIssuanceFlow> {
+class PresentationFlowRepository implements RepositoryDefinition<PresentationFlow, NewPresentationFlow> {
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly assetRepository: AssetRepository,
-        private readonly issuerRepository: IssuerRepository
+        private readonly relyingPartyRepository: RelyingPartyRepository
     ) {}
 
-    // ISSUANCE FLOW
+    // PRESENTATION FLOW
 
-    async create(issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> {
-        if (issuanceFlow.steps.length === 0) {
+    async create(presentationFlow: NewPresentationFlow): Promise<PresentationFlow> {
+        if (presentationFlow.steps.length === 0) {
             return Promise.reject(Error('At least one step is required'));
         }
-        const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
+        const relyingPartyResult = await this.relyingPartyRepository.findById(presentationFlow.relyingParty)
 
-        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
-            const [issuanceFlowResult] = await tx.insert(workflows)
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<PresentationFlow> => {
+            const [presentationFlowResult] = await tx.insert(workflows)
                 .values({
-                    name: issuanceFlow.name,
-                    description: issuanceFlow.description,
-                    issuer: issuerResult.id,
-                    workflowType: WorkflowType.ISSUANCE
+                    name: presentationFlow.name,
+                    description: presentationFlow.description,
+                    relyingParty: relyingPartyResult.id,
+                    workflowType: WorkflowType.PRESENTATION
                 })
                 .returning();
 
             const stepsResult = await tx.insert(steps)
-                .values(issuanceFlow.steps.map((step: NewStep) => ({
+                .values(presentationFlow.steps.map((step: NewStep) => ({
                     ...step,
-                    workflow: issuanceFlowResult.id
+                    workflow: presentationFlowResult.id
                 })))
                 .returning();
 
             const stepActionsResult = await tx.insert(stepActions)
                 .values(stepsResult.flatMap((stepResult, index) =>
-                    issuanceFlow.steps[index].actions.map(action => ({
+                    presentationFlow.steps[index].actions.map(action => ({
                         ...action,
                         step: stepResult.id,
                     }))
@@ -70,54 +70,54 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             }))
 
             return {
-                ...issuanceFlowResult,
+                ...presentationFlowResult,
                 steps: sortSteps(flowSteps),
-                issuer: issuerResult
+                relyingParty: relyingPartyResult
             }
         })
     }
 
-    async delete(issuanceFlowId: string): Promise<void> {
-        await this.findById(issuanceFlowId)
+    async delete(presentationFlowId: string): Promise<void> {
+        await this.findById(presentationFlowId)
         await (await this.databaseService.getConnection())
             .delete(workflows)
-            .where(eq(workflows.id, issuanceFlowId))
+            .where(eq(workflows.id, presentationFlowId))
     }
 
-    async update(issuanceFlowId: string, issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> {
-        await this.findById(issuanceFlowId)
-        if (issuanceFlow.steps.length === 0) {
+    async update(presentationFlowId: string, presentationFlow: NewPresentationFlow): Promise<PresentationFlow> {
+        await this.findById(presentationFlowId)
+        if (presentationFlow.steps.length === 0) {
             return Promise.reject(Error('At least one step is required'));
         }
-        const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
+        const relyingPartyResult = await this.relyingPartyRepository.findById(presentationFlow.relyingParty)
 
-        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
-            const [issuanceFlowResult] = await tx.update(workflows)
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<PresentationFlow> => {
+            const [presentationFlowResult] = await tx.update(workflows)
                 .set({
-                    name: issuanceFlow.name,
-                    description: issuanceFlow.description,
-                    issuer: issuerResult.id,
-                    workflowType: WorkflowType.ISSUANCE
+                    name: presentationFlow.name,
+                    description: presentationFlow.description,
+                    relyingParty: relyingPartyResult.id,
+                    workflowType: WorkflowType.PRESENTATION
                 })
-                .where(eq(workflows.id, issuanceFlowId))
+                .where(eq(workflows.id, presentationFlowId))
                 .returning();
 
             const selectedSteps = await tx.select({ id: steps.id })
                 .from(steps)
-                .where(eq(steps.workflow, issuanceFlowId));
-            await tx.delete(steps).where(eq(steps.workflow, issuanceFlowId))
+                .where(eq(steps.workflow, presentationFlowId));
+            await tx.delete(steps).where(eq(steps.workflow, presentationFlowId))
             await tx.delete(stepActions).where(inArray(stepActions.step, selectedSteps.map(step => step.id)));
 
             const stepsResult = await tx.insert(steps)
-                .values(issuanceFlow.steps.map((step: NewStep) => ({
+                .values(presentationFlow.steps.map((step: NewStep) => ({
                     ...step,
-                    workflow: issuanceFlowResult.id
+                    workflow: presentationFlowResult.id
                 })))
                 .returning();
 
             const stepActionsResult = await tx.insert(stepActions)
                 .values(stepsResult.flatMap((stepResult, index) =>
-                    issuanceFlow.steps[index].actions.map(action => ({
+                    presentationFlow.steps[index].actions.map(action => ({
                         ...action,
                         step: stepResult.id,
                     }))
@@ -135,16 +135,16 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             }))
 
             return {
-                ...issuanceFlowResult,
+                ...presentationFlowResult,
                 steps: sortSteps(flowSteps),
-                issuer: issuerResult
+                relyingParty: relyingPartyResult
             }
         })
     }
 
-    async findById(issuanceFlowId: string): Promise<IssuanceFlow> {
+    async findById(presentationFlowId: string): Promise<PresentationFlow> {
         const result = await (await this.databaseService.getConnection()).query.workflows.findFirst({
-            where: and(eq(workflows.id, issuanceFlowId), eq(workflows.workflowType, WorkflowType.ISSUANCE)),
+            where: and(eq(workflows.id, presentationFlowId), eq(workflows.workflowType, WorkflowType.PRESENTATION)),
             with: {
                 steps: {
                     with: {
@@ -152,7 +152,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                         asset: true
                     }
                 },
-                issuer: {
+                relyingParty: {
                     with: {
                         credentialDefinitions: {
                             with: {
@@ -173,22 +173,22 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         })
 
         if (!result) {
-            return Promise.reject(new NotFoundError(`No issuance flow found for id: ${issuanceFlowId}`))
+            return Promise.reject(new NotFoundError(`No presentation flow found for id: ${presentationFlowId}`))
         }
 
         return {
             ...result,
             steps: sortSteps(result.steps),
-            issuer: {
-                ...result.issuer as any, // TODO check this typing issue at a later point in time
-                credentialDefinitions: result.issuer!.credentialDefinitions.map(credentialDefinition => credentialDefinition.cd)
+            relyingParty: {
+                ...result.relyingParty as any, // TODO check this typing issue at a later point in time
+                credentialDefinitions: result.relyingParty!.credentialDefinitions.map(credentialDefinition => credentialDefinition.cd)
             }
         };
     }
 
-    async findAll(): Promise<IssuanceFlow[]> {
+    async findAll(): Promise<PresentationFlow[]> {
         const result = await (await this.databaseService.getConnection()).query.workflows.findMany({
-            where: eq(workflows.workflowType, WorkflowType.ISSUANCE),
+            where: eq(workflows.workflowType, WorkflowType.PRESENTATION),
             with: {
                 steps: {
                     with: {
@@ -196,7 +196,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                         asset: true
                     }
                 },
-                issuer: {
+                relyingParty: {
                     with: {
                         credentialDefinitions: {
                             with: {
@@ -220,16 +220,16 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             ...workflow,
             steps: sortSteps(workflow.steps),
             issuer: {
-                ...workflow.issuer,
-                credentialDefinitions: workflow.issuer.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO any
+                ...workflow.relyingParty,
+                credentialDefinitions: workflow.relyingParty.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO any
             }
         }));
     }
 
-    // ISSUANCE FLOW STEP
+    // PRESENTATION FLOW STEP
 
-    async createStep(issuanceFlowId: string, step: NewStep): Promise<Step> {
-        await this.findById(issuanceFlowId)
+    async createStep(presentationFlowId: string, step: NewStep): Promise<Step> {
+        await this.findById(presentationFlowId)
 
         if (step.actions.length === 0) {
             return Promise.reject(Error('At least one action is required'));
@@ -240,7 +240,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             const [stepResult] = await tx.insert(steps)
                 .values({
                     ...step,
-                    workflow: issuanceFlowId
+                    workflow: presentationFlowId
                 })
                 .returning();
 
@@ -259,15 +259,15 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         })
     }
 
-    async deleteStep(issuanceFlowId: string, stepId: string): Promise<void> {
-        await this.findByStepId(issuanceFlowId, stepId)
+    async deleteStep(presentationFlowId: string, stepId: string): Promise<void> {
+        await this.findByStepId(presentationFlowId, stepId)
         await (await this.databaseService.getConnection())
             .delete(steps)
-            .where(and(eq(steps.id, stepId), eq(steps.workflow, issuanceFlowId)));
+            .where(and(eq(steps.id, stepId), eq(steps.workflow, presentationFlowId)));
     }
 
-    async updateStep(issuanceFlowId: string, stepId: string, step: NewStep): Promise<Step> {
-        await this.findById(issuanceFlowId)
+    async updateStep(presentationFlowId: string, stepId: string, step: NewStep): Promise<Step> {
+        await this.findById(presentationFlowId)
 
         if (step.actions.length === 0) {
             return Promise.reject(Error('At least one action is required'));
@@ -278,7 +278,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             const [stepResult] = await tx.update(steps)
                 .set({
                     ...step,
-                    workflow: issuanceFlowId
+                    workflow: presentationFlowId
                 })
                 .where(eq(steps.id, stepId))
                 .returning();
@@ -300,9 +300,9 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         })
     }
 
-    async findByStepId(issuanceFlowId: string, stepId: string): Promise<Step> {
+    async findByStepId(presentationFlowId: string, stepId: string): Promise<Step> {
         const result = await (await this.databaseService.getConnection()).query.steps.findFirst({
-            where: and(and(eq(steps.id, stepId), eq(steps.workflow, issuanceFlowId))),
+            where: and(and(eq(steps.id, stepId), eq(steps.workflow, presentationFlowId))),
             with: {
                 actions: true,
                 asset: true
@@ -310,15 +310,15 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         })
 
         if (!result) {
-            return Promise.reject(new NotFoundError(`No step found for issuance flow id ${issuanceFlowId} and step id: ${stepId}`))
+            return Promise.reject(new NotFoundError(`No step found for presentation flow id ${presentationFlowId} and step id: ${stepId}`))
         }
 
         return result
     }
 
-    async findAllSteps(issuanceFlowId: string): Promise<Step[]> {
+    async findAllSteps(presentationFlowId: string): Promise<Step[]> {
         const result = await (await this.databaseService.getConnection()).query.steps.findMany({
-            where: eq(steps.workflow, issuanceFlowId),
+            where: eq(steps.workflow, presentationFlowId),
             with: {
                 asset: true,
                 actions: true,
@@ -328,10 +328,10 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         return sortSteps(result)
     }
 
-    // ISSUANCE FLOW STEP ACTION
+    // PRESENTATION FLOW STEP ACTION
 
-    async createStepAction(issuanceFlowId: string, stepId: string, action: NewStepAction): Promise<StepAction> {
-        await this.findByStepId(issuanceFlowId, stepId)
+    async createStepAction(presentationFlowId: string, stepId: string, action: NewStepAction): Promise<StepAction> {
+        await this.findByStepId(presentationFlowId, stepId)
         const [result] = await (await this.databaseService.getConnection())
             .insert(stepActions)
             .values({ ...action, step: stepId })
@@ -340,15 +340,15 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         return result
     }
 
-    async deleteStepAction(issuanceFlowId: string, stepId: string, actionId: string): Promise<void> {
-        await this.findByStepActionId(issuanceFlowId, stepId, actionId)
+    async deleteStepAction(presentationFlowId: string, stepId: string, actionId: string): Promise<void> {
+        await this.findByStepActionId(presentationFlowId, stepId, actionId)
         await (await this.databaseService.getConnection())
             .delete(stepActions)
             .where(and(eq(stepActions.id, actionId), eq(stepActions.step, stepId)));
     }
 
-    async updateStepAction(issuanceFlowId: string, stepId: string, actionId: string, action: NewStepAction): Promise<StepAction> {
-        await this.findByStepId(issuanceFlowId, stepId)
+    async updateStepAction(presentationFlowId: string, stepId: string, actionId: string, action: NewStepAction): Promise<StepAction> {
+        await this.findByStepId(presentationFlowId, stepId)
 
         const [result] = await (await this.databaseService.getConnection())
             .update(stepActions)
@@ -362,8 +362,8 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         return result
     }
 
-    async findByStepActionId(issuanceFlowId: string, stepId: string, actionId: string): Promise<StepAction> {
-        await this.findById(issuanceFlowId)
+    async findByStepActionId(presentationFlowId: string, stepId: string, actionId: string): Promise<StepAction> {
+        await this.findById(presentationFlowId)
         const [result] = await (await this.databaseService.getConnection())
             .select()
             .from(stepActions)
@@ -379,12 +379,12 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         return result
     }
 
-    async findAllStepActions(issuanceFlowId: string, stepId: string): Promise<StepAction[]> {
-        // TODO issuanceFlowId is not being used
+    async findAllStepActions(presentationFlowId: string, stepId: string): Promise<StepAction[]> {
+        // TODO presentationFlowId is not being used
         return (await this.databaseService.getConnection()).query.stepActions.findMany({
             where: eq(stepActions.step, stepId)
         });
     }
 }
 
-export default IssuanceFlowRepository
+export default PresentationFlowRepository

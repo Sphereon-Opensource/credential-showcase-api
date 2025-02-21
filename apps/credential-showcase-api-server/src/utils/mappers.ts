@@ -4,6 +4,7 @@ import {
     RelyingParty as RelyingPartyDTO,
     Issuer as IssuerDTO,
     IssuanceFlow as IssuanceFlowDTO,
+    PresentationFlow as PresentationFlowDTO,
     Step as StepDTO,
     AssetRequest,
 } from 'credential-showcase-openapi';
@@ -14,6 +15,7 @@ import {
     RelyingParty,
     Issuer,
     IssuanceFlow,
+    PresentationFlow,
     Step,
     WorkflowType
 } from '../types';
@@ -70,6 +72,19 @@ export const issuanceFlowDTOFrom = (issuanceFlow: IssuanceFlow): IssuanceFlowDTO
         issuer: issuerDTOFrom(issuanceFlow.issuer),
         type: WorkflowType.ISSUANCE,
         steps: issuanceFlow.steps.map(step => stepDTOFrom(step))
+    }
+}
+
+export const presentationFlowDTOFrom = (presentationFlow: PresentationFlow): PresentationFlowDTO => {
+    if (!presentationFlow.relyingParty) {
+        throw Error('Missing relying party in presentation flow')
+    }
+
+    return {
+        ...presentationFlow,
+        relyingParty: relyingPartyDTOFrom(presentationFlow.relyingParty),
+        type: WorkflowType.PRESENTATION,
+        steps: presentationFlow.steps.map(step => stepDTOFrom(step))
     }
 }
 

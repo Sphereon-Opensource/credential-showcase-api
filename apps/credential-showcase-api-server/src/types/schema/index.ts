@@ -104,6 +104,15 @@ export type NewIssuanceFlow = Omit<typeof workflows.$inferInsert, 'relyingParty'
     steps: NewStep[]
 };
 
+export type PresentationFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer' | 'workflowType'> & {
+    steps: Step[]
+    relyingParty?: RelyingParty | null
+};
+export type NewPresentationFlow = Omit<typeof workflows.$inferInsert, 'issuer' | 'workflowType'> & {
+    relyingParty: string
+    steps: NewStep[]
+};
+
 export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
     actions: StepAction[]
     asset?: Asset | null

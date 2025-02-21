@@ -108,7 +108,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
             with: {
                 credentialDefinitions: {
                     with: {
-                        credentialDefinition: {
+                        cd: {
                             with: {
                                 icon: true,
                                 attributes: true,
@@ -128,7 +128,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
         return {
             ...result,
-            credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinition)
+            credentialDefinitions: result.credentialDefinitions.map((item) => item.cd)
         }
     }
 
@@ -137,7 +137,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
             with: {
                 credentialDefinitions: {
                     with: {
-                        credentialDefinition: {
+                        cd: {
                             with: {
                                 icon: true,
                                 attributes: true,
@@ -153,7 +153,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
         return result.map(relyingParty => ({
             ...relyingParty,
-            credentialDefinitions: relyingParty.credentialDefinitions.map(item => item.credentialDefinition)
+            credentialDefinitions: relyingParty.credentialDefinitions.map(item => item.cd)
         }))
     }
 }

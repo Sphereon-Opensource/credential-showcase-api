@@ -15,6 +15,7 @@ import {
     StepAction,
     WorkflowType
 } from '../../types';
+import {sortSteps} from '../../utils/sortUtils';
 
 @Service()
 class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIssuanceFlow> {
@@ -27,6 +28,9 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
     // ISSUANCE FLOW
 
     async create(issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> {
+        if (issuanceFlow.steps.length === 0) {
+            return Promise.reject(Error('At least one step is required'));
+        }
         const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
@@ -56,17 +60,18 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                 .returning();
 
             const stepAssetsResult = await tx.query.assets.findMany({
-                where: inArray(assets.id, stepsResult.map(step => step.asset))
+                where: inArray(assets.id, stepsResult.map(step => step.asset).filter(assetId => assetId !== null))
             })
+
+            const flowSteps = stepsResult.map(stepResult => ({
+                ...stepResult,
+                actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
+                asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
+            }))
 
             return {
                 ...issuanceFlowResult,
-                steps: stepsResult.map(stepResult => ({
-                    ...stepResult,
-                    actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
-                    asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
-                        ?? (() => { throw new Error(`Asset not found for step ${stepResult.id}`) })()
-                })),
+                steps: sortSteps(flowSteps),
                 issuer: issuerResult
             }
         })
@@ -79,9 +84,13 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             .where(eq(workflows.id, issuanceFlowId))
     }
 
-    async update(issuanceFlowId: string, issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> { // TODO see the result of openapi and the payloads to determine how we update an asset
+    async update(issuanceFlowId: string, issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> {
         await this.findById(issuanceFlowId)
+        if (issuanceFlow.steps.length === 0) {
+            return Promise.reject(Error('At least one step is required'));
+        }
         const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
+
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
             const [issuanceFlowResult] = await tx.update(workflows)
                 .set({
@@ -116,17 +125,18 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                 .returning();
 
             const stepAssetsResult = await tx.query.assets.findMany({
-                where: inArray(assets.id, stepsResult.map(step => step.asset))
+                where: inArray(assets.id, stepsResult.map(step => step.asset).filter(assetId => assetId !== null))
             })
+
+            const flowSteps = stepsResult.map(stepResult => ({
+                ...stepResult,
+                actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
+                asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
+            }))
 
             return {
                 ...issuanceFlowResult,
-                steps: stepsResult.map(stepResult => ({
-                    ...stepResult,
-                    actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
-                    asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
-                        ?? (() => { throw new Error(`Asset not found for step ${stepResult.id}`) })()
-                })),
+                steps: sortSteps(flowSteps),
                 issuer: issuerResult
             }
         })
@@ -168,6 +178,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
         return {
             ...result,
+            steps: sortSteps(result.steps),
             issuer: {
                 ...result.issuer as any, // TODO check this typing issue at a later point in time
                 credentialDefinitions: result.issuer!.credentialDefinitions.map(credentialDefinition => credentialDefinition.cd)
@@ -207,6 +218,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
         return result.map((workflow: any) => ({
             ...workflow,
+            steps: sortSteps(workflow.steps),
             issuer: {
                 ...workflow.issuer,
                 credentialDefinitions: workflow.issuer.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO any
@@ -218,7 +230,12 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
     async createStep(issuanceFlowId: string, step: NewStep): Promise<Step> {
         await this.findById(issuanceFlowId)
-        const imageResult = await this.assetRepository.findById(step.asset)
+
+        if (step.actions.length === 0) {
+            return Promise.reject(Error('At least one action is required'));
+        }
+
+        const assetResult = step.asset ? await this.assetRepository.findById(step.asset) : null
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Step> => {
             const [stepResult] = await tx.insert(steps)
                 .values({
@@ -237,7 +254,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             return {
                 ...stepResult,
                 actions: actionsResult,
-                asset: imageResult
+                asset: assetResult
             }
         })
     }
@@ -251,7 +268,12 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
     async updateStep(issuanceFlowId: string, stepId: string, step: NewStep): Promise<Step> {
         await this.findById(issuanceFlowId)
-        const imageResult = await this.assetRepository.findById(step.asset)
+
+        if (step.actions.length === 0) {
+            return Promise.reject(Error('At least one action is required'));
+        }
+
+        const assetResult = step.asset ? await this.assetRepository.findById(step.asset) : null
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Step> => {
             const [stepResult] = await tx.update(steps)
                 .set({
@@ -273,7 +295,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             return {
                 ...stepResult,
                 actions: actionsResult,
-                asset: imageResult
+                asset: assetResult
             }
         })
     }
@@ -295,13 +317,15 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
     }
 
     async findAllSteps(issuanceFlowId: string): Promise<Step[]> {
-        return (await this.databaseService.getConnection()).query.steps.findMany({
+        const result = await (await this.databaseService.getConnection()).query.steps.findMany({
             where: eq(steps.workflow, issuanceFlowId),
             with: {
                 asset: true,
                 actions: true,
             },
         });
+
+        return sortSteps(result)
     }
 
     // ISSUANCE FLOW STEP ACTION

@@ -4,6 +4,7 @@ import {
     RelyingParty as RelyingPartyDTO,
     Issuer as IssuerDTO,
     IssuanceFlow as IssuanceFlowDTO,
+    Step as StepDTO,
     AssetRequest,
 } from 'credential-showcase-openapi';
 import {
@@ -11,7 +12,10 @@ import {
     NewAsset,
     CredentialDefinition,
     RelyingParty,
-    Issuer, IssuanceFlow, Step, StepAction
+    Issuer,
+    IssuanceFlow,
+    Step,
+    WorkflowType
 } from '../types';
 
 export const newAssetFrom = (asset: AssetRequest): NewAsset => {
@@ -57,28 +61,21 @@ export const issuerDTOFrom = (issuer: Issuer): IssuerDTO => {
 }
 
 export const issuanceFlowDTOFrom = (issuanceFlow: IssuanceFlow): IssuanceFlowDTO => {
+    if (!issuanceFlow.issuer) {
+        throw Error('Missing issuer in issuance flow')
+    }
+
     return {
-        ...issuer,
-        organization: issuer.organization ? issuer.organization : undefined,
-        logo: issuer.logo ? assetDTOFrom(issuer.logo) : undefined,
-        credentialDefinitions: issuer.credentialDefinitions.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
+        ...issuanceFlow,
+        issuer: issuerDTOFrom(issuanceFlow.issuer),
+        type: WorkflowType.ISSUANCE,
+        steps: issuanceFlow.steps.map(step => stepDTOFrom(step))
     }
 }
 
 export const stepDTOFrom = (step: Step): StepDTO => {
     return {
-        ...issuer,
-        organization: issuer.organization ? issuer.organization : undefined,
-        logo: issuer.logo ? assetDTOFrom(issuer.logo) : undefined,
-        credentialDefinitions: issuer.credentialDefinitions.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
-    }
-}
-
-export const stepActionDTOFrom = (action: StepAction): StepActionDTO => {
-    return {
-        ...issuer,
-        organization: issuer.organization ? issuer.organization : undefined,
-        logo: issuer.logo ? assetDTOFrom(issuer.logo) : undefined,
-        credentialDefinitions: issuer.credentialDefinitions.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
+        ...step,
+        asset: step.asset ? assetDTOFrom(step.asset) : undefined,
     }
 }

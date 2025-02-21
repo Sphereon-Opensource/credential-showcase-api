@@ -24,7 +24,9 @@ export const workflows = pgTable('workflow', {
 
 export const workflowRelations = relations(workflows, ({ one, many }) => ({
     //personas: many(personas), // TODO implement personas from SHOWCASE-37
-    steps: many(steps),
+    steps: many(steps, {
+        relationName: 'steps_workflow'
+    }),
     issuer: one(issuers, {
         fields: [workflows.issuer],
         references: [issuers.id],

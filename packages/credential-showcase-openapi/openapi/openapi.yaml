@@ -2237,6 +2237,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Step'
+    StepResponse:
+      properties:
+        step:
+          $ref: '#/components/schemas/Step'
 
     StepType:
       type: string
@@ -2303,6 +2307,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StepAction'
+    StepActionResponse:
+      properties:
+        action:
+          $ref: '#/components/schemas/StepAction'
 
     AriesOOBAction:
       allOf:

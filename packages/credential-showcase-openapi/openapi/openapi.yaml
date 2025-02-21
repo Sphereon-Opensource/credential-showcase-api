@@ -1654,7 +1654,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuerResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1681,7 +1681,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuerResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1707,7 +1707,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Issuer'
+                $ref: '#/components/schemas/IssuerResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2167,8 +2167,12 @@ components:
     Step:
       type: object
       required:
+        - id
         - title
+        - description
+        - order
         - type
+        - actions
       properties:
         id:
           type: string
@@ -2201,7 +2205,10 @@ components:
       type: object
       required:
         - title
+        - description
+        - order
         - type
+        - actions
       properties:
         title:
           type: string
@@ -2250,6 +2257,7 @@ components:
     StepAction:
       type: object
       required:
+        - id
         - actionType
         - title
         - text
@@ -2560,8 +2568,11 @@ components:
     Issuer:
       type: object
       required:
+        - id
         - name
+        - description
         - type
+        - credentialDefinitions
       properties:
         id:
           type: string
@@ -2591,7 +2602,9 @@ components:
       type: object
       required:
         - name
+        - description
         - type
+        - credentialDefinitions
       properties:
         name:
           type: string
@@ -2616,11 +2629,18 @@ components:
             type: string
             example: 123e4567-e89b-12d3-a456-426614174469
     IssuersResponse:
+      type: object
       properties:
         issuers:
           type: array
           items:
             $ref: '#/components/schemas/Issuer'
+    IssuerResponse:
+      type: object
+      properties:
+        issuer:
+          $ref: '#/components/schemas/Issuer'
+
 
     RelyingParty:
       type: object

@@ -4,6 +4,7 @@ import {
     credentialAttributes,
     credentialDefinitions,
     credentialRepresentations,
+    issuers,
     relyingParties,
     revocationInfo
 } from '../../database/schema';
@@ -56,6 +57,16 @@ export type NewRelyingParty = Omit<typeof relyingParties.$inferInsert, 'logo'> &
     logo?: string | null
 };
 
+export type Issuer = Omit<typeof issuers.$inferSelect, 'logo'> & {
+    credentialDefinitions: CredentialDefinition[]
+    logo: Asset | null
+};
+export type NewIssuer = Omit<typeof issuers.$inferInsert, 'logo'> & {
+    credentialDefinitions: string[]
+    organization?: string | null
+    logo?: string | null
+};
+
 export enum CredentialType {
     ANONCRED = 'ANONCRED',
 }
@@ -71,3 +82,19 @@ export enum CredentialAttributeType {
 export enum RelyingPartyType {
     ARIES = 'ARIES',
 }
+
+export enum IssuerType {
+    ARIES = 'ARIES',
+}
+
+export enum StepType {
+    HUMAN_TASK = 'HUMAN_TASK',
+    SERVICE = 'SERVICE',
+    WORKFLOW = 'WORKFLOW',
+}
+
+export enum WorkflowType {
+    ISSUANCE = 'ISSUANCE',
+    PRESENTATION = 'PRESENTATION',
+}
+

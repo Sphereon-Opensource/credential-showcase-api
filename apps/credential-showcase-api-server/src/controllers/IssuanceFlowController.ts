@@ -85,7 +85,7 @@ class IssuanceFlowController {
 
     @Get('/:issuanceFlowId/steps')
     public async getAllSteps(
-        @Param('issuanceFlow') issuanceFlowId: string
+        @Param('issuanceFlowId') issuanceFlowId: string
     ): Promise<StepsResponse> {
         const result = await this.issuanceFlowService.getIssuanceFlowSteps(issuanceFlowId)
         const steps = result.map(step => stepDTOFrom(step));

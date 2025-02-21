@@ -144,6 +144,11 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow.steps[0].title).toEqual(issuanceFlow.steps[0].title)
         expect(savedIssuanceFlow.steps[0].order).toEqual(issuanceFlow.steps[0].order)
         expect(savedIssuanceFlow.steps[0].type).toEqual(issuanceFlow.steps[0].type)
+        expect(savedIssuanceFlow.steps[0].actions.length).toEqual(1)
+        expect(savedIssuanceFlow.steps[0].actions[0].id).toBeDefined()
+        expect(savedIssuanceFlow.steps[0].actions[0].title).toEqual(issuanceFlow.steps[0].actions[0].title)
+        expect(savedIssuanceFlow.steps[0].actions[0].type).toEqual(issuanceFlow.steps[0].actions[0].type)
+        expect(savedIssuanceFlow.steps[0].actions[0].text).toEqual(issuanceFlow.steps[0].actions[0].text)
         expect(savedIssuanceFlow.steps[0].asset).toBeDefined()
         expect(savedIssuanceFlow.steps[0].asset.mediaType).toEqual(asset.mediaType)
         expect(savedIssuanceFlow.steps[0].asset.fileName).toEqual(asset.fileName)
@@ -290,26 +295,91 @@ describe('Database issuance flow repository tests', (): void => {
         await expect(repository.findById(savedIssuanceFlow.id)).rejects.toThrowError(`No issuance flow found for id: ${savedIssuanceFlow.id}`)
     })
 
-    // it('Should update issuance flow in database', async (): Promise<void> => {
-    //     const asset: NewAsset = {
-    //         mediaType: 'image/png',
-    //         fileName: 'image.png',
-    //         description: 'some image',
-    //         content: Buffer.from('some binary data'),
-    //     };
-    //
-    //     const savedAsset = await repository.create(asset)
-    //     expect(savedAsset).toBeDefined()
-    //
-    //     const newFileName = 'new_image.png'
-    //     const updatedAsset = await repository.update(savedAsset.id, { ...savedAsset, fileName: newFileName })
-    //
-    //     expect(updatedAsset).toBeDefined()
-    //     expect(updatedAsset.mediaType).toEqual(asset.mediaType)
-    //     expect(updatedAsset.fileName).toEqual(newFileName)
-    //     expect(updatedAsset.description).toEqual(asset.description)
-    //     expect(updatedAsset.content).toStrictEqual(asset.content);
-    // })
+    it('Should update issuance flow in database', async (): Promise<void> => {
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    order: 1, // TODO test on duplicate order
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            type: 'example_type',
+                            text: 'example_text'
+                        }
+                    ]
+                },
+                {
+                    title: 'example_title',
+                    order: 2, // TODO test on duplicate order
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            type: 'example_type',
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ]
+            // personas
+        };
+
+        const savedIssuanceFlow = await repository.create(issuanceFlow)
+        expect(savedIssuanceFlow).toBeDefined()
+
+        const updatedIssuanceFlow: NewIssuanceFlow = {
+            ...savedIssuanceFlow,
+            name: 'new_name',
+            steps: [
+                {
+                    title: 'example_title',
+                    order: 1, // TODO test on duplicate order
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title1',
+                            type: 'example_type1',
+                            text: 'example_text1'
+                        },
+                        {
+                            title: 'example_title2',
+                            type: 'example_type2',
+                            text: 'example_text2'
+                        }
+                    ]
+                }
+            ],
+            issuer: savedIssuanceFlow.issuer!.id,
+        }
+        const updatedIssuanceFlowResult = await repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)
+
+        expect(updatedIssuanceFlowResult).toBeDefined()
+        expect(updatedIssuanceFlowResult.name).toEqual(updatedIssuanceFlow.name)
+        expect(updatedIssuanceFlowResult.description).toEqual(updatedIssuanceFlow.description)
+        expect(updatedIssuanceFlowResult.steps).toBeDefined();
+        expect(updatedIssuanceFlowResult.steps.length).toEqual(1)
+        expect(updatedIssuanceFlowResult.steps[0].title).toEqual(updatedIssuanceFlow.steps[0].title)
+        expect(updatedIssuanceFlowResult.steps[0].order).toEqual(updatedIssuanceFlow.steps[0].order)
+        expect(updatedIssuanceFlowResult.steps[0].type).toEqual(updatedIssuanceFlow.steps[0].type)
+        expect(updatedIssuanceFlowResult.steps[0].actions.length).toEqual(2)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].id).toBeDefined()
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].title).toEqual(updatedIssuanceFlow.steps[0].actions[0].title)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].type).toEqual(updatedIssuanceFlow.steps[0].actions[0].type)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].text).toEqual(updatedIssuanceFlow.steps[0].actions[0].text)
+        expect(updatedIssuanceFlowResult.steps[0].asset).toBeDefined()
+        expect(updatedIssuanceFlowResult.steps[0].asset.mediaType).toEqual(asset.mediaType)
+        expect(updatedIssuanceFlowResult.steps[0].asset.fileName).toEqual(asset.fileName)
+        expect(updatedIssuanceFlowResult.steps[0].asset.description).toEqual(asset.description)
+        expect(updatedIssuanceFlowResult.steps[0].asset.content).toStrictEqual(asset.content)
+    })
 
     it('Should add to issuance flow step to database', async (): Promise<void> => {
         const issuanceFlow: NewIssuanceFlow = {
@@ -535,9 +605,66 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.steps.length).toEqual(1)
     })
 
-    // it('Should update issuance flow step in database', async (): Promise<void> => {
-    //
-    // })
+    it('Should update issuance flow step in database', async (): Promise<void> => {
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            type: 'example_type',
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ]
+            // personas
+        };
+
+        const savedIssuanceFlow = await repository.create(issuanceFlow)
+        expect(savedIssuanceFlow).toBeDefined()
+
+        const updatedStep: NewStep = {
+            ...savedIssuanceFlow.steps[0],
+            title: 'new_title',
+            actions: [
+                {
+                    title: 'example_title1',
+                    type: 'example_type1',
+                    text: 'example_text1'
+                },
+                {
+                    title: 'example_title2',
+                    type: 'example_type2',
+                    text: 'example_text2'
+                }
+            ],
+            asset: savedIssuanceFlow.steps[0].asset.id
+        }
+        const updatedStepResult = await repository.updateStep(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, updatedStep)
+
+        expect(updatedStepResult).toBeDefined()
+        expect(updatedStepResult.title).toEqual(updatedStep.title)
+        expect(updatedStepResult.order).toEqual(updatedStep.order)
+        expect(updatedStepResult.type).toEqual(updatedStep.type)
+        expect(updatedStepResult.actions.length).toEqual(2)
+        expect(updatedStepResult.actions[0].id).toBeDefined()
+        expect(updatedStepResult.actions[0].title).toEqual(updatedStep.actions[0].title)
+        expect(updatedStepResult.actions[0].type).toEqual(updatedStep.actions[0].type)
+        expect(updatedStepResult.actions[0].text).toEqual(updatedStep.actions[0].text)
+        expect(updatedStepResult.asset).toBeDefined()
+        expect(updatedStepResult.asset.mediaType).toEqual(asset.mediaType)
+        expect(updatedStepResult.asset.fileName).toEqual(asset.fileName)
+        expect(updatedStepResult.asset.description).toEqual(asset.description)
+        expect(updatedStepResult.asset.content).toStrictEqual(asset.content)
+    })
 
     it('Should add to issuance flow step action to database', async (): Promise<void> => {
         const issuanceFlow: NewIssuanceFlow = {
@@ -701,7 +828,42 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.steps[0].actions.length).toEqual(1)
     })
 
-    // it('Should update issuance flow step action in database', async (): Promise<void> => {
-    //
-    // })
+    it('Should update issuance flow step action in database', async (): Promise<void> => {
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            type: 'example_type',
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ]
+            // personas
+        };
+
+        const savedIssuanceFlow = await repository.create(issuanceFlow)
+        expect(savedIssuanceFlow).toBeDefined()
+
+        const updatedStepAction: NewStepAction = {
+            ...savedIssuanceFlow.steps[0].actions[0],
+            title: 'new_title',
+        }
+        const updatedStepResult = await repository.updateStepAction(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, savedIssuanceFlow.steps[0].actions[0].id, updatedStepAction)
+
+        expect(updatedStepResult).toBeDefined();
+        expect(updatedStepResult.id).toBeDefined()
+        expect(updatedStepResult.title).toEqual(updatedStepAction.title)
+        expect(updatedStepResult.type).toEqual(updatedStepAction.type)
+        expect(updatedStepResult.text).toEqual(updatedStepAction.text)
+    })
 })

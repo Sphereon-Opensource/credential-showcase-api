@@ -81,20 +81,55 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
 
     async update(issuanceFlowId: string, issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> { // TODO see the result of openapi and the payloads to determine how we update an asset
         await this.findById(issuanceFlowId)
-        const [result] = await (await this.databaseService.getConnection())
-            .update(workflows)
-            // @ts-ignore
-            .set(issuanceFlow)
-            .returning();
+        const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
+            const [issuanceFlowResult] = await tx.update(workflows)
+                .set({
+                    name: issuanceFlow.name,
+                    description: issuanceFlow.description,
+                    issuer: issuerResult.id,
+                    workflowType: WorkflowType.ISSUANCE
+                })
+                .where(eq(workflows.id, issuanceFlowId))
+                .returning();
 
-        // TODO
-        // @ts-ignore
-        return {
-            ...result,
-            steps: [],
-            // @ts-ignore
-            relyingParty: null
-        }
+            const selectedSteps = await tx.select({ id: steps.id })
+                .from(steps)
+                .where(eq(steps.workflow, issuanceFlowId));
+            await tx.delete(steps).where(eq(steps.workflow, issuanceFlowId))
+            await tx.delete(stepActions).where(inArray(stepActions.step, selectedSteps.map(step => step.id)));
+
+            const stepsResult = await tx.insert(steps)
+                .values(issuanceFlow.steps.map((step: NewStep) => ({
+                    ...step,
+                    workflow: issuanceFlowResult.id
+                })))
+                .returning();
+
+            const stepActionsResult = await tx.insert(stepActions)
+                .values(stepsResult.flatMap((stepResult, index) =>
+                    issuanceFlow.steps[index].actions.map(action => ({
+                        ...action,
+                        step: stepResult.id,
+                    }))
+                ))
+                .returning();
+
+            const stepAssetsResult = await tx.query.assets.findMany({
+                where: inArray(assets.id, stepsResult.map(step => step.asset))
+            })
+
+            return {
+                ...issuanceFlowResult,
+                steps: stepsResult.map(stepResult => ({
+                    ...stepResult,
+                    actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
+                    asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
+                        ?? (() => { throw new Error(`Asset not found for step ${stepResult.id}`) })()
+                })),
+                issuer: issuerResult
+            }
+        })
     }
 
     async findById(issuanceFlowId: string): Promise<IssuanceFlow> {
@@ -214,16 +249,33 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             .where(and(eq(steps.id, stepId), eq(steps.workflow, issuanceFlowId)));
     }
 
-    async updateStep(issuanceFlowId: string, stepId: string, step: NewStep): Promise<Step> { // TODO see the result of openapi and the payloads to determine how we update an asset
-        return Promise.reject(Error('Not yet implemented'))
+    async updateStep(issuanceFlowId: string, stepId: string, step: NewStep): Promise<Step> {
+        await this.findById(issuanceFlowId)
+        const imageResult = await this.assetRepository.findById(step.asset)
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Step> => {
+            const [stepResult] = await tx.update(steps)
+                .set({
+                    ...step,
+                    workflow: issuanceFlowId
+                })
+                .where(eq(steps.id, stepId))
+                .returning();
 
-        // await this.findById(issuanceFlowId)
-        // const [result] = await (await this.databaseService.getConnection())
-        //     .update(workflows)
-        //     .set(issuanceFlow)
-        //     .returning();
-        //
-        // return result
+            await tx.delete(stepActions).where(eq(stepActions.step, stepId))
+
+            const actionsResult = await tx.insert(stepActions)
+                .values(step.actions.map((action: NewStepAction) => ({
+                    ...action,
+                    step: stepResult.id
+                })))
+                .returning();
+
+            return {
+                ...stepResult,
+                actions: actionsResult,
+                asset: imageResult
+            }
+        })
     }
 
     async findByStepId(issuanceFlowId: string, stepId: string): Promise<Step> {
@@ -271,16 +323,19 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             .where(and(eq(stepActions.id, actionId), eq(stepActions.step, stepId)));
     }
 
-    async updateStepAction(issuanceFlowId: string, stepId: string, actionId: string, action: NewStepAction): Promise<StepAction> { // TODO see the result of openapi and the payloads to determine how we update an asset
-        return Promise.reject(Error('Not yet implemented'))
+    async updateStepAction(issuanceFlowId: string, stepId: string, actionId: string, action: NewStepAction): Promise<StepAction> {
+        await this.findByStepId(issuanceFlowId, stepId)
 
-        // await this.findById(id)
-        // const [result] = await (await this.databaseService.getConnection())
-        //     .update(workflows)
-        //     .set(issuanceFlow)
-        //     .returning();
-        //
-        // return result
+        const [result] = await (await this.databaseService.getConnection())
+            .update(stepActions)
+            .set({
+                ...action,
+                step: stepId
+            })
+            .where(eq(stepActions.id, actionId))
+            .returning();
+
+        return result
     }
 
     async findByStepActionId(issuanceFlowId: string, stepId: string, actionId: string): Promise<StepAction> {

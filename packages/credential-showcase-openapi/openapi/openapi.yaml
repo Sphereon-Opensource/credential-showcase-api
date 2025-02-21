@@ -69,7 +69,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssuanceFlow'
+                $ref: '#/components/schemas/IssuanceFlowResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -95,7 +95,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssuanceFlow'
+                $ref: '#/components/schemas/IssuanceFlowResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -128,7 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssuanceFlow'
+                $ref: '#/components/schemas/IssuanceFlowResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2492,10 +2492,16 @@ components:
             example: 123e4567-e89b-12d3-a456-426614174456
 
     IssuanceFlowsResponse:
+      type: object
       properties:
         issuanceFlows:
           type: array
           items:
+            $ref: '#/components/schemas/IssuanceFlow'
+    IssuanceFlowResponse:
+      type: object
+      properties:
+        issuanceFlow:
             $ref: '#/components/schemas/IssuanceFlow'
     IssuanceFlow:
       allOf:

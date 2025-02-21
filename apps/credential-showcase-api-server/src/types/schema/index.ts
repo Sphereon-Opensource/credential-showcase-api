@@ -15,7 +15,7 @@ import {
 export type Asset = typeof assets.$inferSelect;
 export type NewAsset = typeof assets.$inferInsert & { fileName?: string | null, description?: string | null };
 
-export type Persona = typeof personas.$inferSelect & {
+export type Persona = Omit<typeof personas.$inferSelect, 'headshotImage' | 'bodyImage'> & {
     headshotImage: Asset | null
     bodyImage: Asset | null
 };

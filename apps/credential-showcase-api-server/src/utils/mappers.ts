@@ -3,6 +3,7 @@ import {
     CredentialDefinition as CredentialDefinitionDTO,
     RelyingParty as RelyingPartyDTO,
     Issuer as IssuerDTO,
+    Persona as PersonaDTO,
     AssetRequest,
 } from 'credential-showcase-openapi';
 import {
@@ -10,7 +11,8 @@ import {
     NewAsset,
     CredentialDefinition,
     RelyingParty,
-    Issuer
+    Issuer,
+    Persona
 } from '../types';
 
 export const newAssetFrom = (asset: AssetRequest): NewAsset => {
@@ -52,5 +54,13 @@ export const issuerDTOFrom = (issuer: Issuer): IssuerDTO => {
         organization: issuer.organization ? issuer.organization : undefined,
         logo: issuer.logo ? assetDTOFrom(issuer.logo) : undefined,
         credentialDefinitions: issuer.credentialDefinitions.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
+    }
+}
+
+export const personaDTOFrom = (persona: Persona): PersonaDTO => {
+    return {
+        ...persona,
+        headshotImage: persona.headshotImage ? assetDTOFrom(persona.headshotImage) : undefined,
+        bodyImage: persona.bodyImage ? assetDTOFrom(persona.bodyImage) : undefined,
     }
 }

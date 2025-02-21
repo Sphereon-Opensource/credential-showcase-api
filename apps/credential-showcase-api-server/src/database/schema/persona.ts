@@ -1,12 +1,12 @@
-import { pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core'
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core'
 import { assets } from './asset'
 import { relations } from 'drizzle-orm';
 
 export const personas = pgTable("persona", {
   id: uuid('id').defaultRandom().primaryKey(),
-  name: varchar('name', { length: 255 }).notNull(),
-  role: varchar('role', { length: 255 }).notNull(),
-  description: text('description').notNull(),
+  name: text().notNull(),
+  role: text().notNull(),
+  description: text().notNull(),
   headshotImage: uuid('headshot_image').references(() => assets.id),
   bodyImage: uuid('body_image').references(() => assets.id),
 });

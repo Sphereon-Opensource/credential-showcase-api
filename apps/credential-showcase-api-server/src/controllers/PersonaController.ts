@@ -18,6 +18,7 @@ import {
     PersonaRequest
 } from 'credential-showcase-openapi'
 import PersonaService from '../services/PersonaService';
+import { NewPersona } from '../types';
 
 @JsonController('/personas')
 @Service()
@@ -38,14 +39,14 @@ class PersonaController {
 
     @HttpCode(201)
     @Post('/')
-    public async post(@Body() personaRequest: PersonaRequest): Promise<PersonaResponse> {
+    public async post(@Body() personaRequest: NewPersona): Promise<PersonaResponse> {
         const result = await this.personaService.create(personaRequest);
         return PersonaResponseFromJSONTyped({ persona: result }, true)
     }
 
     @Put('/:id')
-    public async put(@Param('id') id: string, @Body() personaRequest: PersonaRequest): Promise<PersonaResponse> {
-        const result = await this.personaService.update(id, personaRequest)
+    public async put(@Param('id') id: string, @Body() personaRequest: NewPersona): Promise<PersonaResponse> {
+        const result = await this.personaService.update(id, personaRequest);
         return PersonaResponseFromJSONTyped({ persona: result }, true)
     }
 

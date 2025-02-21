@@ -2167,8 +2167,13 @@ components:
     Step:
       type: object
       required:
+        - id
         - title
+        - description
+        - order
         - type
+        - asset
+        - actions
       properties:
         id:
           type: string
@@ -2201,7 +2206,11 @@ components:
       type: object
       required:
         - title
+        - description
+        - order
         - type
+        - asset
+        - actions
       properties:
         title:
           type: string
@@ -2250,6 +2259,7 @@ components:
     StepAction:
       type: object
       required:
+        - id
         - actionType
         - title
         - text

@@ -27,7 +27,7 @@ class IssuanceFlowService {
         return this.issuanceFlowRepository.create(issuanceFlow)
     };
 
-    public updateIssuanceFlow = async (issuanceFlowId: string, issuanceFlow: IssuanceFlow): Promise<IssuanceFlow> => {
+    public updateIssuanceFlow = async (issuanceFlowId: string, issuanceFlow: NewIssuanceFlow): Promise<IssuanceFlow> => {
         return this.issuanceFlowRepository.update(issuanceFlowId, issuanceFlow)
     };
 

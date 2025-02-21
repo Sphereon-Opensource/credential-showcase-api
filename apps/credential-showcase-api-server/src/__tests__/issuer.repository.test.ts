@@ -125,6 +125,33 @@ describe('Database issuer repository tests', (): void => {
     await expect(repository.create(issuer)).rejects.toThrowError(`No asset found for id: ${unknownIconId}`)
   })
 
+  it('Should throw error when saving issuer with no credential definitions', async (): Promise<void> => {
+    const issuer: NewIssuer = {
+      name: 'example_name',
+      type: IssuerType.ARIES,
+      credentialDefinitions: [],
+      description: 'example_description',
+      organization: 'example_organization',
+      logo: asset.id,
+    };
+
+    await expect(repository.create(issuer)).rejects.toThrowError(`At least one credential definition is required`)
+  })
+
+  it('Should throw error when saving issuer with invalid credential definition id', async (): Promise<void> => {
+    const unknownCredentialDefinitionId = '498e1086-a2ac-4189-b951-fe863d0fe9fc'
+    const issuer: NewIssuer = {
+      name: 'example_name',
+      type: IssuerType.ARIES,
+      credentialDefinitions: [unknownCredentialDefinitionId],
+      description: 'example_description',
+      organization: 'example_organization',
+      logo: asset.id,
+    };
+
+    await expect(repository.create(issuer)).rejects.toThrowError(`No credential definition found for id: ${unknownCredentialDefinitionId}`)
+  })
+
   it('Should get issuer by id from database', async (): Promise<void> => {
     const issuer: NewIssuer = {
       name: 'example_name',
@@ -242,10 +269,55 @@ describe('Database issuer repository tests', (): void => {
 
     const updatedIssuer: NewIssuer = {
       ...savedIssuer,
-      credentialDefinitions: [credentialDefinition1.id],
+      credentialDefinitions: savedIssuer.credentialDefinitions.map(credentialDefinition => credentialDefinition.id),
       logo: unknownIconId,
     }
 
     await expect(repository.update(savedIssuer.id, updatedIssuer)).rejects.toThrowError(`No asset found for id: ${unknownIconId}`)
+  })
+
+  it('Should throw error when updating issuer with no credential definitions', async (): Promise<void> => {
+    const issuer: NewIssuer = {
+      name: 'example_name',
+      type: IssuerType.ARIES,
+      credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
+      description: 'example_description',
+      organization: 'example_organization',
+      logo: asset.id,
+    };
+
+    const savedIssuer = await repository.create(issuer)
+    expect(savedIssuer).toBeDefined()
+
+    const updatedIssuer: NewIssuer = {
+      ...savedIssuer,
+      credentialDefinitions: [],
+      logo: asset.id,
+    }
+
+    await expect(repository.update(savedIssuer.id, updatedIssuer)).rejects.toThrowError(`At least one credential definition is required`)
+  })
+
+  it('Should throw error when updating issuer with invalid credential definition id', async (): Promise<void> => {
+    const unknownCredentialDefinitionId = '498e1086-a2ac-4189-b951-fe863d0fe9fc'
+    const issuer: NewIssuer = {
+      name: 'example_name',
+      type: IssuerType.ARIES,
+      credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
+      description: 'example_description',
+      organization: 'example_organization',
+      logo: asset.id,
+    };
+
+    const savedIssuer = await repository.create(issuer)
+    expect(savedIssuer).toBeDefined()
+
+    const updatedIssuer: NewIssuer = {
+      ...savedIssuer,
+      credentialDefinitions: [unknownCredentialDefinitionId],
+      logo: asset.id,
+    }
+
+    await expect(repository.update(savedIssuer.id, updatedIssuer)).rejects.toThrowError(`No credential definition found for id: ${unknownCredentialDefinitionId}`)
   })
 })

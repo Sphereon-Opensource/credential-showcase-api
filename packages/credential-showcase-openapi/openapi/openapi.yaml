@@ -991,257 +991,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  # /workflows/{workflowId}/steps:
-  #   parameters:
-  #     - name: workflowId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #   get:
-  #     tags:
-  #       - Steps
-  #     summary: List steps in a workflow
-  #     operationId: listWorkflowSteps
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/Step'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   post:
-  #     tags:
-  #       - Steps
-  #     summary: Add a step to a workflow
-  #     operationId: createWorkflowStep
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Step'
-  #       required: true
-  #     responses:
-  #       '201':
-  #         description: Created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Step'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  # /workflows/{workflowId}/steps/{stepId}:
-  #   parameters:
-  #     - name: workflowId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #       description: Unique identifier of the workflow
-  #     - name: stepId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #       description: Unique identifier of the step to delete
-  #   put:
-  #     tags:
-  #       - Steps
-  #     summary: Update a step in a workflow
-  #     description: Update the details of a specific step within a workflow
-  #     operationId: updateWorkflowStep
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Step'
-  #     responses:
-  #       '200':
-  #         description: Step successfully updated
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Step'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   delete:
-  #     tags:
-  #       - Steps
-  #     summary: Delete a step from a workflow
-  #     operationId: deleteWorkflowStep
-  #     responses:
-  #       '204':
-  #         description: Step successfully deleted
-  #       '404':
-  #         description: Workflow or step not found
-
-  # /workflows/{workflowId}/steps/{stepId}/actions:
-  #   parameters:
-  #     - name: workflowId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #     - name: stepId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #   get:
-  #     tags:
-  #       - Step Actions
-  #     summary: List actions in a step
-  #     operationId: listStepActions
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 oneOf:
-  #                   - $ref: '#/components/schemas/StepAction'
-  #                   - $ref: '#/components/schemas/AriesOOBAction'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   post:
-  #     tags:
-  #       - Step Actions
-  #     summary: Add an action to a step
-  #     operationId: createStepAction
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             oneOf:
-  #               - $ref: '#/components/schemas/StepAction'
-  #               - $ref: '#/components/schemas/AriesOOBAction'
-  #       required: true
-  #     responses:
-  #       '201':
-  #         description: Created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               oneOf:
-  #                 - $ref: '#/components/schemas/StepAction'
-  #                 - $ref: '#/components/schemas/AriesOOBAction'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  # /workflows/{workflowId}/steps/{stepId}/actions/{actionId}:
-  #   parameters:
-  #     - name: workflowId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #     - name: stepId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #     - name: actionId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #   get:
-  #     tags:
-  #       - Step Actions
-  #     summary: Get a specific action
-  #     operationId: getStepAction
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               oneOf:
-  #                 - $ref: '#/components/schemas/StepAction'
-  #                 - $ref: '#/components/schemas/AriesOOBAction'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   put:
-  #     tags:
-  #       - Step Actions
-  #     summary: Update an action
-  #     operationId: updateStepAction
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             oneOf:
-  #               - $ref: '#/components/schemas/StepAction'
-  #               - $ref: '#/components/schemas/AriesOOBAction'
-  #       required: true
-  #     responses:
-  #       '200':
-  #         description: Updated
-  #         content:
-  #           application/json:
-  #             schema:
-  #               oneOf:
-  #                 - $ref: '#/components/schemas/StepAction'
-  #                 - $ref: '#/components/schemas/AriesOOBAction'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   delete:
-  #     tags:
-  #       - Step Actions
-  #     summary: Delete an action
-  #     operationId: deleteStepAction
-  #     responses:
-  #       '204':
-  #         description: Deleted
-
   /credential-definitions:
     get:
       tags:
@@ -1420,7 +1169,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Persona'
+                $ref: '#/components/schemas/PersonaResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1447,7 +1196,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Persona'
+                $ref: '#/components/schemas/PersonaResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1473,7 +1222,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Persona'
+                $ref: '#/components/schemas/PersonaResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2167,8 +1916,12 @@ components:
     Step:
       type: object
       required:
+        - id
         - title
+        - description
+        - order
         - type
+        - actions
       properties:
         id:
           type: string
@@ -2201,7 +1954,10 @@ components:
       type: object
       required:
         - title
+        - description
+        - order
         - type
+        - actions
       properties:
         title:
           type: string
@@ -2254,6 +2010,7 @@ components:
     StepAction:
       type: object
       required:
+        - id
         - actionType
         - title
         - text
@@ -2439,6 +2196,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Persona'
+    PersonaResponse:
+      type: object
+      properties:
+        persona:
+          $ref: '#/components/schemas/Persona'
 
     Workflow:
       type: object

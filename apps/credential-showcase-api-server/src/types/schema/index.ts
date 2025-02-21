@@ -1,5 +1,6 @@
 import {
     assets,
+    personas,
     credentialAttributes,
     credentialDefinitions,
     credentialRepresentations,
@@ -16,6 +17,12 @@ import {
 
 export type Asset = typeof assets.$inferSelect;
 export type NewAsset = typeof assets.$inferInsert & { fileName?: string | null, description?: string | null };
+
+export type Persona = Omit<typeof personas.$inferSelect, 'headshotImage' | 'bodyImage'> & {
+    headshotImage: Asset | null
+    bodyImage: Asset | null
+};
+export type NewPersona = typeof personas.$inferInsert & { headshotImage?: string, bodyImage?: string };
 
 export type CredentialDefinition = Omit<typeof credentialDefinitions.$inferSelect, 'icon' | 'type'> & {
     type: CredentialType
@@ -115,3 +122,4 @@ export type NewStep = Omit<typeof steps.$inferInsert, 'workflow'> & {
 
 export type StepAction = typeof stepActions.$inferSelect;
 export type NewStepAction = Omit<typeof stepActions.$inferInsert, 'step'>;
+

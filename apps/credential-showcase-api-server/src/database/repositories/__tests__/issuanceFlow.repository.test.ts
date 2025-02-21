@@ -4,12 +4,12 @@ import { drizzle } from 'drizzle-orm/pglite';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import DatabaseService from '../services/DatabaseService';
-import IssuanceFlowRepository from '../database/repositories/IssuanceFlowRepository';
-import IssuerRepository from '../database/repositories/IssuerRepository';
-import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
-import AssetRepository from '../database/repositories/AssetRepository';
-import * as schema from '../database/schema';
+import DatabaseService from '../../../services/DatabaseService';
+import IssuanceFlowRepository from '../../../database/repositories/IssuanceFlowRepository';
+import IssuerRepository from '../../../database/repositories/IssuerRepository';
+import CredentialDefinitionRepository from '../../../database/repositories/CredentialDefinitionRepository';
+import AssetRepository from '../../../database/repositories/AssetRepository';
+import * as schema from '../../../database/schema';
 import {
     Asset,
     NewAsset,
@@ -23,7 +23,7 @@ import {
     NewIssuer,
     IssuerType,
     Issuer
-} from '../types';
+} from '../../../types';
 
 describe('Database issuance flow repository tests', (): void => {
     let client: PGlite;
@@ -106,6 +106,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -119,6 +120,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -177,6 +179,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -190,6 +193,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -216,6 +220,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -229,6 +234,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -255,6 +261,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -268,6 +275,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -303,6 +311,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -316,6 +325,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -350,6 +360,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -363,6 +374,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -394,6 +406,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -407,6 +420,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -431,6 +445,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -480,6 +495,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -493,6 +509,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -529,6 +546,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -542,6 +560,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -565,6 +584,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -591,6 +611,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -611,6 +632,7 @@ describe('Database issuance flow repository tests', (): void => {
 
         const step: NewStep = {
             title: 'example_title',
+            description: 'example_description',
             order: 2,
             type: StepType.HUMAN_TASK,
             asset: asset.id,
@@ -658,6 +680,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -678,6 +701,7 @@ describe('Database issuance flow repository tests', (): void => {
 
         const step: NewStep = {
             title: 'example_title',
+            description: 'example_description',
             order: 2,
             type: StepType.HUMAN_TASK,
             asset: asset.id,
@@ -695,6 +719,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -745,6 +770,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -758,6 +784,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -804,6 +831,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -817,6 +845,7 @@ describe('Database issuance flow repository tests', (): void => {
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -852,6 +881,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -913,6 +943,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -948,6 +979,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -995,6 +1027,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -1029,6 +1062,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -1070,6 +1104,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
@@ -1110,6 +1145,7 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,

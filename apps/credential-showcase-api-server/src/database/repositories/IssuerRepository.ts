@@ -1,6 +1,7 @@
 import { eq, inArray } from 'drizzle-orm';
 import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
+import CredentialDefinitionRepository from './CredentialDefinitionRepository';
 import AssetRepository from './AssetRepository';
 import { NotFoundError } from '../../errors';
 import { credentialDefinitions, issuers, issuersToCredentialDefinitions } from '../schema';
@@ -10,10 +11,17 @@ import { Issuer, NewIssuer, RepositoryDefinition } from '../../types';
 class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
   constructor(
       private readonly databaseService: DatabaseService,
+      private readonly credentialDefinitionRepository: CredentialDefinitionRepository,
       private readonly assetRepository: AssetRepository
   ) {}
 
   async create(issuer: NewIssuer): Promise<Issuer> {
+    if (issuer.credentialDefinitions.length === 0) {
+      return Promise.reject(Error('At least one credential definition is required'));
+    }
+
+    const credentialDefinitionPromises = issuer.credentialDefinitions.map(async credentialDefinition => await this.credentialDefinitionRepository.findById(credentialDefinition))
+    await Promise.all(credentialDefinitionPromises)
     const logoResult = issuer.logo ? await this.assetRepository.findById(issuer.logo) : null
 
     return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Issuer> => {
@@ -62,7 +70,14 @@ class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
   async update(id: string, issuer: NewIssuer): Promise<Issuer> {
     await this.findById(id)
 
+    if (issuer.credentialDefinitions.length === 0) {
+      return Promise.reject(Error('At least one credential definition is required'));
+    }
+
+    const credentialDefinitionPromises = issuer.credentialDefinitions.map(async credentialDefinition => await this.credentialDefinitionRepository.findById(credentialDefinition))
+    await Promise.all(credentialDefinitionPromises)
     const logoResult = issuer.logo ? await this.assetRepository.findById(issuer.logo) : null
+
     return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Issuer> => {
       const [issuerResult] = await tx.update(issuers)
           .set({

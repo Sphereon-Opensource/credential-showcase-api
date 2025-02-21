@@ -4,6 +4,7 @@ import Container from 'typedi';
 import { ExpressErrorHandler } from './middleware/ExpressErrorHandler';
 import AssetController from './controllers/AssetController';
 import CredentialDefinitionController from './controllers/CredentialDefinitionController';
+import PersonaController from './controllers/PersonaController';
 import RelyingPartyController from './controllers/RelyingPartyController';
 import IssuerController from './controllers/IssuerController';
 import IssuanceFlowController from './controllers/IssuanceFlowController';
@@ -16,6 +17,7 @@ useContainer(Container);
 const app = createExpressServer({
     controllers: [
         AssetController,
+        PersonaController,
         CredentialDefinitionController,
         RelyingPartyController,
         IssuerController,

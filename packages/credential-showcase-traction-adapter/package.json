@@ -1,5 +1,5 @@
 {
-  "name": "credential-showcase-api-server",
+  "name": "credential-showcase-traction-adapter",
   "version": "0.1.0",
   "source": "src/index.ts",
   "main": "dist/index.js",
@@ -7,26 +7,19 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
-    "build:clean": "tsc --build --clean && tsc --build",
-    "migration:generate": "drizzle-kit generate --config=drizzle.config.ts --name=credential-showcase-api"
+    "build:clean": "tsc --build --clean && tsc --build"
   },
   "dependencies": {
-    "credential-showcase-openapi" : "workspace:*",
-    "dotenv-flow": "^4.1.0",
-    "drizzle-orm": "^0.39.1",
     "express": "^4.21.2",
-    "pg": "^8.13.1",
-    "reflect-metadata": "^0.2.2",
-    "routing-controllers": "^0.11.0",
+    "rhea": "^3.0.3",
+    "rhea-promise": "^3.0.3",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.2.16",
-    "@types/dotenv-flow": "^3.3.3",
+    "testcontainers": "^10.18.0",
+    "@testcontainers/rabbitmq": "^10.18.0",
     "@types/express": "^5.0.0",
-    "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.4",
-    "ts-node": "^10.9.2"
+    "@types/node": "^22.13.1"
   },
   "files": [
     "dist/**/*",

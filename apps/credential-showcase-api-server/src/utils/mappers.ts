@@ -5,6 +5,7 @@ import {
     Issuer as IssuerDTO,
     IssuanceFlow as IssuanceFlowDTO,
     Step as StepDTO,
+    Persona as PersonaDTO,
     AssetRequest,
 } from 'credential-showcase-openapi';
 import {
@@ -15,7 +16,8 @@ import {
     Issuer,
     IssuanceFlow,
     Step,
-    WorkflowType
+    WorkflowType,
+    Persona
 } from '../types';
 
 export const newAssetFrom = (asset: AssetRequest): NewAsset => {
@@ -79,3 +81,12 @@ export const stepDTOFrom = (step: Step): StepDTO => {
         asset: step.asset ? assetDTOFrom(step.asset) : undefined,
     }
 }
+
+export const personaDTOFrom = (persona: Persona): PersonaDTO => {
+    return {
+        ...persona,
+        headshotImage: persona.headshotImage ? assetDTOFrom(persona.headshotImage) : undefined,
+        bodyImage: persona.bodyImage ? assetDTOFrom(persona.bodyImage) : undefined,
+    }
+}
+

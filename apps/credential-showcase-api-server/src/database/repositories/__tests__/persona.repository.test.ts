@@ -50,8 +50,8 @@ describe('Database persona repository tests', (): void => {
       name: 'test',
       role: 'tester',
       description: 'some persona',
-      bodyImageId: '123',
-      headshotImageId: '456',
+      bodyImage: '123',
+      headshotImage: '456',
     }
 
     const savedPersona = await repository.create(persona)
@@ -60,8 +60,8 @@ describe('Database persona repository tests', (): void => {
     expect(savedPersona.name).toStrictEqual(persona.name)
     expect(savedPersona.role).toStrictEqual(persona.role)
     expect(savedPersona.description).toStrictEqual(persona.description)
-    expect(savedPersona.bodyImageId).toStrictEqual(persona.bodyImageId)
-    expect(savedPersona.headshotImageId).toStrictEqual(persona.headshotImageId)
+    expect(savedPersona.bodyImage).toStrictEqual(persona.bodyImage)
+    expect(savedPersona.headshotImage).toStrictEqual(persona.headshotImage)
   })
 
   it('Should get persona by id from database', async (): Promise<void> => {
@@ -137,7 +137,7 @@ describe('Database persona repository tests', (): void => {
     const updatedPersona = await repository.update(savedPersona.id, {
       name: savedPersona.name,
       role: newRole,
-      description: savedPersona.description || undefined,
+      description: savedPersona.description || '',
     })
 
     expect(updatedPersona).toBeDefined()

@@ -80,3 +80,15 @@ export enum RelyingPartyType {
 export enum IssuerType {
     ARIES = 'ARIES',
 }
+
+export enum StepType {
+    HUMAN_TASK = 'HUMAN_TASK',
+    SERVICE = 'SERVICE',
+    WORKFLOW = 'WORKFLOW',
+}
+
+export enum WorkflowType {
+    ISSUANCE = 'ISSUANCE',
+    PRESENTATION = 'PRESENTATION',
+}
+

@@ -2172,7 +2172,6 @@ components:
         - description
         - order
         - type
-        - asset
         - actions
       properties:
         id:
@@ -2209,7 +2208,6 @@ components:
         - description
         - order
         - type
-        - asset
         - actions
       properties:
         title:

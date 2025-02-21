@@ -14,7 +14,7 @@ export const steps = pgTable('step', {
     type: StepTypePg('step_type').notNull().$type<StepType>(),
     subFlow: uuid('sub_flow').references(() => workflows.id),
     workflowId: uuid('workflow_id').references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
-    image: uuid().references(() => assets.id).notNull(),
+    asset: uuid().references(() => assets.id),
 });
 
 export const stepRelations = relations(steps, ({ one, many }) => ({
@@ -28,7 +28,7 @@ export const stepRelations = relations(steps, ({ one, many }) => ({
         references: [workflows.id],
     }),
     image: one(assets, {
-        fields: [steps.image],
+        fields: [steps.asset],
         references: [assets.id],
     }),
 }));

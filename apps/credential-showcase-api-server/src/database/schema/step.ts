@@ -9,6 +9,7 @@ import { StepType } from '../../types';
 export const steps = pgTable('step', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
     title: varchar({ length: 255 }).notNull(),
+    description: varchar({ length: 255 }).notNull(),
     order: integer().notNull(),
     type: StepTypePg('step_type').notNull().$type<StepType>(),
     subFlow: uuid('sub_flow').references(() => workflows.id),

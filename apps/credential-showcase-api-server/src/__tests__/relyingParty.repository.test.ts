@@ -125,6 +125,33 @@ describe('Database relying party repository tests', (): void => {
         await expect(repository.create(relyingParty)).rejects.toThrowError(`No asset found for id: ${unknownIconId}`)
     })
 
+    it('Should throw error when saving relying party with no credential definitions', async (): Promise<void> => {
+        const relyingParty: NewRelyingParty = {
+            name: 'example_name',
+            type: RelyingPartyType.ARIES,
+            credentialDefinitions: [],
+            description: 'example_description',
+            organization: 'example_organization',
+            logo: asset.id,
+        };
+
+        await expect(repository.create(relyingParty)).rejects.toThrowError(`At least one credential definition is required`)
+    })
+
+    it('Should throw error when saving relying party with invalid credential definition id', async (): Promise<void> => {
+        const unknownCredentialDefinitionId = '498e1086-a2ac-4189-b951-fe863d0fe9fc'
+        const relyingParty: NewRelyingParty = {
+            name: 'example_name',
+            type: RelyingPartyType.ARIES,
+            credentialDefinitions: [unknownCredentialDefinitionId],
+            description: 'example_description',
+            organization: 'example_organization',
+            logo: asset.id,
+        };
+
+        await expect(repository.create(relyingParty)).rejects.toThrowError(`No credential definition found for id: ${unknownCredentialDefinitionId}`)
+    })
+
     it('Should get relying party by id from database', async (): Promise<void> => {
         const relyingParty: NewRelyingParty = {
             name: 'example_name',
@@ -247,5 +274,50 @@ describe('Database relying party repository tests', (): void => {
         }
 
         await expect(repository.update(savedRelyingParty.id, updatedRelyingParty)).rejects.toThrowError(`No asset found for id: ${unknownIconId}`)
+    })
+
+    it('Should throw error when updating relying party with no credential definitions', async (): Promise<void> => {
+        const relyingParty: NewRelyingParty = {
+            name: 'example_name',
+            type: RelyingPartyType.ARIES,
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
+            description: 'example_description',
+            organization: 'example_organization',
+            logo: asset.id,
+        };
+
+        const savedRelyingParty = await repository.create(relyingParty)
+        expect(savedRelyingParty).toBeDefined()
+
+        const updatedRelyingParty: NewRelyingParty = {
+            ...savedRelyingParty,
+            credentialDefinitions: [],
+            logo: asset.id,
+        }
+
+        await expect(repository.update(savedRelyingParty.id, updatedRelyingParty)).rejects.toThrowError(`At least one credential definition is required`)
+    })
+
+    it('Should throw error when updating relying party with invalid credential definition id', async (): Promise<void> => {
+        const unknownCredentialDefinitionId = '498e1086-a2ac-4189-b951-fe863d0fe9fc'
+        const relyingParty: NewRelyingParty = {
+            name: 'example_name',
+            type: RelyingPartyType.ARIES,
+            credentialDefinitions: [credentialDefinition1.id, credentialDefinition2.id],
+            description: 'example_description',
+            organization: 'example_organization',
+            logo: asset.id,
+        };
+
+        const savedRelyingParty = await repository.create(relyingParty)
+        expect(savedRelyingParty).toBeDefined()
+
+        const updatedRelyingParty: NewRelyingParty = {
+            ...savedRelyingParty,
+            credentialDefinitions: [unknownCredentialDefinitionId],
+            logo: asset.id,
+        }
+
+        await expect(repository.update(savedRelyingParty.id, updatedRelyingParty)).rejects.toThrowError(`No credential definition found for id: ${unknownCredentialDefinitionId}`)
     })
 })

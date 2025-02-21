@@ -1,6 +1,7 @@
-import {eq, inArray} from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
+import CredentialDefinitionRepository from './CredentialDefinitionRepository';
 import AssetRepository from './AssetRepository';
 import { NotFoundError } from '../../errors';
 import { credentialDefinitions, relyingParties, relyingPartiesToCredentialDefinitions } from '../schema';
@@ -10,10 +11,17 @@ import { RelyingParty, NewRelyingParty, RepositoryDefinition } from '../../types
 class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRelyingParty> {
     constructor(
         private readonly databaseService: DatabaseService,
+        private readonly credentialDefinitionRepository: CredentialDefinitionRepository,
         private readonly assetRepository: AssetRepository
     ) {}
 
     async create(relyingParty: NewRelyingParty): Promise<RelyingParty> {
+        if (relyingParty.credentialDefinitions.length === 0) {
+            return Promise.reject(Error('At least one credential definition is required'));
+        }
+
+        const credentialDefinitionPromises = relyingParty.credentialDefinitions.map(async credentialDefinition => await this.credentialDefinitionRepository.findById(credentialDefinition))
+        await Promise.all(credentialDefinitionPromises)
         const logoResult = relyingParty.logo ? await this.assetRepository.findById(relyingParty.logo) : null
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<RelyingParty> => {
@@ -62,7 +70,14 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
     async update(id: string, relyingParty: NewRelyingParty): Promise<RelyingParty> {
         await this.findById(id)
 
+        if (relyingParty.credentialDefinitions.length === 0) {
+            return Promise.reject(Error('At least one credential definition is required'));
+        }
+
+        const credentialDefinitionPromises = relyingParty.credentialDefinitions.map(async credentialDefinition => await this.credentialDefinitionRepository.findById(credentialDefinition))
+        await Promise.all(credentialDefinitionPromises)
         const logoResult = relyingParty.logo ? await this.assetRepository.findById(relyingParty.logo) : null
+
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<RelyingParty> => {
             const [relyingPartyResult] = await tx.update(relyingParties)
                 .set({
@@ -151,9 +166,9 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
             },
         })
 
-        return result.map((relayingParty) => ({
-            ...relayingParty,
-            credentialDefinitions: relayingParty.credentialDefinitions.map(item => item.credentialDefinition)
+        return result.map(relyingParty => ({
+            ...relyingParty,
+            credentialDefinitions: relyingParty.credentialDefinitions.map(item => item.credentialDefinition)
         }))
     }
 }

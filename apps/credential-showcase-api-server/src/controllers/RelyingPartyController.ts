@@ -31,7 +31,6 @@ class RelyingPartyController {
         const result = await this.relyingPartyService.getRelyingParties()
         const relyingParties = result.map(relyingParty => relyingPartyDTOFrom(relyingParty))
         return RelyingPartiesResponseFromJSONTyped({ relyingParties }, false)
-
     }
 
     @Get('/:id')

@@ -3,8 +3,17 @@ import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
 import IssuerRepository from './IssuerRepository';
+import PersonaRepository from './PersonaRepository';
 import { NotFoundError } from '../../errors';
-import { assets, stepActions, steps, workflows } from '../schema';
+import {
+    assets,
+    workflowsToPersonas,
+    stepActions,
+    steps,
+    workflows,
+    credentialDefinitions
+} from '../schema';
+import { sortSteps } from '../../utils/sortUtils';
 import {
     IssuanceFlow,
     NewIssuanceFlow,
@@ -15,14 +24,14 @@ import {
     StepAction,
     WorkflowType
 } from '../../types';
-import {sortSteps} from '../../utils/sortUtils';
 
 @Service()
 class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIssuanceFlow> {
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly assetRepository: AssetRepository,
-        private readonly issuerRepository: IssuerRepository
+        private readonly issuerRepository: IssuerRepository,
+        private readonly personaRepository: PersonaRepository
     ) {}
 
     // ISSUANCE FLOW
@@ -31,6 +40,11 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         if (issuanceFlow.steps.length === 0) {
             return Promise.reject(Error('At least one step is required'));
         }
+        if (issuanceFlow.personas.length === 0) {
+            return Promise.reject(Error('At least one persona is required'));
+        }
+        const personaPromises = issuanceFlow.personas.map(async persona => await this.personaRepository.findById(persona))
+        await Promise.all(personaPromises)
         const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
@@ -39,9 +53,24 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                     name: issuanceFlow.name,
                     description: issuanceFlow.description,
                     issuer: issuerResult.id,
-                    workflowType: WorkflowType.ISSUANCE
+                    workflowType: WorkflowType.ISSUANCE,
                 })
                 .returning();
+
+            const workflowsToPersonasResult = await tx.insert(workflowsToPersonas)
+                .values(issuanceFlow.personas.map((personaId: string) => ({
+                    workflow: issuanceFlowResult.id,
+                    persona: personaId
+                })))
+                .returning();
+
+            const personasResult = await tx.query.personas.findMany({
+                where: inArray(credentialDefinitions.id, workflowsToPersonasResult.map(item => item.persona)),
+                with: {
+                    headshotImage: true,
+                    bodyImage: true
+                },
+            })
 
             const stepsResult = await tx.insert(steps)
                 .values(issuanceFlow.steps.map((step: NewStep) => ({
@@ -72,7 +101,8 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             return {
                 ...issuanceFlowResult,
                 steps: sortSteps(flowSteps),
-                issuer: issuerResult
+                issuer: issuerResult,
+                personas: personasResult
             }
         })
     }
@@ -89,6 +119,11 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         if (issuanceFlow.steps.length === 0) {
             return Promise.reject(Error('At least one step is required'));
         }
+        if (issuanceFlow.personas.length === 0) {
+            return Promise.reject(Error('At least one persona is required'));
+        }
+        const personaPromises = issuanceFlow.personas.map(async persona => await this.personaRepository.findById(persona))
+        await Promise.all(personaPromises)
         const issuerResult = await this.issuerRepository.findById(issuanceFlow.issuer)
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<IssuanceFlow> => {
@@ -101,6 +136,23 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                 })
                 .where(eq(workflows.id, issuanceFlowId))
                 .returning();
+
+            await tx.delete(workflowsToPersonas).where(eq(workflowsToPersonas.workflow, issuanceFlowId))
+
+            const workflowsToPersonasResult = await tx.insert(workflowsToPersonas)
+                .values(issuanceFlow.personas.map((personaId: string) => ({
+                    workflow: issuanceFlowResult.id,
+                    persona: personaId
+                })))
+                .returning();
+
+            const personasResult = await tx.query.personas.findMany({
+                where: inArray(credentialDefinitions.id, workflowsToPersonasResult.map(item => item.persona)),
+                with: {
+                    headshotImage: true,
+                    bodyImage: true
+                },
+            })
 
             const selectedSteps = await tx.select({ id: steps.id })
                 .from(steps)
@@ -137,7 +189,8 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             return {
                 ...issuanceFlowResult,
                 steps: sortSteps(flowSteps),
-                issuer: issuerResult
+                issuer: issuerResult,
+                personas: personasResult
             }
         })
     }
@@ -168,6 +221,16 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                         },
                         logo: true
                     }
+                },
+                personas: {
+                    with: {
+                        persona: {
+                            with: {
+                                headshotImage: true,
+                                bodyImage: true
+                            }
+                        }
+                    }
                 }
             }
         })
@@ -182,7 +245,8 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             issuer: {
                 ...result.issuer as any, // TODO check this typing issue at a later point in time
                 credentialDefinitions: result.issuer!.credentialDefinitions.map(credentialDefinition => credentialDefinition.cd)
-            }
+            },
+            personas: result.personas.map(item => item.persona)
         };
     }
 
@@ -212,6 +276,16 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
                         },
                         logo: true
                     }
+                },
+                personas: {
+                    with: {
+                        persona: {
+                            with: {
+                                headshotImage: true,
+                                bodyImage: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -221,8 +295,9 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
             steps: sortSteps(workflow.steps),
             issuer: {
                 ...workflow.issuer,
-                credentialDefinitions: workflow.issuer.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO any
-            }
+                credentialDefinitions: workflow.issuer.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO check this typing issue at a later point in time
+            },
+            personas: workflow.personas.map((item: any) => item.persona) // TODO check this typing issue at a later point in time
         }));
     }
 
@@ -380,7 +455,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
     }
 
     async findAllStepActions(issuanceFlowId: string, stepId: string): Promise<StepAction[]> {
-        // TODO issuanceFlowId is not being used
+        // FIXME issuanceFlowId is not being used, decide later what to do with it
         return (await this.databaseService.getConnection()).query.stepActions.findMany({
             where: eq(stepActions.step, stepId)
         });

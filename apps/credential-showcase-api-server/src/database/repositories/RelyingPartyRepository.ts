@@ -143,7 +143,7 @@ class RelyingPartyRepository implements RepositoryDefinition<RelyingParty, NewRe
 
         return {
             ...result,
-            credentialDefinitions: result.credentialDefinitions.map((item) => item.credentialDefinition)
+            credentialDefinitions: result.credentialDefinitions.map(item => item.credentialDefinition)
         }
     }
 

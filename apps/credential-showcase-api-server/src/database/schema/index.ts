@@ -17,4 +17,4 @@ export * from './workflow'
 export * from './workflowType'
 export * from './revocationInfo'
 export * from './persona'
-
+export * from './workflowsToPersonas'

@@ -1,11 +1,11 @@
-import {pgTable, uuid, varchar} from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { credentialDefinitions } from './credentialDefinition';
 
 export const revocationInfo = pgTable('revocationInfo', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
-    title: varchar({ length: 255 }).notNull(),
-    description: varchar({ length: 255 }).notNull(),
+    title: text().notNull(),
+    description: text().notNull(),
     credentialDefinition: uuid('credential_definition').references(() => credentialDefinitions.id, { onDelete: 'cascade' }).notNull().unique()
 });
 

@@ -1,4 +1,5 @@
 export * from './asset'
+export * from './persona'
 export * from './credentialDefinition'
 export * from './credentialRepresentation'
 export * from './credentialAttribute'

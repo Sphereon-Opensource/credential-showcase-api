@@ -6,7 +6,7 @@
   "author": "4Sure",
   "license": "Apache-2.0",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
     "build": "turbo run build",
     "prettier": "prettier --write \"{packages,__tests__,!dist}/**/*.{ts,js,json,md}\"",

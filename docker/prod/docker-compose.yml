@@ -79,7 +79,7 @@ services:
   traefik:
     image: traefik:latest
     profiles:
-      - traefik
+      - traefik  # CONDITIONAL - set COMPOSE_PROFILES=traefik to enable
     command: >
       --providers.docker
       --providers.docker.exposedbydefault=false

@@ -1,15 +1,32 @@
-import { CredentialDefinition, instanceOfAnonCredRevocation } from 'credential-showcase-openapi'
-import {
-  CreateWalletTokenRequest,
-  CreateWalletTokenRequestToJSON,
-  CredentialDefinitionSendRequest,
-  CredentialDefinitionSendRequestToJSON,
-} from 'credential-showcase-traction-openapi'
+import { CredentialDefinition } from 'credential-showcase-openapi'
+import { CredentialDefinitionSendRequestToJSON } from 'credential-showcase-traction-openapi'
 import { endpoints } from './endpoints'
-import { environment } from './environment'
+import { credentialDefinitionToCredDefPostRequest } from './mappers/credential-definition'
 
 const credentialsEndpoint = `${endpoints.TRACTION.API_BASE}${endpoints.TRACTION.CREDENTIAL_DEFINITIONS}`
-const tokenEndpoint = `${endpoints.TRACTION.API_BASE}${endpoints.TRACTION.TOKEN_ENDPOINT}`
+
+export async function storeAnonCredentialDefinition(credentialDef: CredentialDefinition) {
+  const storeRequest = credentialDefinitionToCredDefPostRequest(credentialDef)
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+  const response = await fetch(credentialsEndpoint, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(CredentialDefinitionSendRequestToJSON(storeRequest)),
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP error in storeAnonCredentialDefinition! status: ${response.status}`)
+  }
+
+  return await response.json()
+}
+
+/* Probably not needed
+
+ const tokenEndpoint = `${endpoints.TRACTION.API_BASE}${endpoints.TRACTION.TOKEN_ENDPOINT}`
 
 export async function getWalletToken(): Promise<string> {
   const request: CreateWalletTokenRequest = {
@@ -31,36 +48,4 @@ export async function getWalletToken(): Promise<string> {
   const data = await response.json()
   return data.token
 }
-
-export async function sendCredentialDefinition(credentialDef: CredentialDefinition, apiToken: string) {
-  const sendRequest: CredentialDefinitionSendRequest = {
-    schemaId: credentialDef.id,
-    tag: credentialDef.name,
-    supportRevocation: false,
-  }
-
-  if (credentialDef.revocation) {
-    sendRequest.supportRevocation = true
-
-    if (instanceOfAnonCredRevocation(credentialDef.revocation)) {
-      sendRequest.revocationRegistrySize = 1000 // FIXME do we need this?
-    }
-  }
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${apiToken}`,
-  }
-
-  const response = await fetch(credentialsEndpoint, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(CredentialDefinitionSendRequestToJSON(sendRequest)),
-  })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-
-  return await response.json()
-}
+*/

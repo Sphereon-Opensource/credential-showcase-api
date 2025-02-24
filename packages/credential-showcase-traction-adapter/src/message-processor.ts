@@ -1,12 +1,11 @@
 import { Connection, Receiver, ReceiverEvents, ReceiverOptions } from 'rhea-promise'
 import { environment } from './environment'
 import { CredentialDefinitionFromJSON } from 'credential-showcase-openapi'
-import { getWalletToken, sendCredentialDefinition } from './traction-functions'
+import { storeAnonCredentialDefinition } from './traction-functions'
 
 export class MessageProcessor {
   private readonly connection: Connection
   private receiver!: Receiver
-  private tokenCache: { token: string; expiry: number } | null = null
 
   constructor(private topic: string) {
     this.connection = new Connection({
@@ -40,12 +39,14 @@ export class MessageProcessor {
         const credentialDef = CredentialDefinitionFromJSON(jsonData)
         try {
           console.debug('Received credential definition', credentialDef)
-          await sendCredentialDefinition(credentialDef, await this.getApiToken())
+          await storeAnonCredentialDefinition(credentialDef)
           if (context.delivery) {
             context.delivery.accept()
           }
         } catch (e) {
-          console.error(`An error occurred while sending credential definition ${credentialDef.id}/${credentialDef.name} of type ${credentialDef.type} to Traction`)
+          console.error(
+            `An error occurred while sending credential definition ${credentialDef.id}/${credentialDef.name} of type ${credentialDef.type} to Traction`,
+          )
           if (context.delivery) {
             context.delivery.reject() // FIXME context.delivery.release() to redeliver ??
           }
@@ -67,6 +68,10 @@ export class MessageProcessor {
     }
   }
 
+  /* Probably not needed
+  private tokenCache: { token: string; expiry: number } | null = null
+
+
   private async getApiToken(): Promise<string> {
     // Check if we have a valid cached token
     if (this.tokenCache && this.tokenCache.expiry > Date.now()) {
@@ -81,5 +86,5 @@ export class MessageProcessor {
       expiry: Date.now() + expiresAfterMs,
     }
     return token
-  }
+  }*/
 }

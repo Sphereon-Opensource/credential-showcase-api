@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, integer, varchar, uuid, unique } from 'drizzle-orm/pg-core';
+import { pgTable, integer, text, uuid, unique } from 'drizzle-orm/pg-core';
 import { StepTypePg } from './stepType';
 import { workflows } from './workflow';
 import { stepActions } from './stepAction';
@@ -8,7 +8,8 @@ import { StepType } from '../../types';
 
 export const steps = pgTable('step', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
-    title: varchar({ length: 255 }).notNull(),
+    title: text().notNull(),
+    description: text().notNull(),
     order: integer().notNull(),
     type: StepTypePg('step_type').notNull().$type<StepType>(),
     subFlow: uuid('sub_flow').references(() => workflows.id),

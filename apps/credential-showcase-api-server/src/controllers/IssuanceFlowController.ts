@@ -85,7 +85,7 @@ class IssuanceFlowController {
 
     @Get('/:issuanceFlowId/steps')
     public async getAllSteps(
-        @Param('issuanceFlow') issuanceFlowId: string
+        @Param('issuanceFlowId') issuanceFlowId: string
     ): Promise<StepsResponse> {
         const result = await this.issuanceFlowService.getIssuanceFlowSteps(issuanceFlowId)
         const steps = result.map(step => stepDTOFrom(step));
@@ -149,7 +149,7 @@ class IssuanceFlowController {
         @Param('actionId') actionId: string
     ): Promise<StepActionResponse> {
         const result = await this.issuanceFlowService.getIssuanceFlowStepAction(issuanceFlowId, stepId, actionId);
-        return StepActionResponseFromJSONTyped({ step: result }, false);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @HttpCode(201)
@@ -160,7 +160,7 @@ class IssuanceFlowController {
         @Body() actionRequest: StepActionRequest
     ): Promise<StepActionResponse> {
         const result = await this.issuanceFlowService.createIssuanceFlowStepAction(issuanceFlowId, stepId, StepActionRequestToJSONTyped(actionRequest));
-        return StepActionResponseFromJSONTyped({ step: result }, false);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @Put('/:issuanceFlowId/steps/:stepId/actions/:actionId')
@@ -171,7 +171,7 @@ class IssuanceFlowController {
         @Body() actionRequest: StepActionRequest
     ): Promise<StepActionResponse> {
         const result = await this.issuanceFlowService.updateIssuanceFlowStepAction(issuanceFlowId, stepId, actionId, StepActionRequestToJSONTyped(actionRequest))
-        return StepActionResponseFromJSONTyped({ step: result }, false);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @OnUndefined(204)

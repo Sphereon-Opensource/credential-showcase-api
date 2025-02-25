@@ -4,12 +4,13 @@ import { drizzle } from 'drizzle-orm/pglite';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import DatabaseService from '../services/DatabaseService';
-import PresentationFlowRepository from '../database/repositories/PresentationFlowRepository';
-import RelyingPartyRepository from '../database/repositories/RelyingPartyRepository';
-import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
-import AssetRepository from '../database/repositories/AssetRepository';
-import * as schema from '../database/schema';
+import DatabaseService from '../../../services/DatabaseService';
+import PresentationFlowRepository from '../../../database/repositories/PresentationFlowRepository';
+import RelyingPartyRepository from '../../../database/repositories/RelyingPartyRepository';
+import CredentialDefinitionRepository from '../../../database/repositories/CredentialDefinitionRepository';
+import AssetRepository from '../../../database/repositories/AssetRepository';
+import PersonaRepository from '../PersonaRepository';
+import * as schema from '../../../database/schema';
 import {
     Asset,
     NewAsset,
@@ -22,14 +23,19 @@ import {
     StepType,
     NewRelyingParty,
     RelyingPartyType,
-    RelyingParty
-} from '../types';
+    RelyingParty,
+    Persona,
+    NewPersona,
+    StepActionType
+} from '../../../types';
 
 describe('Database presentation flow repository tests', (): void => {
     let client: PGlite;
     let repository: PresentationFlowRepository;
     let relyingParty: RelyingParty
     let asset: Asset
+    let persona1: Persona
+    let persona2: Persona
 
     beforeEach(async (): Promise<void> => {
         client = new PGlite();
@@ -68,14 +74,14 @@ describe('Database presentation flow repository tests', (): void => {
                 }
             ],
             representations: [
-                { // TODO AnonCredRevocation
+                { // TODO SHOWCASE-81 OCARepresentation
 
                 },
-                { // TODO AnonCredRevocation
+                { // TODO SHOWCASE-81 OCARepresentation
 
                 }
             ],
-            revocation: { // TODO OCARepresentation
+            revocation: { // TODO SHOWCASE-80 AnonCredRevocation
                 title: 'example_revocation_title',
                 description: 'example_revocation_description'
             }
@@ -90,6 +96,16 @@ describe('Database presentation flow repository tests', (): void => {
             logo: asset.id,
         };
         relyingParty = await relyingPartyRepository.create(newRelyingParty)
+        const personaRepository = Container.get(PersonaRepository);
+        const newPersona: NewPersona = {
+            name: 'John Doe',
+            role: 'Software Engineer',
+            description: 'Experienced developer',
+            headshotImage: asset.id,
+            bodyImage: asset.id
+        };
+        persona1 = await personaRepository.create(newPersona);
+        persona2 = await personaRepository.create(newPersona);
     })
 
     afterEach(async (): Promise<void> => {
@@ -106,32 +122,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -160,6 +178,23 @@ describe('Database presentation flow repository tests', (): void => {
         expect(savedPresentationFlow.relyingParty!.description).toEqual(relyingParty.description);
         expect(savedPresentationFlow.relyingParty!.organization).toEqual(relyingParty.organization);
         expect(savedPresentationFlow.relyingParty!.logo).not.toBeNull()
+        expect(savedPresentationFlow.personas).toBeDefined();
+        expect(savedPresentationFlow.personas.length).toEqual(2)
+        expect(savedPresentationFlow.personas[0].name).toEqual(persona1.name)
+        expect(savedPresentationFlow.personas[0].role).toEqual(persona1.role)
+        expect(savedPresentationFlow.personas[0].description).toEqual(persona1.description)
+        expect(savedPresentationFlow.personas[0].headshotImage).not.toBeNull()
+        expect(savedPresentationFlow.personas[0].headshotImage!.id).toBeDefined();
+        expect(savedPresentationFlow.personas[0].headshotImage!.mediaType).toEqual(asset.mediaType)
+        expect(savedPresentationFlow.personas[0].headshotImage!.fileName).toEqual(asset.fileName)
+        expect(savedPresentationFlow.personas[0].headshotImage!.description).toEqual(asset.description)
+        expect(savedPresentationFlow.personas[0].headshotImage!.content).toStrictEqual(asset.content)
+        expect(savedPresentationFlow.personas[0].bodyImage).not.toBeNull()
+        expect(savedPresentationFlow.personas[0].bodyImage!.id).toBeDefined();
+        expect(savedPresentationFlow.personas[0].bodyImage!.mediaType).toEqual(asset.mediaType)
+        expect(savedPresentationFlow.personas[0].bodyImage!.fileName).toEqual(asset.fileName)
+        expect(savedPresentationFlow.personas[0].bodyImage!.description).toEqual(asset.description)
+        expect(savedPresentationFlow.personas[0].bodyImage!.content).toStrictEqual(asset.content)
     })
 
     it('Should throw error when saving presentation flow with no steps', async (): Promise<void> => {
@@ -167,8 +202,8 @@ describe('Database presentation flow repository tests', (): void => {
             name: 'example_name',
             description: 'example_description',
             relyingParty: relyingParty.id,
-            steps: []
-            // personas
+            steps: [],
+            personas: [persona1.id]
         };
 
         await expect(repository.create(presentationFlow)).rejects.toThrowError(`At least one step is required`)
@@ -183,32 +218,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         await expect(repository.create(presentationFlow)).rejects.toThrowError(`No relying party found for id: ${unknownRelyingPartyId}`)
@@ -222,35 +259,92 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         await expect(repository.create(presentationFlow)).rejects.toThrowError('duplicate key value violates unique constraint "step_order_workflow_unique"') // FIXME would be nice if we can set a custom error message returns by a constraint
+    })
+
+    it('Should throw error when saving issuance flow with invalid persona id', async (): Promise<void> => {
+        const unknownPersonaId = 'a197e5b2-e4e5-4788-83b1-ecaa0e99ed3a'
+        const presentationFlow: NewPresentationFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            relyingParty: relyingParty.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: [unknownPersonaId]
+        };
+
+        await expect(repository.create(presentationFlow)).rejects.toThrowError(`No persona found for id: ${unknownPersonaId}`)
+    })
+
+    it('Should throw error when saving issuance flow with no personas', async (): Promise<void> => {
+        const presentationFlow: NewPresentationFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            relyingParty: relyingParty.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: []
+        };
+
+        await expect(repository.create(presentationFlow)).rejects.toThrowError(`At least one persona is required`)
     })
 
     it('Should get presentation flow by id from database', async (): Promise<void> => {
@@ -261,32 +355,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -299,6 +395,23 @@ describe('Database presentation flow repository tests', (): void => {
         expect(fromDb.description).toEqual(presentationFlow.description)
         expect(fromDb.steps).toBeDefined()
         expect(fromDb.steps.length).toEqual(2)
+        expect(fromDb.personas).toBeDefined();
+        expect(fromDb.personas.length).toEqual(2)
+        expect(fromDb.personas[0].name).toEqual(persona1.name)
+        expect(fromDb.personas[0].role).toEqual(persona1.role)
+        expect(fromDb.personas[0].description).toEqual(persona1.description)
+        expect(fromDb.personas[0].headshotImage).not.toBeNull()
+        expect(fromDb.personas[0].headshotImage!.id).toBeDefined();
+        expect(fromDb.personas[0].headshotImage!.mediaType).toEqual(asset.mediaType)
+        expect(fromDb.personas[0].headshotImage!.fileName).toEqual(asset.fileName)
+        expect(fromDb.personas[0].headshotImage!.description).toEqual(asset.description)
+        expect(fromDb.personas[0].headshotImage!.content).toStrictEqual(asset.content)
+        expect(fromDb.personas[0].bodyImage).not.toBeNull()
+        expect(fromDb.personas[0].bodyImage!.id).toBeDefined();
+        expect(fromDb.personas[0].bodyImage!.mediaType).toEqual(asset.mediaType)
+        expect(fromDb.personas[0].bodyImage!.fileName).toEqual(asset.fileName)
+        expect(fromDb.personas[0].bodyImage!.description).toEqual(asset.description)
+        expect(fromDb.personas[0].bodyImage!.content).toStrictEqual(asset.content)
     })
 
     it('Should get all presentation flows from database', async (): Promise<void> => {
@@ -309,32 +422,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedPresentationFlow1 = await repository.create(presentationFlow)
@@ -356,32 +471,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -400,32 +517,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -437,24 +556,26 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title1',
-                            actionType: 'example_type1',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text1'
                         },
                         {
                             title: 'example_title2',
-                            actionType: 'example_type2',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text2'
                         }
                     ]
                 }
             ],
             relyingParty: savedPresentationFlow.relyingParty!.id,
+            personas: [persona1.id]
         }
         const updatedPresentationFlowResult = await repository.update(savedPresentationFlow.id, updatedPresentationFlow)
 
@@ -476,6 +597,23 @@ describe('Database presentation flow repository tests', (): void => {
         expect(updatedPresentationFlowResult.steps[0].asset!.fileName).toEqual(asset.fileName)
         expect(updatedPresentationFlowResult.steps[0].asset!.description).toEqual(asset.description)
         expect(updatedPresentationFlowResult.steps[0].asset!.content).toStrictEqual(asset.content)
+        expect(updatedPresentationFlowResult.personas).toBeDefined();
+        expect(updatedPresentationFlowResult.personas.length).toEqual(1)
+        expect(updatedPresentationFlowResult.personas[0].name).toEqual(persona1.name)
+        expect(updatedPresentationFlowResult.personas[0].role).toEqual(persona1.role)
+        expect(updatedPresentationFlowResult.personas[0].description).toEqual(persona1.description)
+        expect(updatedPresentationFlowResult.personas[0].headshotImage).not.toBeNull()
+        expect(updatedPresentationFlowResult.personas[0].headshotImage!.id).toBeDefined();
+        expect(updatedPresentationFlowResult.personas[0].headshotImage!.mediaType).toEqual(asset.mediaType)
+        expect(updatedPresentationFlowResult.personas[0].headshotImage!.fileName).toEqual(asset.fileName)
+        expect(updatedPresentationFlowResult.personas[0].headshotImage!.description).toEqual(asset.description)
+        expect(updatedPresentationFlowResult.personas[0].headshotImage!.content).toStrictEqual(asset.content)
+        expect(updatedPresentationFlowResult.personas[0].bodyImage).not.toBeNull()
+        expect(updatedPresentationFlowResult.personas[0].bodyImage!.id).toBeDefined();
+        expect(updatedPresentationFlowResult.personas[0].bodyImage!.mediaType).toEqual(asset.mediaType)
+        expect(updatedPresentationFlowResult.personas[0].bodyImage!.fileName).toEqual(asset.fileName)
+        expect(updatedPresentationFlowResult.personas[0].bodyImage!.description).toEqual(asset.description)
+        expect(updatedPresentationFlowResult.personas[0].bodyImage!.content).toStrictEqual(asset.content)
     })
 
     it('Should throw error when updating presentation flow with no steps', async (): Promise<void> => {
@@ -486,32 +624,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -521,6 +661,7 @@ describe('Database presentation flow repository tests', (): void => {
             ...savedPresentationFlow,
             steps: [],
             relyingParty: savedPresentationFlow.relyingParty!.id,
+            personas: [persona1.id]
         }
 
         await expect(repository.update(savedPresentationFlow.id, updatedPresentationFlow)).rejects.toThrowError(`At least one step is required`)
@@ -535,32 +676,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -571,22 +714,129 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
             ],
             relyingParty: unknownRelyingPartyId,
+            personas: [persona1.id]
         }
 
         await expect(repository.update(savedPresentationFlow.id, updatedPresentationFlow)).rejects.toThrowError(`No relying party found for id: ${unknownRelyingPartyId}`)
+    })
+
+    it('Should throw error when updating issuance flow with invalid persona id', async (): Promise<void> => {
+        const unknownPersonaId = 'a197e5b2-e4e5-4788-83b1-ecaa0e99ed3a'
+        const presentationFlow: NewPresentationFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            relyingParty: relyingParty.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: [persona1.id]
+        };
+
+        const savedPresentationFlow = await repository.create(presentationFlow)
+        expect(savedPresentationFlow).toBeDefined()
+
+        const updatedPresentationFlow: NewPresentationFlow = {
+            ...savedPresentationFlow,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                },
+            ],
+            relyingParty: relyingParty.id,
+            personas: [unknownPersonaId]
+        }
+
+        await expect(repository.update(savedPresentationFlow.id, updatedPresentationFlow)).rejects.toThrowError(`No persona found for id: ${unknownPersonaId}`)
+    })
+
+    it('Should throw error when updating issuance flow with no personas', async (): Promise<void> => {
+        const presentationFlow: NewPresentationFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            relyingParty: relyingParty.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: [persona1.id]
+        };
+
+        const savedPresentationFlow = await repository.create(presentationFlow)
+        expect(savedPresentationFlow).toBeDefined()
+
+        const updatedPresentationFlow: NewPresentationFlow = {
+            ...savedPresentationFlow,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                },
+            ],
+            relyingParty: savedPresentationFlow.relyingParty!.id,
+            personas: []
+        }
+
+        await expect(repository.update(savedPresentationFlow.id, updatedPresentationFlow)).rejects.toThrowError(`At least one persona is required`)
     })
 
     it('Should add presentation flow step to database', async (): Promise<void> => {
@@ -597,19 +847,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -617,18 +868,19 @@ describe('Database presentation flow repository tests', (): void => {
 
         const step: NewStep = {
             title: 'example_title',
+            description: 'example_description',
             order: 2,
             type: StepType.HUMAN_TASK,
             asset: asset.id,
             actions: [
                 {
                     title: 'example_title1',
-                    actionType: 'example_type1',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text1'
                 },
                 {
                     title: 'example_title2',
-                    actionType: 'example_type2',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text2'
                 }
             ]
@@ -664,19 +916,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -684,6 +937,7 @@ describe('Database presentation flow repository tests', (): void => {
 
         const step: NewStep = {
             title: 'example_title',
+            description: 'example_description',
             order: 2,
             type: StepType.HUMAN_TASK,
             asset: asset.id,
@@ -701,24 +955,25 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title1',
-                            actionType: 'example_type1',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text1'
                         },
                         {
                             title: 'example_title2',
-                            actionType: 'example_type2',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text2'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -751,32 +1006,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -810,32 +1067,34 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -858,19 +1117,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -882,12 +1142,12 @@ describe('Database presentation flow repository tests', (): void => {
             actions: [
                 {
                     title: 'example_title1',
-                    actionType: 'example_type1',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text1'
                 },
                 {
                     title: 'example_title2',
-                    actionType: 'example_type2',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text2'
                 }
             ],
@@ -919,19 +1179,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -954,19 +1215,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -974,7 +1236,7 @@ describe('Database presentation flow repository tests', (): void => {
 
         const action: NewStepAction = {
             title: 'example_title',
-            actionType: 'example_type',
+            actionType: StepActionType.ARIES_OOB,
             text: 'example_text'
         };
         const savedStepAction = await repository.createStepAction(savedPresentationFlow.id, savedPresentationFlow.steps[0].id, action)
@@ -1001,19 +1263,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -1035,24 +1298,25 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         },
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -1076,24 +1340,25 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         },
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)
@@ -1116,19 +1381,20 @@ describe('Database presentation flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedPresentationFlow = await repository.create(presentationFlow)

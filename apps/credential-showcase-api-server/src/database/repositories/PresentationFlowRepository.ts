@@ -3,8 +3,16 @@ import { Service } from 'typedi';
 import DatabaseService from '../../services/DatabaseService';
 import AssetRepository from './AssetRepository';
 import RelyingPartyRepository from './RelyingPartyRepository';
+import PersonaRepository from './PersonaRepository';
 import { NotFoundError } from '../../errors';
-import { assets, stepActions, steps, workflows } from '../schema';
+import {
+    assets,
+    credentialDefinitions,
+    stepActions,
+    steps,
+    workflows,
+    workflowsToPersonas
+} from '../schema';
 import { sortSteps } from '../../utils/sortUtils';
 import {
     PresentationFlow,
@@ -22,7 +30,8 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
     constructor(
         private readonly databaseService: DatabaseService,
         private readonly assetRepository: AssetRepository,
-        private readonly relyingPartyRepository: RelyingPartyRepository
+        private readonly relyingPartyRepository: RelyingPartyRepository,
+        private readonly personaRepository: PersonaRepository
     ) {}
 
     // PRESENTATION FLOW
@@ -31,6 +40,11 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
         if (presentationFlow.steps.length === 0) {
             return Promise.reject(Error('At least one step is required'));
         }
+        if (presentationFlow.personas.length === 0) {
+            return Promise.reject(Error('At least one persona is required'));
+        }
+        const personaPromises = presentationFlow.personas.map(async persona => await this.personaRepository.findById(persona))
+        await Promise.all(personaPromises)
         const relyingPartyResult = await this.relyingPartyRepository.findById(presentationFlow.relyingParty)
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<PresentationFlow> => {
@@ -42,6 +56,21 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                     workflowType: WorkflowType.PRESENTATION
                 })
                 .returning();
+
+            const workflowsToPersonasResult = await tx.insert(workflowsToPersonas)
+                .values(presentationFlow.personas.map((personaId: string) => ({
+                    workflow: presentationFlowResult.id,
+                    persona: personaId
+                })))
+                .returning();
+
+            const personasResult = await tx.query.personas.findMany({
+                where: inArray(credentialDefinitions.id, workflowsToPersonasResult.map(item => item.persona)),
+                with: {
+                    headshotImage: true,
+                    bodyImage: true
+                },
+            })
 
             const stepsResult = await tx.insert(steps)
                 .values(presentationFlow.steps.map((step: NewStep) => ({
@@ -72,7 +101,8 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             return {
                 ...presentationFlowResult,
                 steps: sortSteps(flowSteps),
-                relyingParty: relyingPartyResult
+                relyingParty: relyingPartyResult,
+                personas: personasResult
             }
         })
     }
@@ -89,6 +119,11 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
         if (presentationFlow.steps.length === 0) {
             return Promise.reject(Error('At least one step is required'));
         }
+        if (presentationFlow.personas.length === 0) {
+            return Promise.reject(Error('At least one persona is required'));
+        }
+        const personaPromises = presentationFlow.personas.map(async persona => await this.personaRepository.findById(persona))
+        await Promise.all(personaPromises)
         const relyingPartyResult = await this.relyingPartyRepository.findById(presentationFlow.relyingParty)
 
         return (await this.databaseService.getConnection()).transaction(async (tx): Promise<PresentationFlow> => {
@@ -101,6 +136,23 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                 })
                 .where(eq(workflows.id, presentationFlowId))
                 .returning();
+
+            await tx.delete(workflowsToPersonas).where(eq(workflowsToPersonas.workflow, presentationFlowId))
+
+            const workflowsToPersonasResult = await tx.insert(workflowsToPersonas)
+                .values(presentationFlow.personas.map((personaId: string) => ({
+                    workflow: presentationFlowResult.id,
+                    persona: personaId
+                })))
+                .returning();
+
+            const personasResult = await tx.query.personas.findMany({
+                where: inArray(credentialDefinitions.id, workflowsToPersonasResult.map(item => item.persona)),
+                with: {
+                    headshotImage: true,
+                    bodyImage: true
+                },
+            })
 
             const selectedSteps = await tx.select({ id: steps.id })
                 .from(steps)
@@ -137,7 +189,8 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             return {
                 ...presentationFlowResult,
                 steps: sortSteps(flowSteps),
-                relyingParty: relyingPartyResult
+                relyingParty: relyingPartyResult,
+                personas: personasResult
             }
         })
     }
@@ -168,6 +221,16 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                         },
                         logo: true
                     }
+                },
+                personas: {
+                    with: {
+                        persona: {
+                            with: {
+                                headshotImage: true,
+                                bodyImage: true
+                            }
+                        }
+                    }
                 }
             }
         })
@@ -182,7 +245,8 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             relyingParty: {
                 ...result.relyingParty as any, // TODO check this typing issue at a later point in time
                 credentialDefinitions: result.relyingParty!.credentialDefinitions.map(credentialDefinition => credentialDefinition.cd)
-            }
+            },
+            personas: result.personas.map(item => item.persona)
         };
     }
 
@@ -212,6 +276,16 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                         },
                         logo: true
                     }
+                },
+                personas: {
+                    with: {
+                        persona: {
+                            with: {
+                                headshotImage: true,
+                                bodyImage: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -222,7 +296,8 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             issuer: {
                 ...workflow.relyingParty,
                 credentialDefinitions: workflow.relyingParty.credentialDefinitions.map((credentialDefinition: any) => credentialDefinition.cd) // TODO any
-            }
+            },
+            personas: workflow.personas.map((item: any) => item.persona) // TODO check this typing issue at a later point in time
         }));
     }
 

@@ -1,18 +1,19 @@
-import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
-import { steps } from './step';
 import { relations } from 'drizzle-orm';
+import { pgTable, uuid, text } from 'drizzle-orm/pg-core';
+import { steps } from './step';
+import { StepActionType } from '../../types';
 
 // TODO this needs to become a base entity
 export const stepActions = pgTable('stepAction', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
-    actionType: varchar({ length: 255 }).notNull(),
-    title: varchar({ length: 255 }).notNull(),
-    text: varchar({ length: 255 }).notNull(),
+    actionType: text().notNull().$type<StepActionType>(),
+    title: text().notNull(),
+    text: text().notNull(),
     step: uuid().references(() => steps.id,{ onDelete: 'cascade' }).notNull()
 });
 
 export const stepActionRelations = relations(stepActions, ({ one }) => ({
-    credentialDefinition: one(steps, {
+    step: one(steps, {
         fields: [stepActions.step],
         references: [steps.id],
     }),

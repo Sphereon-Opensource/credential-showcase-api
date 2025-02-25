@@ -4,12 +4,13 @@ import { drizzle } from 'drizzle-orm/pglite';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import DatabaseService from '../services/DatabaseService';
-import IssuanceFlowRepository from '../database/repositories/IssuanceFlowRepository';
-import IssuerRepository from '../database/repositories/IssuerRepository';
-import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
-import AssetRepository from '../database/repositories/AssetRepository';
-import * as schema from '../database/schema';
+import DatabaseService from '../../../services/DatabaseService';
+import IssuanceFlowRepository from '../../../database/repositories/IssuanceFlowRepository';
+import IssuerRepository from '../../../database/repositories/IssuerRepository';
+import CredentialDefinitionRepository from '../../../database/repositories/CredentialDefinitionRepository';
+import AssetRepository from '../../../database/repositories/AssetRepository';
+import PersonaRepository from '../PersonaRepository';
+import * as schema from '../../../database/schema';
 import {
     Asset,
     NewAsset,
@@ -22,14 +23,19 @@ import {
     StepType,
     NewIssuer,
     IssuerType,
-    Issuer
-} from '../types';
+    Issuer,
+    Persona,
+    NewPersona,
+    StepActionType
+} from '../../../types';
 
 describe('Database issuance flow repository tests', (): void => {
     let client: PGlite;
     let repository: IssuanceFlowRepository;
     let issuer: Issuer
     let asset: Asset
+    let persona1: Persona
+    let persona2: Persona
 
     beforeEach(async (): Promise<void> => {
         client = new PGlite();
@@ -47,9 +53,9 @@ describe('Database issuance flow repository tests', (): void => {
             mediaType: 'image/png',
             fileName: 'image.png',
             description: 'some image',
-            content: Buffer.from('some binary data'),
+            content: Buffer.from('some binary data')
         };
-        asset = await assetRepository.create(newAsset)
+        asset = await assetRepository.create(newAsset);
         const newCredentialDefinition: NewCredentialDefinition = {
             name: 'example_name',
             version: 'example_version',
@@ -68,19 +74,19 @@ describe('Database issuance flow repository tests', (): void => {
                 }
             ],
             representations: [
-                { // TODO AnonCredRevocation
+                { // TODO SHOWCASE-81 OCARepresentation
 
                 },
-                { // TODO AnonCredRevocation
+                { // TODO SHOWCASE-81 OCARepresentation
 
                 }
             ],
-            revocation: { // TODO OCARepresentation
+            revocation: { // TODO SHOWCASE-80 AnonCredRevocation
                 title: 'example_revocation_title',
                 description: 'example_revocation_description'
             }
         };
-        const credentialDefinition = await credentialDefinitionRepository.create(newCredentialDefinition)
+        const credentialDefinition = await credentialDefinitionRepository.create(newCredentialDefinition);
         const newIssuer: NewIssuer = {
             name: 'example_name',
             type: IssuerType.ARIES,
@@ -89,7 +95,17 @@ describe('Database issuance flow repository tests', (): void => {
             organization: 'example_organization',
             logo: asset.id,
         };
-        issuer = await issuerRepository.create(newIssuer)
+        issuer = await issuerRepository.create(newIssuer);
+        const personaRepository = Container.get(PersonaRepository);
+        const newPersona: NewPersona = {
+            name: 'John Doe',
+            role: 'Software Engineer',
+            description: 'Experienced developer',
+            headshotImage: asset.id,
+            bodyImage: asset.id
+        };
+        persona1 = await personaRepository.create(newPersona);
+        persona2 = await personaRepository.create(newPersona);
     })
 
     afterEach(async (): Promise<void> => {
@@ -106,32 +122,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -154,6 +172,29 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow.steps[0].asset!.fileName).toEqual(asset.fileName)
         expect(savedIssuanceFlow.steps[0].asset!.description).toEqual(asset.description)
         expect(savedIssuanceFlow.steps[0].asset!.content).toStrictEqual(asset.content)
+        expect(savedIssuanceFlow.issuer).not.toBeNull()
+        expect(savedIssuanceFlow.issuer!.name).toEqual(issuer.name);
+        expect(savedIssuanceFlow.issuer!.credentialDefinitions.length).toEqual(1);
+        expect(savedIssuanceFlow.issuer!.description).toEqual(issuer.description);
+        expect(savedIssuanceFlow.issuer!.organization).toEqual(issuer.organization);
+        expect(savedIssuanceFlow.issuer!.logo).not.toBeNull()
+        expect(savedIssuanceFlow.personas).toBeDefined();
+        expect(savedIssuanceFlow.personas.length).toEqual(2)
+        expect(savedIssuanceFlow.personas[0].name).toEqual(persona1.name)
+        expect(savedIssuanceFlow.personas[0].role).toEqual(persona1.role)
+        expect(savedIssuanceFlow.personas[0].description).toEqual(persona1.description)
+        expect(savedIssuanceFlow.personas[0].headshotImage).not.toBeNull()
+        expect(savedIssuanceFlow.personas[0].headshotImage!.id).toBeDefined();
+        expect(savedIssuanceFlow.personas[0].headshotImage!.mediaType).toEqual(asset.mediaType)
+        expect(savedIssuanceFlow.personas[0].headshotImage!.fileName).toEqual(asset.fileName)
+        expect(savedIssuanceFlow.personas[0].headshotImage!.description).toEqual(asset.description)
+        expect(savedIssuanceFlow.personas[0].headshotImage!.content).toStrictEqual(asset.content)
+        expect(savedIssuanceFlow.personas[0].bodyImage).not.toBeNull()
+        expect(savedIssuanceFlow.personas[0].bodyImage!.id).toBeDefined();
+        expect(savedIssuanceFlow.personas[0].bodyImage!.mediaType).toEqual(asset.mediaType)
+        expect(savedIssuanceFlow.personas[0].bodyImage!.fileName).toEqual(asset.fileName)
+        expect(savedIssuanceFlow.personas[0].bodyImage!.description).toEqual(asset.description)
+        expect(savedIssuanceFlow.personas[0].bodyImage!.content).toStrictEqual(asset.content)
     })
 
     it('Should throw error when saving issuance flow with no steps', async (): Promise<void> => {
@@ -161,8 +202,8 @@ describe('Database issuance flow repository tests', (): void => {
             name: 'example_name',
             description: 'example_description',
             issuer: issuer.id,
-            steps: []
-            // personas
+            steps: [],
+            personas: [persona1.id]
         };
 
         await expect(repository.create(issuanceFlow)).rejects.toThrowError(`At least one step is required`)
@@ -177,32 +218,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         await expect(repository.create(issuanceFlow)).rejects.toThrowError(`No issuer found for id: ${unknownIssuerId}`)
@@ -216,35 +259,92 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         await expect(repository.create(issuanceFlow)).rejects.toThrowError('duplicate key value violates unique constraint "step_order_workflow_unique"') // FIXME would be nice if we can set a custom error message returns by a constraint
+    })
+
+    it('Should throw error when saving issuance flow with invalid persona id', async (): Promise<void> => {
+        const unknownPersonaId = 'a197e5b2-e4e5-4788-83b1-ecaa0e99ed3a'
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: [unknownPersonaId]
+        };
+
+        await expect(repository.create(issuanceFlow)).rejects.toThrowError(`No persona found for id: ${unknownPersonaId}`)
+    })
+
+    it('Should throw error when saving issuance flow with no personas', async (): Promise<void> => {
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: []
+        };
+
+        await expect(repository.create(issuanceFlow)).rejects.toThrowError(`At least one persona is required`)
     })
 
     it('Should get issuance flow by id from database', async (): Promise<void> => {
@@ -255,32 +355,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -293,6 +395,23 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.description).toEqual(issuanceFlow.description)
         expect(fromDb.steps).toBeDefined()
         expect(fromDb.steps.length).toEqual(2)
+        expect(fromDb.personas).toBeDefined();
+        expect(fromDb.personas.length).toEqual(2)
+        expect(fromDb.personas[0].name).toEqual(persona1.name)
+        expect(fromDb.personas[0].role).toEqual(persona1.role)
+        expect(fromDb.personas[0].description).toEqual(persona1.description)
+        expect(fromDb.personas[0].headshotImage).not.toBeNull()
+        expect(fromDb.personas[0].headshotImage!.id).toBeDefined();
+        expect(fromDb.personas[0].headshotImage!.mediaType).toEqual(asset.mediaType)
+        expect(fromDb.personas[0].headshotImage!.fileName).toEqual(asset.fileName)
+        expect(fromDb.personas[0].headshotImage!.description).toEqual(asset.description)
+        expect(fromDb.personas[0].headshotImage!.content).toStrictEqual(asset.content)
+        expect(fromDb.personas[0].bodyImage).not.toBeNull()
+        expect(fromDb.personas[0].bodyImage!.id).toBeDefined();
+        expect(fromDb.personas[0].bodyImage!.mediaType).toEqual(asset.mediaType)
+        expect(fromDb.personas[0].bodyImage!.fileName).toEqual(asset.fileName)
+        expect(fromDb.personas[0].bodyImage!.description).toEqual(asset.description)
+        expect(fromDb.personas[0].bodyImage!.content).toStrictEqual(asset.content)
     })
 
     it('Should get all issuance flows from database', async (): Promise<void> => {
@@ -303,32 +422,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedIssuanceFlow1 = await repository.create(issuanceFlow)
@@ -350,32 +471,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -394,32 +517,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id, persona2.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -431,24 +556,26 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title1',
-                            actionType: 'example_type1',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text1'
                         },
                         {
                             title: 'example_title2',
-                            actionType: 'example_type2',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text2'
                         }
                     ]
                 }
             ],
             issuer: savedIssuanceFlow.issuer!.id,
+            personas: [persona1.id]
         }
         const updatedIssuanceFlowResult = await repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)
 
@@ -470,6 +597,23 @@ describe('Database issuance flow repository tests', (): void => {
         expect(updatedIssuanceFlowResult.steps[0].asset!.fileName).toEqual(asset.fileName)
         expect(updatedIssuanceFlowResult.steps[0].asset!.description).toEqual(asset.description)
         expect(updatedIssuanceFlowResult.steps[0].asset!.content).toStrictEqual(asset.content)
+        expect(updatedIssuanceFlowResult.personas).toBeDefined();
+        expect(updatedIssuanceFlowResult.personas.length).toEqual(1)
+        expect(updatedIssuanceFlowResult.personas[0].name).toEqual(persona1.name)
+        expect(updatedIssuanceFlowResult.personas[0].role).toEqual(persona1.role)
+        expect(updatedIssuanceFlowResult.personas[0].description).toEqual(persona1.description)
+        expect(updatedIssuanceFlowResult.personas[0].headshotImage).not.toBeNull()
+        expect(updatedIssuanceFlowResult.personas[0].headshotImage!.id).toBeDefined();
+        expect(updatedIssuanceFlowResult.personas[0].headshotImage!.mediaType).toEqual(asset.mediaType)
+        expect(updatedIssuanceFlowResult.personas[0].headshotImage!.fileName).toEqual(asset.fileName)
+        expect(updatedIssuanceFlowResult.personas[0].headshotImage!.description).toEqual(asset.description)
+        expect(updatedIssuanceFlowResult.personas[0].headshotImage!.content).toStrictEqual(asset.content)
+        expect(updatedIssuanceFlowResult.personas[0].bodyImage).not.toBeNull()
+        expect(updatedIssuanceFlowResult.personas[0].bodyImage!.id).toBeDefined();
+        expect(updatedIssuanceFlowResult.personas[0].bodyImage!.mediaType).toEqual(asset.mediaType)
+        expect(updatedIssuanceFlowResult.personas[0].bodyImage!.fileName).toEqual(asset.fileName)
+        expect(updatedIssuanceFlowResult.personas[0].bodyImage!.description).toEqual(asset.description)
+        expect(updatedIssuanceFlowResult.personas[0].bodyImage!.content).toStrictEqual(asset.content)
     })
 
     it('Should throw error when updating issuance flow with no steps', async (): Promise<void> => {
@@ -480,32 +624,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -515,6 +661,7 @@ describe('Database issuance flow repository tests', (): void => {
             ...savedIssuanceFlow,
             steps: [],
             issuer: savedIssuanceFlow.issuer!.id,
+            personas: [persona1.id]
         }
 
         await expect(repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)).rejects.toThrowError(`At least one step is required`)
@@ -529,32 +676,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -565,25 +714,28 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
             ],
             issuer: unknownIssuerId,
+            personas: [persona1.id]
         }
 
         await expect(repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)).rejects.toThrowError(`No issuer found for id: ${unknownIssuerId}`)
     })
 
-    it('Should add to issuance flow step to database', async (): Promise<void> => {
+    it('Should throw error when updating issuance flow with invalid persona id', async (): Promise<void> => {
+        const unknownPersonaId = 'a197e5b2-e4e5-4788-83b1-ecaa0e99ed3a'
         const issuanceFlow: NewIssuanceFlow = {
             name: 'example_name',
             description: 'example_description',
@@ -591,19 +743,124 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
+        };
+
+        const savedIssuanceFlow = await repository.create(issuanceFlow)
+        expect(savedIssuanceFlow).toBeDefined()
+
+        const updatedIssuanceFlow: NewIssuanceFlow = {
+            ...savedIssuanceFlow,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                },
+            ],
+            issuer: issuer.id,
+            personas: [unknownPersonaId]
+        }
+
+        await expect(repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)).rejects.toThrowError(`No persona found for id: ${unknownPersonaId}`)
+    })
+
+    it('Should throw error when updating issuance flow with no personas', async (): Promise<void> => {
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: [persona1.id]
+        };
+
+        const savedIssuanceFlow = await repository.create(issuanceFlow)
+        expect(savedIssuanceFlow).toBeDefined()
+
+        const updatedIssuanceFlow: NewIssuanceFlow = {
+            ...savedIssuanceFlow,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                },
+            ],
+            issuer: savedIssuanceFlow.issuer!.id,
+            personas: []
+        }
+
+        await expect(repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)).rejects.toThrowError(`At least one persona is required`)
+    })
+
+    it('Should add issuance flow step to database', async (): Promise<void> => {
+        const issuanceFlow: NewIssuanceFlow = {
+            name: 'example_name',
+            description: 'example_description',
+            issuer: issuer.id,
+            steps: [
+                {
+                    title: 'example_title',
+                    description: 'example_description',
+                    order: 1,
+                    type: StepType.HUMAN_TASK,
+                    asset: asset.id,
+                    actions: [
+                        {
+                            title: 'example_title',
+                            actionType: StepActionType.ARIES_OOB,
+                            text: 'example_text'
+                        }
+                    ]
+                }
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -611,18 +868,19 @@ describe('Database issuance flow repository tests', (): void => {
 
         const step: NewStep = {
             title: 'example_title',
+            description: 'example_description',
             order: 2,
             type: StepType.HUMAN_TASK,
             asset: asset.id,
             actions: [
                 {
                     title: 'example_title1',
-                    actionType: 'example_type1',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text1'
                 },
                 {
                     title: 'example_title2',
-                    actionType: 'example_type2',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text2'
                 }
             ]
@@ -658,19 +916,20 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -678,6 +937,7 @@ describe('Database issuance flow repository tests', (): void => {
 
         const step: NewStep = {
             title: 'example_title',
+            description: 'example_description',
             order: 2,
             type: StepType.HUMAN_TASK,
             asset: asset.id,
@@ -695,24 +955,25 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title1',
-                            actionType: 'example_type1',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text1'
                         },
                         {
                             title: 'example_title2',
-                            actionType: 'example_type2',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text2'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -745,32 +1006,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -804,32 +1067,34 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 },
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 2,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -852,19 +1117,20 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -876,12 +1142,12 @@ describe('Database issuance flow repository tests', (): void => {
             actions: [
                 {
                     title: 'example_title1',
-                    actionType: 'example_type1',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text1'
                 },
                 {
                     title: 'example_title2',
-                    actionType: 'example_type2',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text2'
                 }
             ],
@@ -913,19 +1179,20 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -948,19 +1215,20 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -968,7 +1236,7 @@ describe('Database issuance flow repository tests', (): void => {
 
         const action: NewStepAction = {
             title: 'example_title',
-            actionType: 'example_type',
+            actionType: StepActionType.ARIES_OOB,
             text: 'example_text'
         };
         const savedStepAction = await repository.createStepAction(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, action)
@@ -995,19 +1263,20 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -1029,24 +1298,25 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         },
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -1070,24 +1340,25 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         },
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)
@@ -1110,19 +1381,20 @@ describe('Database issuance flow repository tests', (): void => {
             steps: [
                 {
                     title: 'example_title',
+                    description: 'example_description',
                     order: 1,
                     type: StepType.HUMAN_TASK,
                     asset: asset.id,
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
                 }
-            ]
-            // personas
+            ],
+            personas: [persona1.id]
         };
 
         const savedIssuanceFlow = await repository.create(issuanceFlow)

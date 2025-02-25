@@ -109,7 +109,7 @@ export enum WorkflowType {
 export type IssuanceFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer' | 'workflowType'> & {
     personas: Persona[]
     steps: Step[]
-    issuer?: Issuer | null // TODO test having no issuer
+    issuer?: Issuer | null
 };
 export type NewIssuanceFlow = Omit<typeof workflows.$inferInsert, 'relyingParty' | 'workflowType'> & {
     personas: string[]

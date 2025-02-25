@@ -87,7 +87,8 @@ export const presentationFlowDTOFrom = (presentationFlow: PresentationFlow): Pre
         ...presentationFlow,
         relyingParty: relyingPartyDTOFrom(presentationFlow.relyingParty),
         type: WorkflowType.PRESENTATION,
-        steps: presentationFlow.steps.map(step => stepDTOFrom(step))
+        steps: presentationFlow.steps.map(step => stepDTOFrom(step)),
+        personas: presentationFlow.personas.map(persona => personaDTOFrom(persona)),
     }
 }
 

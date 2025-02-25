@@ -97,6 +97,10 @@ export enum StepType {
     WORKFLOW = 'WORKFLOW',
 }
 
+export enum StepActionType {
+    ARIES_OOB = 'ARIES_OOB',
+}
+
 export enum WorkflowType {
     ISSUANCE = 'ISSUANCE',
     PRESENTATION = 'PRESENTATION',

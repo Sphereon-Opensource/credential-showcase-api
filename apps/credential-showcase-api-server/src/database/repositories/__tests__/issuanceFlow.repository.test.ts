@@ -25,7 +25,8 @@ import {
     IssuerType,
     Issuer,
     Persona,
-    NewPersona
+    NewPersona,
+    StepActionType
 } from '../../../types';
 
 describe('Database issuance flow repository tests', (): void => {
@@ -128,7 +129,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -142,7 +143,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -224,7 +225,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -238,7 +239,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -265,7 +266,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -279,7 +280,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -307,7 +308,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -334,7 +335,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -361,7 +362,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -375,7 +376,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -428,7 +429,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -442,7 +443,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -477,7 +478,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -491,7 +492,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -523,7 +524,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -537,7 +538,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -562,12 +563,12 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title1',
-                            actionType: 'example_type1',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text1'
                         },
                         {
                             title: 'example_title2',
-                            actionType: 'example_type2',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text2'
                         }
                     ]
@@ -630,7 +631,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -644,7 +645,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -682,7 +683,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -696,7 +697,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -720,7 +721,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -749,7 +750,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -773,7 +774,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -801,7 +802,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -825,7 +826,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -853,7 +854,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -874,12 +875,12 @@ describe('Database issuance flow repository tests', (): void => {
             actions: [
                 {
                     title: 'example_title1',
-                    actionType: 'example_type1',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text1'
                 },
                 {
                     title: 'example_title2',
-                    actionType: 'example_type2',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text2'
                 }
             ]
@@ -922,7 +923,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -961,12 +962,12 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title1',
-                            actionType: 'example_type1',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text1'
                         },
                         {
                             title: 'example_title2',
-                            actionType: 'example_type2',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text2'
                         }
                     ]
@@ -1012,7 +1013,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1026,7 +1027,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1073,7 +1074,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1087,7 +1088,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1123,7 +1124,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1141,12 +1142,12 @@ describe('Database issuance flow repository tests', (): void => {
             actions: [
                 {
                     title: 'example_title1',
-                    actionType: 'example_type1',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text1'
                 },
                 {
                     title: 'example_title2',
-                    actionType: 'example_type2',
+                    actionType: StepActionType.ARIES_OOB,
                     text: 'example_text2'
                 }
             ],
@@ -1185,7 +1186,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1221,7 +1222,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1235,7 +1236,7 @@ describe('Database issuance flow repository tests', (): void => {
 
         const action: NewStepAction = {
             title: 'example_title',
-            actionType: 'example_type',
+            actionType: StepActionType.ARIES_OOB,
             text: 'example_text'
         };
         const savedStepAction = await repository.createStepAction(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, action)
@@ -1269,7 +1270,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1304,12 +1305,12 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         },
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1346,12 +1347,12 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         },
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]
@@ -1387,7 +1388,7 @@ describe('Database issuance flow repository tests', (): void => {
                     actions: [
                         {
                             title: 'example_title',
-                            actionType: 'example_type',
+                            actionType: StepActionType.ARIES_OOB,
                             text: 'example_text'
                         }
                     ]

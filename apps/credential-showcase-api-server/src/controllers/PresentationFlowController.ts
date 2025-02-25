@@ -149,7 +149,7 @@ class PresentationFlowController {
         @Param('actionId') actionId: string
     ): Promise<StepActionResponse> {
         const result = await this.presentationFlowService.getPresentationFlowStepAction(presentationFlowId, stepId, actionId);
-        return StepActionResponseFromJSONTyped({ step: result }, false);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @HttpCode(201)
@@ -160,7 +160,7 @@ class PresentationFlowController {
         @Body() actionRequest: StepActionRequest
     ): Promise<StepActionResponse> {
         const result = await this.presentationFlowService.createPresentationFlowStepAction(presentationFlowId, stepId, StepActionRequestToJSONTyped(actionRequest));
-        return StepActionResponseFromJSONTyped({ step: result }, false);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @Put('/:presentationFlowId/steps/:stepId/actions/:actionId')
@@ -171,7 +171,7 @@ class PresentationFlowController {
         @Body() actionRequest: StepActionRequest
     ): Promise<StepActionResponse> {
         const result = await this.presentationFlowService.updatePresentationFlowStepAction(presentationFlowId, stepId, actionId, StepActionRequestToJSONTyped(actionRequest))
-        return StepActionResponseFromJSONTyped({ step: result }, false);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @OnUndefined(204)

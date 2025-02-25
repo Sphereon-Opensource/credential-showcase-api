@@ -438,24 +438,21 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
     }
 
     async findByStepActionId(presentationFlowId: string, stepId: string, actionId: string): Promise<StepAction> {
-        await this.findById(presentationFlowId)
+        await this.findByStepId(presentationFlowId, stepId)
         const [result] = await (await this.databaseService.getConnection())
             .select()
             .from(stepActions)
-            .where(and(
-                eq(stepActions.id, actionId),
-                eq(stepActions.step, stepId),
-            ));
+            .where(eq(stepActions.id, actionId))
 
         if (!result) {
-            return Promise.reject(new NotFoundError(`No step found for step id ${stepId} and step action id: ${actionId}`))
+            return Promise.reject(new NotFoundError(`No action found for step id ${stepId} and action id: ${actionId}`))
         }
 
         return result
     }
 
     async findAllStepActions(presentationFlowId: string, stepId: string): Promise<StepAction[]> {
-        // TODO presentationFlowId is not being used
+        await this.findByStepId(presentationFlowId, stepId)
         return (await this.databaseService.getConnection()).query.stepActions.findMany({
             where: eq(stepActions.step, stepId)
         });

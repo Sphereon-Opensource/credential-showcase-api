@@ -31,7 +31,6 @@ security:
   - OIDC: []
 
 paths:
-  # tenenant will be a token in the header
   /showcases:
     get:
       tags:

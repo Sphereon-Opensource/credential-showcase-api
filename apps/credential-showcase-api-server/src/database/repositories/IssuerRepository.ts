@@ -7,7 +7,6 @@ import { NotFoundError } from '../../errors';
 import { credentialDefinitions, issuers, issuersToCredentialDefinitions } from '../schema';
 import { Issuer, NewIssuer, RepositoryDefinition } from '../../types';
 
-
 @Service()
 class IssuerRepository implements RepositoryDefinition<Issuer, NewIssuer> {
   constructor(

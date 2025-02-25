@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { RelyingPartyTypePg } from './relyingPartyType';
 import { assets } from './asset';
@@ -7,10 +7,10 @@ import { RelyingPartyType } from '../../types';
 
 export const relyingParties = pgTable('relyingParty', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
-    name: varchar({ length: 255 }).notNull(),
+    name: text().notNull(),
     type: RelyingPartyTypePg('relying_party_type').notNull().$type<RelyingPartyType>(),
-    description: varchar({ length: 255 }).notNull(),
-    organization: varchar({ length: 255 }),
+    description: text().notNull(),
+    organization: text(),
     logo: uuid().references(() => assets.id)
 });
 

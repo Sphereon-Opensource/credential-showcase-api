@@ -93,7 +93,7 @@ classDiagram
     }
     class RelyingParty {
         +name : String
-        +type: RelyingPartyType 
+        +type: RelyingPartyType
         +credentialDefinitions: List~CredentialDefinition~
         +description: String
         organization: String
@@ -175,3 +175,4 @@ classDiagram
     IssuanceFlow "0..*" o-- "1" Issuer : includes
     PresentationFlow "0..*" o-- "1" RelyingParty : includes
 
+```

@@ -1,12 +1,12 @@
 import { Service } from 'typedi';
-import { NewPersona, Persona } from '../types';
 import PersonaRepository from '../database/repositories/PersonaRepository';
+import { NewPersona, Persona } from '../types';
 
 @Service()
 class PersonaService {
     constructor(private readonly personaRepository: PersonaRepository) {}
 
-    public getPersonas = async (): Promise<Persona[]> => {
+    public getAll = async (): Promise<Persona[]> => {
         return this.personaRepository.findAll()
     };
 

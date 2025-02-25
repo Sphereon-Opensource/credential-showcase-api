@@ -1,10 +1,10 @@
-import { eq } from 'drizzle-orm'
-import { Service } from 'typedi'
-import { DatabaseService } from '../../services/DatabaseService'
-import { NotFoundError } from '../../errors/NotFoundError'
-import { personas } from '../schema'
-import { Persona, NewPersona, RepositoryDefinition } from '../../types'
-import AssetRepository from './AssetRepository'
+import { eq } from 'drizzle-orm';
+import { Service } from 'typedi';
+import DatabaseService from '../../services/DatabaseService';
+import AssetRepository from './AssetRepository';
+import { NotFoundError } from '../../errors';
+import { personas } from '../schema';
+import { Persona, NewPersona, RepositoryDefinition } from '../../types';
 
 @Service()
 class PersonaRepository implements RepositoryDefinition<Persona, NewPersona> {
@@ -13,39 +13,24 @@ class PersonaRepository implements RepositoryDefinition<Persona, NewPersona> {
     private readonly assetRepository: AssetRepository,
   ) {}
 
-  async create(newPersona: NewPersona): Promise<Persona> {
-    if (newPersona.headshotImage !== undefined && newPersona.headshotImage !== null) {
-      try {
-        await this.assetRepository.findById(newPersona.headshotImage)
-      } catch (error) {
-        throw new NotFoundError(`No asset found for id: ${newPersona.headshotImage}`)
-      }
-    }
+  async create(persona: NewPersona): Promise<Persona> {
+    const headshotImageResult = persona.headshotImage ? await this.assetRepository.findById(persona.headshotImage) : null
+    const bodyImageResult = persona.bodyImage ? await this.assetRepository.findById(persona.bodyImage) : null
 
-    if (newPersona.bodyImage !== undefined && newPersona.bodyImage !== null) {
-      try {
-        await this.assetRepository.findById(newPersona.bodyImage)
-      } catch (error) {
-        throw new NotFoundError(`No asset found for id: ${newPersona.bodyImage}`)
-      }
-    }
-    
-    return (await this.databaseService.getConnection()).transaction(async (tx): Promise<Persona> => {
-      const [result] = await tx
+    const [result] = await (await this.databaseService.getConnection())
         .insert(personas)
         .values({
-          name: newPersona.name,
-          role: newPersona.role,
-          description: newPersona.description,
-          headshotImage: newPersona.headshotImage || null,
-          bodyImage: newPersona.bodyImage || null,
+          ...persona,
+          headshotImage: headshotImageResult ? headshotImageResult.id : null,
+          bodyImage: bodyImageResult ? bodyImageResult.id : null
         })
-        .returning({
-          id: personas.id,
-        });
+        .returning();
 
-      return this.findById(result.id);
-    });
+      return {
+        ...result,
+        bodyImage: bodyImageResult,
+        headshotImage: headshotImageResult
+      }
   }
 
   async delete(id: string): Promise<void> {
@@ -55,44 +40,30 @@ class PersonaRepository implements RepositoryDefinition<Persona, NewPersona> {
       .where(eq(personas.id, id));
   }
 
-  async update(id: string, body: NewPersona): Promise<Persona> {
+  async update(id: string, persona: NewPersona): Promise<Persona> {
     await this.findById(id);
-    if (body.headshotImage) {
-      try {
-        await this.assetRepository.findById(body.headshotImage)
-      } catch (error) {
-        throw new NotFoundError(`No asset found for id: ${body.headshotImage}`)
-      }
-    }
-    if (body.bodyImage) {
-      try {
-        await this.assetRepository.findById(body.bodyImage)
-      } catch (error) {
-        throw new NotFoundError(`No asset found for id: ${body.bodyImage}`)
-      }
-    }
+    const headshotImageResult = persona.headshotImage ? await this.assetRepository.findById(persona.headshotImage) : null
+    const bodyImageResult = persona.bodyImage ? await this.assetRepository.findById(persona.bodyImage) : null
 
     const [result] = await (await this.databaseService.getConnection())
-      .update(personas)
-      .set({
-        name: body.name,
-        role: body.role,
-        description: body.description,
-        headshotImage: body.headshotImage,
-        bodyImage: body.bodyImage,
-      })
-      .where(eq(personas.id, id))
-      .returning({
-        id: personas.id,
-      });
+        .update(personas)
+        .set({
+          ...persona,
+          headshotImage: headshotImageResult ? headshotImageResult.id : null,
+          bodyImage: bodyImageResult ? bodyImageResult.id : null
+        })
+        .where(eq(personas.id, id))
+        .returning();
 
-    return this.findById(result.id);
+    return {
+      ...result,
+      bodyImage: bodyImageResult,
+      headshotImage: headshotImageResult
+    }
   }
 
   async findById(id: string): Promise<Persona> {
-    const result = await (
-      await this.databaseService.getConnection()
-    ).query.personas.findFirst({
+    const result = await (await this.databaseService.getConnection()).query.personas.findFirst({
       where: eq(personas.id, id),
       with: {
         headshotImage: true,
@@ -108,13 +79,12 @@ class PersonaRepository implements RepositoryDefinition<Persona, NewPersona> {
   }
 
   async findAll(): Promise<Persona[]> {
-    return (await this.databaseService.getConnection())
-      .query.personas.findMany({
-        with: {
-          headshotImage: true,
-          bodyImage: true,
-        },
-      });
+    return (await this.databaseService.getConnection()).query.personas.findMany({
+      with: {
+        headshotImage: true,
+        bodyImage: true,
+      },
+    });
   }
 }
 

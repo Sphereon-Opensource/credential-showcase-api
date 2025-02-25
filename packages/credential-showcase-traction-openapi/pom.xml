@@ -35,7 +35,7 @@
                                     <addCompileSourceRoot>true</addCompileSourceRoot>
                                     <artifactVersion>${project.version}</artifactVersion>
 
-                                    <generateApis>false</generateApis>
+                                    <generateApis>true</generateApis>
                                     <generateModels>true</generateModels>
                                     <generateModelDocumentation>true</generateModelDocumentation>
                                     <generateSupportingFiles>true</generateSupportingFiles>

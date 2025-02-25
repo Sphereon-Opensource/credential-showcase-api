@@ -13,15 +13,17 @@
     "credential-showcase-openapi": "workspace:*",
     "credential-showcase-traction-openapi": "workspace:*",
     "express": "^4.21.2",
+    "lru-cache": "^11.0.2",
     "rhea": "^3.0.3",
     "rhea-promise": "^3.0.3",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "testcontainers": "^10.18.0",
     "@testcontainers/rabbitmq": "^10.18.0",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.13.1"
+    "@types/node": "^22.13.1",
+    "testcontainers": "^10.18.0",
+    "uuid": "^11.1.0"
   },
   "files": [
     "dist/**/*",

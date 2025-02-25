@@ -1,24 +1,40 @@
 import { Connection, Receiver, ReceiverEvents, ReceiverOptions } from 'rhea-promise'
 import { environment } from './environment'
 import { CredentialDefinitionFromJSON } from 'credential-showcase-openapi'
-import { storeAnonCredentialDefinition } from './traction-functions'
+import { TractionService } from './services/traction-service'
+import { getTractionService } from './services/service-manager'
+import { Action, Topic } from './types'
+
+interface MessageHeaders {
+  action?: Action
+  tenantId?: string
+  apiUrlBase?: string
+  walletId?: string
+  accessTokenEnc?: string
+}
 
 export class MessageProcessor {
   private readonly connection: Connection
   private receiver!: Receiver
 
-  constructor(private topic: string) {
+  constructor(private topic: Topic) {
+    // Validate that topic is a valid enum value
+    if (!Object.values(Topic).includes(topic)) {
+      throw new Error(`Invalid topic: ${topic}. Valid topics are: ${Object.values(Topic).join(', ')}`)
+    }
+
+    // Setup AMQ broker connection
     this.connection = new Connection({
-      hostname: environment.RABBITMQ_HOST,
-      port: environment.RABBITMQ_PORT,
+      hostname: environment.AMQ_HOST,
+      port: environment.AMQ_PORT,
       transport: 'tcp',
       reconnect: true,
-      username: environment.RABBITMQ_USER,
-      password: environment.RABBITMQ_PASSWORD,
+      username: environment.AMQ_USER,
+      password: environment.AMQ_PASSWORD,
     })
   }
 
-  async start() {
+  public async start(): Promise<void> {
     await this.connection.open()
 
     const receiverOptions: ReceiverOptions = {
@@ -32,34 +48,112 @@ export class MessageProcessor {
     }
 
     this.receiver = await this.connection.createReceiver(receiverOptions)
+    this.setupMessageHandler()
+    this.setupErrorHandler()
+  }
 
+  private setupMessageHandler(): void {
     this.receiver.on(ReceiverEvents.message, async (context) => {
-      if (context.message) {
-        const jsonData = JSON.parse(context.message.body as string)
-        const credentialDef = CredentialDefinitionFromJSON(jsonData)
-        try {
-          console.debug('Received credential definition', credentialDef)
-          await storeAnonCredentialDefinition(credentialDef)
-          if (context.delivery) {
-            context.delivery.accept()
-          }
-        } catch (e) {
-          console.error(
-            `An error occurred while sending credential definition ${credentialDef.id}/${credentialDef.name} of type ${credentialDef.type} to Traction`,
-          )
-          if (context.delivery) {
-            context.delivery.reject() // FIXME context.delivery.release() to redeliver ??
-          }
-        }
+      const message = context.message
+      if (!message) {
+        return
+      }
+
+      const headers = this.getMessageHeaders(message.application_properties)
+      const messageId = message.message_id
+
+      // Validate required headers
+      if (!headers.action) {
+        this.rejectDelivery(context, `message ${messageId} did not contain an action`)
+        return
+      }
+
+      if (!headers.tenantId) {
+        this.rejectDelivery(context, `message ${messageId} did not contain the tenant id`)
+        return
+      }
+
+      const service = getTractionService(headers.tenantId, headers.apiUrlBase, headers.walletId, headers.accessTokenEnc)
+
+      try {
+        const jsonData = JSON.parse(message.body as string)
+        await this.processMessage(headers.action, jsonData, service, context, headers)
+      } catch (error) {
+        this.rejectDelivery(context, `Failed to parse message body for ${messageId}: ${error}`, headers)
       }
     })
+  }
 
+  private setupErrorHandler(): void {
     this.receiver.on(ReceiverEvents.receiverError, (context) => {
       console.error(`[${this.topic}] Receiver error:`, context.receiver?.error)
     })
   }
 
-  async stop() {
+  private getMessageHeaders(applicationProperties: any): MessageHeaders {
+    if (!applicationProperties) {
+      return {}
+    }
+
+    return {
+      action: applicationProperties['action'] as Action | undefined,
+      tenantId: applicationProperties['tenantId'] as string | undefined,
+      apiUrlBase: applicationProperties['apiUrlBase'] as string | undefined,
+      walletId: applicationProperties['walletId'] as string | undefined,
+      accessTokenEnc: applicationProperties['accessTokenEnc'] as string | undefined,
+    }
+  }
+
+  private async processMessage(action: Action, jsonData: any, service: TractionService, context: any, headers: MessageHeaders): Promise<void> {
+    switch (action) {
+      case 'store-credentialdef': {
+        await this.handleStoreCredentialDef(jsonData, service, context, headers)
+        break
+      }
+      default: {
+        const errorMsg = `An error occurred while processing message ${context.message.message_id}; unsupported action ${action}`
+        this.rejectDelivery(context, errorMsg, headers)
+      }
+    }
+  }
+
+  private async handleStoreCredentialDef(jsonData: any, service: TractionService, context: any, headers: MessageHeaders): Promise<void> {
+    const credentialDef = CredentialDefinitionFromJSON(jsonData)
+    try {
+      console.debug('Received credential definition', credentialDef)
+      await service.storeAnonCredentialDefinition(credentialDef)
+      if (context.delivery) {
+        context.delivery.accept()
+      }
+    } catch (e) {
+      const errorMsg = `An error occurred while sending credential definition ${credentialDef.id}/${credentialDef.name} of type ${credentialDef.type} to Traction`
+      console.error(errorMsg)
+      if (context.delivery) {
+        context.delivery.reject({
+          info: `apiBasePath: ${headers.apiUrlBase ?? environment.DEFAULT_API_BASE_PATH}, tenantId: ${headers.tenantId}, walletId: ${headers.walletId}`,
+          condition: 'fatal error',
+          description: errorMsg,
+          value: [credentialDef],
+        }) // FIXME context.delivery.release() to redeliver ??
+      }
+    }
+  }
+
+  private rejectDelivery(context: any, errorMsg: string, headers?: MessageHeaders): void {
+    console.error(errorMsg)
+    if (context.delivery) {
+      const rejectOptions: any = { description: errorMsg }
+
+      if (headers) {
+        rejectOptions.info = `apiBasePath: ${headers.apiUrlBase ?? environment.DEFAULT_API_BASE_PATH}, tenantId: ${headers.tenantId}, walletId: ${headers.walletId}`
+        rejectOptions.condition = 'fatal error'
+      }
+
+      context.delivery.reject(rejectOptions)
+    }
+  }
+
+  public async stop(): Promise<void> {
     if (this.receiver) {
       await this.receiver.close()
     }
@@ -67,24 +161,4 @@ export class MessageProcessor {
       await this.connection.close()
     }
   }
-
-  /* Probably not needed
-  private tokenCache: { token: string; expiry: number } | null = null
-
-
-  private async getApiToken(): Promise<string> {
-    // Check if we have a valid cached token
-    if (this.tokenCache && this.tokenCache.expiry > Date.now()) {
-      return Promise.resolve(this.tokenCache.token)
-    }
-
-    // No, get a new one
-    const token = await getWalletToken()
-    const expiresAfterMs = Number(environment.WALLET_KEY_EXPIRES_AFTER_SECONDS) * 1000
-    this.tokenCache = {
-      token,
-      expiry: Date.now() + expiresAfterMs,
-    }
-    return token
-  }*/
 }

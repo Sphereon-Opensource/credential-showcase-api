@@ -1,9 +1,28 @@
-export const environment = {
-  RABBITMQ_HOST: process.env.RABBITMQ_HOST || 'localhost',
-  RABBITMQ_PORT: parseInt(process.env.RABBITMQ_PORT || '5672', 10),
-  RABBITMQ_USER: process.env.RABBITMQ_USER || 'guest',
-  RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD || 'guest',
+import { Topic } from './types'
 
-  WALLET_KEY: process.env.WALLET_KEY,
-  WALLET_KEY_EXPIRES_AFTER_SECONDS: process.env.WALLET_KEY_EXPIRES_AFTER_SECONDS || 1800,
+export const environment = {
+  AMQ_HOST: process.env.AMQ_HOST || 'localhost',
+  AMQ_PORT: parseInt(process.env.AMQ_PORT || '5672', 10),
+  AMQ_USER: process.env.AMQ_USER || 'guest',
+  AMQ_PASSWORD: process.env.AMQ_PASSWORD || 'guest',
+
+  DEFAULT_API_BASE_PATH: process.env.DEFAULT_API_BASE_PATH ?? 'http://localhost:8032',
+
+  TENANT_SESSION_CACHE_SIZE: parsePositiveInt(process.env.TENANT_SESSION_CACHE_SIZE, 1024),
+  TENANT_SESSION_TTL_MINS: parsePositiveInt(process.env.TENANT_SESSION_TTL_MINS, 1440),
+  MESSAGE_PROCESSOR_TOPIC: (process.env.MESSAGE_PROCESSOR_TOPIC ?? 'showcase-cmd') as Topic,
+}
+
+function parsePositiveInt(value: string | undefined, defaultValue: number): number {
+  if (!value) {
+    return defaultValue
+  }
+
+  const parsed = parseInt(value, 10)
+
+  if (isNaN(parsed) || parsed <= 0) {
+    return defaultValue
+  }
+
+  return parsed
 }

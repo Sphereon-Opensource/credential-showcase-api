@@ -1,7 +1,8 @@
 import { MessageProcessor } from './message-processor'
+import { environment } from './environment'
 
 async function main() {
-  const processor = new MessageProcessor('credential-definitions')
+  const processor = new MessageProcessor(environment.MESSAGE_PROCESSOR_TOPIC)
 
   try {
     await processor.start()

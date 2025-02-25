@@ -8,10 +8,10 @@
   },
   "references": [
     {
-      "path": "credential-showcase-openapi"
+      "path": "../credential-showcase-openapi"
     },
     {
-      "path": "credential-showcase-traction-openapi"
+      "path": "../credential-showcase-traction-openapi"
     }
   ]
 }

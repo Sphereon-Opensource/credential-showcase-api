@@ -80,6 +80,7 @@ export const stepDTOFrom = (step: Step): StepDTO => {
     return {
         ...step,
         asset: step.asset ? assetDTOFrom(step.asset) : undefined,
+        subFlow: step.subFlow ? step.subFlow : undefined,
     }
 }
 

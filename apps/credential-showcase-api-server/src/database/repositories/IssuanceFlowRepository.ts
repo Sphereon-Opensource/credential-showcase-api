@@ -385,7 +385,7 @@ class IssuanceFlowRepository implements RepositoryDefinition<IssuanceFlow, NewIs
         })
 
         if (!result) {
-            return Promise.reject(new NotFoundError(`No step found for issuance flow id ${issuanceFlowId} and step id: ${stepId}`))
+            return Promise.reject(new NotFoundError(`No step found for issuance flow id: ${issuanceFlowId} and step id: ${stepId}`))
         }
 
         return result

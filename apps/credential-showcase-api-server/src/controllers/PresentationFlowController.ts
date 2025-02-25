@@ -142,7 +142,7 @@ class PresentationFlowController {
         return StepActionsResponseFromJSONTyped({ actions }, false);
     }
 
-    @Get('/:presentationId/steps/:stepId/actions/:actionId')
+    @Get('/:presentationFlowId/steps/:stepId/actions/:actionId')
     public async getOnePresentationFlowStepAction(
         @Param('presentationFlowId') presentationFlowId: string,
         @Param('stepId') stepId: string,

@@ -385,7 +385,7 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
         })
 
         if (!result) {
-            return Promise.reject(new NotFoundError(`No step found for presentation flow id ${presentationFlowId} and step id: ${stepId}`))
+            return Promise.reject(new NotFoundError(`No step found for presentation flow id: ${presentationFlowId} and step id: ${stepId}`))
         }
 
         return result

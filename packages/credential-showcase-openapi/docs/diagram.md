@@ -17,7 +17,7 @@ classDiagram
         +status : String
     }
     class Scenario {
-        <!-- Scenario is a collection of workflows -->
+        <!-- Scenarios is a collection of workflows -->
         +name : String
         +description : String
         +steps: List~Steps~

@@ -71,7 +71,8 @@ export const issuanceFlowDTOFrom = (issuanceFlow: IssuanceFlow): IssuanceFlowDTO
         ...issuanceFlow,
         issuer: issuerDTOFrom(issuanceFlow.issuer),
         type: WorkflowType.ISSUANCE,
-        steps: issuanceFlow.steps.map(step => stepDTOFrom(step))
+        steps: issuanceFlow.steps.map(step => stepDTOFrom(step)),
+        personas: issuanceFlow.personas.map(persona => personaDTOFrom(persona)),
     }
 }
 

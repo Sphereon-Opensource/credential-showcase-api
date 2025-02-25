@@ -22,7 +22,7 @@ export type Persona = Omit<typeof personas.$inferSelect, 'headshotImage' | 'body
     headshotImage: Asset | null
     bodyImage: Asset | null
 };
-export type NewPersona = typeof personas.$inferInsert & { headshotImage?: string, bodyImage?: string };
+export type NewPersona = typeof personas.$inferInsert & { headshotImage?: string | null, bodyImage?: string | null };
 
 export type CredentialDefinition = Omit<typeof credentialDefinitions.$inferSelect, 'icon' | 'type'> & {
     type: CredentialType
@@ -120,6 +120,7 @@ export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
 export type NewStep = Omit<typeof steps.$inferInsert, 'workflow'> & {
     asset?: string | null
     actions: NewStepAction[]
+    subFlow?: string | null
 };
 
 export type StepAction = typeof stepActions.$inferSelect;

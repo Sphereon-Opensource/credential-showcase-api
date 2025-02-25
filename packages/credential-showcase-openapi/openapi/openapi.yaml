@@ -1943,7 +1943,9 @@ components:
         type:
           $ref: '#/components/schemas/StepType'
         subFlow:
-          $ref: '#/components/schemas/Workflow'
+          type: string
+          description: Optional sub-workflow for this step
+          example: 123e4567-e89b-12d3-a456-434314174000
         actions:
           type: array
           items:

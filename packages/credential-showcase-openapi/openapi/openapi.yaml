@@ -69,7 +69,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssuanceFlow'
+                $ref: '#/components/schemas/IssuanceFlowResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -95,7 +95,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssuanceFlow'
+                $ref: '#/components/schemas/IssuanceFlowResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -128,7 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IssuanceFlow'
+                $ref: '#/components/schemas/IssuanceFlowResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1169,7 +1169,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Persona'
+                $ref: '#/components/schemas/PersonaResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1196,7 +1196,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Persona'
+                $ref: '#/components/schemas/PersonaResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1222,7 +1222,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Persona'
+                $ref: '#/components/schemas/PersonaResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1813,8 +1813,12 @@ components:
     Step:
       type: object
       required:
+        - id
         - title
+        - description
+        - order
         - type
+        - actions
       properties:
         id:
           type: string
@@ -1836,7 +1840,9 @@ components:
         type:
           $ref: '#/components/schemas/StepType'
         subFlow:
-          $ref: '#/components/schemas/Workflow'
+          type: string
+          description: Optional sub-workflow for this step
+          example: 123e4567-e89b-12d3-a456-434314174000
         actions:
           type: array
           items:
@@ -1848,7 +1854,10 @@ components:
       type: object
       required:
         - title
+        - description
+        - order
         - type
+        - actions
       properties:
         title:
           type: string
@@ -1884,6 +1893,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Step'
+    StepResponse:
+      properties:
+        step:
+          $ref: '#/components/schemas/Step'
 
     StepType:
       type: string
@@ -1897,6 +1910,7 @@ components:
     StepAction:
       type: object
       required:
+        - id
         - actionType
         - title
         - text
@@ -1950,6 +1964,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StepAction'
+    StepActionResponse:
+      properties:
+        action:
+          $ref: '#/components/schemas/StepAction'
 
     AriesOOBAction:
       allOf:
@@ -2078,6 +2096,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Persona'
+    PersonaResponse:
+      type: object
+      properties:
+        persona:
+          $ref: '#/components/schemas/Persona'
 
     Workflow:
       type: object
@@ -2139,10 +2162,16 @@ components:
             example: 123e4567-e89b-12d3-a456-426614174456
 
     IssuanceFlowsResponse:
+      type: object
       properties:
         issuanceFlows:
           type: array
           items:
+            $ref: '#/components/schemas/IssuanceFlow'
+    IssuanceFlowResponse:
+      type: object
+      properties:
+        issuanceFlow:
             $ref: '#/components/schemas/IssuanceFlow'
     IssuanceFlow:
       allOf:

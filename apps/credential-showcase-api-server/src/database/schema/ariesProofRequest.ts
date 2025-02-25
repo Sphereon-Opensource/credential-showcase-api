@@ -1,16 +1,17 @@
-import { AriesProofRequest } from 'credential-showcase-openapi';
 import { relations } from 'drizzle-orm';
-import { pgTable, jsonb, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, uuid } from 'drizzle-orm/pg-core';
 import { stepActions } from './stepAction';
 
-export const ariesProofRequests = pgTable('ariesProofRequests', {
+export const ariesProofRequests = pgTable('ariesProofRequest', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
-    proofRequest: jsonb('proofRequest').$type<AriesProofRequest>(),
+
+
+    stepAction: uuid('step_action').references(() => stepActions.id, { onDelete: 'cascade' }).notNull().unique()
 });
 
 export const ariesProofRequestRelations = relations(ariesProofRequests, ({ one }) => ({
     stepAction: one(stepActions, {
-        fields: [ariesProofRequests.proofRequest],
+        fields: [ariesProofRequests.stepAction],
         references: [stepActions.id],
     }),
-}));  
+}));

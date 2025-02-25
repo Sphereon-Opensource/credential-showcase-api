@@ -1,5 +1,6 @@
 import {
     assets,
+    personas,
     credentialAttributes,
     credentialDefinitions,
     credentialRepresentations,
@@ -16,6 +17,12 @@ import {
 
 export type Asset = typeof assets.$inferSelect;
 export type NewAsset = typeof assets.$inferInsert & { fileName?: string | null, description?: string | null };
+
+export type Persona = Omit<typeof personas.$inferSelect, 'headshotImage' | 'bodyImage'> & {
+    headshotImage: Asset | null
+    bodyImage: Asset | null
+};
+export type NewPersona = typeof personas.$inferInsert & { headshotImage?: string | null, bodyImage?: string | null };
 
 export type CredentialDefinition = Omit<typeof credentialDefinitions.$inferSelect, 'icon' | 'type'> & {
     type: CredentialType
@@ -90,26 +97,34 @@ export enum StepType {
     WORKFLOW = 'WORKFLOW',
 }
 
+export enum StepActionType {
+    ARIES_OOB = 'ARIES_OOB',
+}
+
 export enum WorkflowType {
     ISSUANCE = 'ISSUANCE',
     PRESENTATION = 'PRESENTATION',
 }
 
 export type IssuanceFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer' | 'workflowType'> & {
+    personas: Persona[]
     steps: Step[]
-    issuer?: Issuer | null
+    issuer?: Issuer | null // TODO test having no issuer
 };
 export type NewIssuanceFlow = Omit<typeof workflows.$inferInsert, 'relyingParty' | 'workflowType'> & {
+    personas: string[]
     issuer: string
     steps: NewStep[]
 };
 
 export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
     actions: StepAction[]
-    asset: Asset
+    asset?: Asset | null
 };
 export type NewStep = Omit<typeof steps.$inferInsert, 'workflow'> & {
+    asset?: string | null
     actions: NewStepAction[]
+    subFlow?: string | null
 };
 
 export type StepAction = typeof stepActions.$inferSelect;

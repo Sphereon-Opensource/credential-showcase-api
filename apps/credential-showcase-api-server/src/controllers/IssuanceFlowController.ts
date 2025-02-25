@@ -12,13 +12,26 @@ import {
 import { Service } from 'typedi';
 import IssuanceFlowService from '../services/IssuanceFlowService';
 import {
-    IssuanceFlow,
-    NewIssuanceFlow,
-    NewStep,
-    NewStepAction,
-    Step,
-    StepAction
-} from '../types';
+    IssuanceFlowRequest,
+    IssuanceFlowRequestToJSONTyped,
+    IssuanceFlowResponse,
+    IssuanceFlowResponseFromJSONTyped,
+    IssuanceFlowsResponse,
+    IssuanceFlowsResponseFromJSONTyped,
+    StepsResponse,
+    StepsResponseFromJSONTyped,
+    StepResponse,
+    StepResponseFromJSONTyped,
+    StepRequest,
+    StepRequestToJSONTyped,
+    StepActionsResponse,
+    StepActionsResponseFromJSONTyped,
+    StepActionResponse,
+    StepActionResponseFromJSONTyped,
+    StepActionRequest,
+    StepActionRequestToJSONTyped
+} from 'credential-showcase-openapi';
+import { issuanceFlowDTOFrom, stepDTOFrom } from '../utils/mappers';
 
 @JsonController('/workflows/issuances')
 @Service()
@@ -28,79 +41,89 @@ class IssuanceFlowController {
     // ISSUANCE FLOW
 
     @Get('/')
-    public async getAllIssuanceFlows(): Promise<IssuanceFlow[]> {
-        return this.issuanceFlowService.getIssuanceFlows()
+    public async getAllIssuanceFlows(): Promise<IssuanceFlowsResponse> {
+        const result = await this.issuanceFlowService.getIssuanceFlows();
+        const issuanceFlows = result.map(issuanceFlow => issuanceFlowDTOFrom(issuanceFlow));
+        return IssuanceFlowsResponseFromJSONTyped({ issuanceFlows }, false);
     }
 
     @Get('/:issuanceFlowId')
-    getOneIssuanceFlow(
+    public async getOneIssuanceFlow(
         @Param('issuanceFlowId') issuanceFlowId: string
-    ): Promise<IssuanceFlow> {
-        return this.issuanceFlowService.getIssuanceFlow(issuanceFlowId);
+    ): Promise<IssuanceFlowResponse> {
+        const result = await this.issuanceFlowService.getIssuanceFlow(issuanceFlowId);
+        return IssuanceFlowResponseFromJSONTyped({ issuanceFlow: issuanceFlowDTOFrom(result) }, false);
     }
 
     @HttpCode(201)
     @Post('/')
-    postIssuanceFlow(
-        @Body() issuanceFlow: NewIssuanceFlow
-    ): Promise<IssuanceFlow> {
-        return this.issuanceFlowService.createIssuanceFlow(issuanceFlow);
+    public async postIssuanceFlow(
+        @Body() issuanceFlowRequest: IssuanceFlowRequest
+    ): Promise<IssuanceFlowResponse> {
+        const result = await this.issuanceFlowService.createIssuanceFlow(IssuanceFlowRequestToJSONTyped(issuanceFlowRequest));
+        return IssuanceFlowResponseFromJSONTyped({ issuanceFlow: issuanceFlowDTOFrom(result) }, false);
     }
 
     @Put('/:issuanceFlowId')
-    putIssuanceFlow(
+    public async putIssuanceFlow(
         @Param('issuanceFlowId') issuanceFlowId: string,
-        @Body() issuanceFlow: IssuanceFlow
-    ): Promise<IssuanceFlow> {
-        return this.issuanceFlowService.updateIssuanceFlow(issuanceFlowId, issuanceFlow)
+        @Body() issuanceFlowRequest: IssuanceFlowRequest
+    ): Promise<IssuanceFlowResponse> {
+        const result = await this.issuanceFlowService.updateIssuanceFlow(issuanceFlowId, IssuanceFlowRequestToJSONTyped(issuanceFlowRequest));
+        return IssuanceFlowResponseFromJSONTyped({ issuanceFlow: issuanceFlowDTOFrom(result) }, false);
     }
 
     @OnUndefined(204)
     @Delete('/:issuanceFlowId')
-    deleteIssuanceFlow(
+    public async deleteIssuanceFlow(
         @Param('issuanceFlowId') issuanceFlowId: string
     ): Promise<void> {
-        return this.issuanceFlowService.deleteIssuanceFlow(issuanceFlowId);
+        return await this.issuanceFlowService.deleteIssuanceFlow(issuanceFlowId);
     }
 
     // ISSUANCE FLOW STEP
 
     @Get('/:issuanceFlowId/steps')
     public async getAllSteps(
-        @Param('issuanceFlow') issuanceFlowId: string
-    ): Promise<Step[]> {
-        return this.issuanceFlowService.getIssuanceFlowSteps(issuanceFlowId)
+        @Param('issuanceFlowId') issuanceFlowId: string
+    ): Promise<StepsResponse> {
+        const result = await this.issuanceFlowService.getIssuanceFlowSteps(issuanceFlowId)
+        const steps = result.map(step => stepDTOFrom(step));
+        return StepsResponseFromJSONTyped({ steps }, false);
     }
 
     @Get('/:issuanceFlowId/steps/:stepId')
-    getOneIssuanceFlowStep(
+    public async getOneIssuanceFlowStep(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string
-    ): Promise<Step> {
-        return this.issuanceFlowService.getIssuanceFlowStep(issuanceFlowId, stepId);
+    ): Promise<StepResponse> {
+        const result = await this.issuanceFlowService.getIssuanceFlowStep(issuanceFlowId, stepId);
+        return StepResponseFromJSONTyped({ step: stepDTOFrom(result) }, false);
     }
 
     @HttpCode(201)
     @Post('/:issuanceFlowId/steps')
-    postIssuanceFlowStep(
+    public async postIssuanceFlowStep(
         @Param('issuanceFlowId') issuanceFlowId: string,
-        @Body() step: NewStep
-    ): Promise<Step> {
-        return this.issuanceFlowService.createIssuanceFlowStep(issuanceFlowId, step);
+        @Body() stepRequest: StepRequest
+    ): Promise<StepResponse> {
+        const result = await this.issuanceFlowService.createIssuanceFlowStep(issuanceFlowId, StepRequestToJSONTyped(stepRequest));
+        return StepResponseFromJSONTyped({ step: stepDTOFrom(result) }, false);
     }
 
     @Put('/:issuanceFlowId/steps/:stepId')
-    putIssuanceFlowStep(
+    public async putIssuanceFlowStep(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string,
-        @Body() step: NewStep
-    ): Promise<Step> {
-        return this.issuanceFlowService.updateIssuanceFlowStep(issuanceFlowId, stepId, step)
+        @Body() stepRequest: StepRequest
+    ): Promise<StepResponse> {
+        const result = await this.issuanceFlowService.updateIssuanceFlowStep(issuanceFlowId, stepId, StepRequestToJSONTyped(stepRequest))
+        return StepResponseFromJSONTyped({ step: stepDTOFrom(result) }, false);
     }
 
     @OnUndefined(204)
     @Delete('/:issuanceFlowId/steps/:stepId')
-    deleteIssuanceFlowStep(
+    public async deleteIssuanceFlowStep(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string
     ): Promise<void> {
@@ -113,42 +136,47 @@ class IssuanceFlowController {
     public async getAllIssuanceFlowStepActions(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string
-    ): Promise<StepAction[]> {
-        return this.issuanceFlowService.getIssuanceFlowStepActions(issuanceFlowId, stepId)
+    ): Promise<StepActionsResponse> {
+        const result = await this.issuanceFlowService.getIssuanceFlowStepActions(issuanceFlowId, stepId)
+        const actions = result.map(action => action);
+        return StepActionsResponseFromJSONTyped({ actions }, false);
     }
 
     @Get('/:issuanceFlowId/steps/:stepId/actions/:actionId')
-    getOneIssuanceFlowStepAction(
+    public async getOneIssuanceFlowStepAction(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string,
         @Param('actionId') actionId: string
-    ): Promise<StepAction> {
-        return this.issuanceFlowService.getIssuanceFlowStepAction(issuanceFlowId, stepId, actionId);
+    ): Promise<StepActionResponse> {
+        const result = await this.issuanceFlowService.getIssuanceFlowStepAction(issuanceFlowId, stepId, actionId);
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @HttpCode(201)
     @Post('/:issuanceFlowId/steps/:stepId/actions')
-    postIssuanceFlowStepAction(
+    public async postIssuanceFlowStepAction(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string,
-        @Body() action: NewStepAction
-    ): Promise<StepAction> {
-        return this.issuanceFlowService.createIssuanceFlowStepAction(issuanceFlowId, stepId, action);
+        @Body() actionRequest: StepActionRequest
+    ): Promise<StepActionResponse> {
+        const result = await this.issuanceFlowService.createIssuanceFlowStepAction(issuanceFlowId, stepId, StepActionRequestToJSONTyped(actionRequest));
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @Put('/:issuanceFlowId/steps/:stepId/actions/:actionId')
-    putIssuanceFlowStepAction(
+    public async putIssuanceFlowStepAction(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string,
         @Param('actionId') actionId: string,
-        @Body() action: NewStepAction
-    ): Promise<StepAction> {
-        return this.issuanceFlowService.updateIssuanceFlowStepAction(issuanceFlowId, stepId, actionId, action)
+        @Body() actionRequest: StepActionRequest
+    ): Promise<StepActionResponse> {
+        const result = await this.issuanceFlowService.updateIssuanceFlowStepAction(issuanceFlowId, stepId, actionId, StepActionRequestToJSONTyped(actionRequest))
+        return StepActionResponseFromJSONTyped({ action: result }, false);
     }
 
     @OnUndefined(204)
     @Delete('/:issuanceFlowId/steps/:stepId/actions/:actionId')
-    deleteIssuanceFlowStepAction(
+    public async deleteIssuanceFlowStepAction(
         @Param('issuanceFlowId') issuanceFlowId: string,
         @Param('stepId') stepId: string,
         @Param('actionId') actionId: string

@@ -91,4 +91,3 @@ export const personaDTOFrom = (persona: Persona): PersonaDTO => {
         bodyImage: persona.bodyImage ? assetDTOFrom(persona.bodyImage) : undefined,
     }
 }
-

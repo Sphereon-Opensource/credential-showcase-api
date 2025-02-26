@@ -1598,7 +1598,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  
+
   /showcases:
     get:
       tags:
@@ -1832,11 +1832,11 @@ components:
           type: string
           description: Detailed description of the step
           example: Verify the user's identity
-        # order:
-        #   type: integer
-        #   description: Order of the step in the workflow
-        #   minimum: 0
-        #   example: 1
+        order:
+          type: integer
+          description: Order of the step in the workflow
+          minimum: 0
+          example: 1
         type:
           $ref: '#/components/schemas/StepType'
         subFlow:
@@ -1849,7 +1849,7 @@ components:
             $ref: '#/components/schemas/StepAction'
         asset:
           $ref: '#/components/schemas/Asset'
-    
+
     StepRequest:
       type: object
       required:

@@ -12,9 +12,7 @@ classDiagram
         +scenarios: List~String~
         +personas: List~String~
         +credentials: List~String~
-        +status : String
         +hidden : Boolean
-        +status : String
     }
     class Scenario {
         <!-- Scenarios is a collection of workflows -->

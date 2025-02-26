@@ -3,6 +3,8 @@ import {
     CredentialDefinition as CredentialDefinitionDTO,
     RelyingParty as RelyingPartyDTO,
     Issuer as IssuerDTO,
+    IssuanceFlow as IssuanceFlowDTO,
+    Step as StepDTO,
     Persona as PersonaDTO,
     AssetRequest,
 } from 'credential-showcase-openapi';
@@ -12,6 +14,9 @@ import {
     CredentialDefinition,
     RelyingParty,
     Issuer,
+    IssuanceFlow,
+    Step,
+    WorkflowType,
     Persona
 } from '../types';
 
@@ -54,6 +59,28 @@ export const issuerDTOFrom = (issuer: Issuer): IssuerDTO => {
         organization: issuer.organization ? issuer.organization : undefined,
         logo: issuer.logo ? assetDTOFrom(issuer.logo) : undefined,
         credentialDefinitions: issuer.credentialDefinitions.map(credentialDefinition => credentialDefinitionDTOFrom(credentialDefinition))
+    }
+}
+
+export const issuanceFlowDTOFrom = (issuanceFlow: IssuanceFlow): IssuanceFlowDTO => {
+    if (!issuanceFlow.issuer) {
+        throw Error('Missing issuer in issuance flow')
+    }
+
+    return {
+        ...issuanceFlow,
+        issuer: issuerDTOFrom(issuanceFlow.issuer),
+        type: WorkflowType.ISSUANCE,
+        steps: issuanceFlow.steps.map(step => stepDTOFrom(step)),
+        personas: issuanceFlow.personas.map(persona => personaDTOFrom(persona)),
+    }
+}
+
+export const stepDTOFrom = (step: Step): StepDTO => {
+    return {
+        ...step,
+        asset: step.asset ? assetDTOFrom(step.asset) : undefined,
+        subFlow: step.subFlow ? step.subFlow : undefined,
     }
 }
 

@@ -25,8 +25,7 @@
     "@types/dotenv-flow": "^3.3.3",
     "@types/express": "^5.0.0",
     "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.4",
-    "ts-node": "^10.9.2"
+    "drizzle-kit": "^0.30.4"
   },
   "files": [
     "dist/**/*",

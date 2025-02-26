@@ -58,7 +58,7 @@ importers:
         version: 4.1.0
       drizzle-orm:
         specifier: ^0.39.1
-        version: 0.39.1(@electric-sql/pglite@0.2.16)(@types/pg@8.11.11)(better-sqlite3@11.8.1)(pg@8.13.1)(postgres@3.4.5)
+        version: 0.39.3(@electric-sql/pglite@0.2.16)(@types/pg@8.11.11)(better-sqlite3@11.8.1)(pg@8.13.1)(postgres@3.4.5)
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -90,9 +90,6 @@ importers:
       drizzle-kit:
         specifier: ^0.30.4
         version: 0.30.4
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@types/node@22.13.1)(typescript@5.7.3)
 
   packages/credential-showcase-openapi: {}
 
@@ -117,9 +114,6 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
-      '@types/node':
-        specifier: ^22.13.1
-        version: 22.13.1
       testcontainers:
         specifier: ^10.18.0
         version: 10.18.0
@@ -1318,8 +1312,8 @@ packages:
     resolution: {integrity: sha512-B2oJN5UkvwwNHscPWXDG5KqAixu7AUzZ3qbe++KU9SsQ+cZWR4DXEPYcvWplyFAno0dhRJECNEhNxiDmFaPGyQ==}
     hasBin: true
 
-  drizzle-orm@0.39.1:
-    resolution: {integrity: sha512-2bDHlzTY31IDmrYn8i+ZZrxK8IyBD4mPZ7JmZdVDQj2tpBZXs/gxB/1kK5pSvkjxPUMNOVsTnoGkSltgjuJwcA==}
+  drizzle-orm@0.39.3:
+    resolution: {integrity: sha512-EZ8ZpYvDIvKU9C56JYLOmUskazhad+uXZCTCRN4OnRMsL+xAJ05dv1eCpAG5xzhsm1hqiuC5kAZUCS924u2DTw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -1334,7 +1328,6 @@ packages:
       '@tidbcloud/serverless': '*'
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
-      '@types/react': '>=18'
       '@types/sql.js': '*'
       '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
@@ -1347,7 +1340,6 @@ packages:
       pg: '>=8'
       postgres: '>=3'
       prisma: '*'
-      react: '>=18'
       sql.js: '>=1'
       sqlite3: '>=5'
     peerDependenciesMeta:
@@ -1377,8 +1369,6 @@ packages:
         optional: true
       '@types/pg':
         optional: true
-      '@types/react':
-        optional: true
       '@types/sql.js':
         optional: true
       '@vercel/postgres':
@@ -1402,8 +1392,6 @@ packages:
       postgres:
         optional: true
       prisma:
-        optional: true
-      react:
         optional: true
       sql.js:
         optional: true
@@ -4288,7 +4276,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.39.1(@electric-sql/pglite@0.2.16)(@types/pg@8.11.11)(better-sqlite3@11.8.1)(pg@8.13.1)(postgres@3.4.5):
+  drizzle-orm@0.39.3(@electric-sql/pglite@0.2.16)(@types/pg@8.11.11)(better-sqlite3@11.8.1)(pg@8.13.1)(postgres@3.4.5):
     optionalDependencies:
       '@electric-sql/pglite': 0.2.16
       '@types/pg': 8.11.11

@@ -1,8 +1,8 @@
-import { pgTable, text, uuid } from 'drizzle-orm/pg-core'
-import { assets } from './asset'
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { assets } from './asset';
 import { relations } from 'drizzle-orm';
 
-export const personas = pgTable("persona", {
+export const personas = pgTable('persona', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text().notNull(),
   role: text().notNull(),

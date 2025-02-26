@@ -30,7 +30,7 @@ export class TractionService {
 
   constructor(
     private tenantId: string,
-    private basePath: string = environment.DEFAULT_API_BASE_PATH,
+    private basePath: string = environment.traction.DEFAULT_API_BASE_PATH,
     private walletId?: string,
     private accessToken?: string,
   ) {

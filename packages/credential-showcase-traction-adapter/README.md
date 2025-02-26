@@ -20,7 +20,6 @@ The **Credential Showcase Traction Adapter** bridges the **Interactive Digital C
 - **Event-Driven Architecture:** Processes only the messages it can handle, simplifying horizontal scaling and maintainability
 - **Error Handling & Consistency:** Ensures durable message delivery and logs all failures for quick resolution
 
-
 ## 📁 Project Structure
 
 ```
@@ -88,6 +87,7 @@ src/__tests__/message-processor.test.ts
 ```
 
 These tests verify:
+
 - Message processing for valid credential definitions
 - Error handling for invalid messages (missing actions, tenants, etc.)
 - RabbitMQ connectivity and durability
@@ -104,6 +104,7 @@ These tests verify:
 ### Traction Service Integration
 
 The adapter provides several credential operations:
+
 - Schema creation and lookup
 - Credential definition creation and lookup
 - Tenant token management
@@ -112,6 +113,7 @@ The adapter provides several credential operations:
 ### Tenant/Wallet Session Management
 
 A service manager provides:
+
 - LRU caching of tenant sessions
 - Configurable TTL and cache sizes
 - Token refreshing for existing sessions
@@ -119,6 +121,7 @@ A service manager provides:
 ### Error Handling
 
 Durable messaging ensures errors do not cause data loss:
+
 - Invalid messages are rejected with descriptive errors
 - Processing failures are logged with contextual details
 - Message acceptance only occurs after successful processing

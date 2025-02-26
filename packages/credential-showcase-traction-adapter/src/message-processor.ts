@@ -25,12 +25,12 @@ export class MessageProcessor {
 
     // Setup AMQ broker connection
     this.connection = new Connection({
-      hostname: environment.AMQ_HOST,
-      port: environment.AMQ_PORT,
+      hostname: environment.messageBroker.AMQ_HOST,
+      port: environment.messageBroker.AMQ_PORT,
       transport: 'tcp',
       reconnect: true,
-      username: environment.AMQ_USER,
-      password: environment.AMQ_PASSWORD,
+      username: environment.messageBroker.AMQ_USER,
+      password: environment.messageBroker.AMQ_PASSWORD,
     })
   }
 
@@ -130,7 +130,7 @@ export class MessageProcessor {
       console.error(errorMsg)
       if (context.delivery) {
         context.delivery.reject({
-          info: `apiBasePath: ${headers.apiUrlBase ?? environment.DEFAULT_API_BASE_PATH}, tenantId: ${headers.tenantId}, walletId: ${headers.walletId}`,
+          info: `apiBasePath: ${headers.apiUrlBase ?? environment.traction.DEFAULT_API_BASE_PATH}, tenantId: ${headers.tenantId}, walletId: ${headers.walletId}`,
           condition: 'fatal error',
           description: errorMsg,
           value: [credentialDef],
@@ -145,7 +145,7 @@ export class MessageProcessor {
       const rejectOptions: any = { description: errorMsg }
 
       if (headers) {
-        rejectOptions.info = `apiBasePath: ${headers.apiUrlBase ?? environment.DEFAULT_API_BASE_PATH}, tenantId: ${headers.tenantId}, walletId: ${headers.walletId}`
+        rejectOptions.info = `apiBasePath: ${headers.apiUrlBase ?? environment.traction.DEFAULT_API_BASE_PATH}, tenantId: ${headers.tenantId}, walletId: ${headers.walletId}`
         rejectOptions.condition = 'fatal error'
       }
 

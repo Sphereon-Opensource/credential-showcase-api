@@ -4,8 +4,8 @@ import { LRUCache } from 'lru-cache'
 
 class ServiceManager {
   private readonly services = new LRUCache<string, TractionService>({
-    max: environment.TENANT_SESSION_CACHE_SIZE,
-    ttl: environment.TENANT_SESSION_TTL_MINS * 60,
+    max: environment.traction.TENANT_SESSION_CACHE_SIZE,
+    ttl: environment.traction.TENANT_SESSION_TTL_MINS * 60,
   })
 
   public getTractionService(tenantId: string, apiUrlBase?: string, walletId?: string, accessTokenEnc?: string): TractionService {
@@ -29,7 +29,7 @@ class ServiceManager {
     return service
   }
 
-  private buildKey(apiUrlBase: string = environment.DEFAULT_API_BASE_PATH, tenantId: string, walletId?: string): string {
+  private buildKey(apiUrlBase: string = environment.traction.DEFAULT_API_BASE_PATH, tenantId: string, walletId?: string): string {
     return walletId ? `${apiUrlBase}:${tenantId}:${walletId}` : `${apiUrlBase}:${tenantId}`
   }
 }

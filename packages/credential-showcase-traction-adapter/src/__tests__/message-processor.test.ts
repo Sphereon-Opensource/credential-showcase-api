@@ -103,7 +103,7 @@ describe('MessageProcessor Integration Test', () => {
 
     // Send a message with the credential definition
     const messageId = uuidv4()
-    void await sender.send({
+    void (await sender.send({
       message_id: messageId,
       body: JSON.stringify(credDef),
       application_properties: {
@@ -113,7 +113,7 @@ describe('MessageProcessor Integration Test', () => {
         walletId: 'test-wallet',
         accessTokenEnc: 'test-token',
       },
-    })
+    }))
 
     // Wait for the message to be processed
     await new Promise<void>((resolve) => {
@@ -164,16 +164,16 @@ describe('MessageProcessor Integration Test', () => {
 
     // Send a message without an action
     const messageId = uuidv4()
-    void await sender.send({
+    void (await sender.send({
       message_id: messageId,
       body: JSON.stringify(credDef),
       application_properties: {
         tenantId: 'test-tenant',
       },
-    })
+    }))
 
     // Wait for the message to be processed
-    void await new Promise<void>((resolve) => {
+    void (await new Promise<void>((resolve) => {
       const checkInterval = setInterval(() => {
         if (consoleSpy.mock.calls.some((call) => call[0].includes('did not contain an action'))) {
           clearInterval(checkInterval)
@@ -186,7 +186,7 @@ describe('MessageProcessor Integration Test', () => {
         clearInterval(checkInterval)
         resolve()
       }, 5000)
-    })
+    }))
 
     // Verify the error was logged
     expect(consoleSpy.mock.calls.some((call) => call[0].includes('did not contain an action'))).toBeTruthy()
@@ -221,13 +221,13 @@ describe('MessageProcessor Integration Test', () => {
 
     // Send a message without a tenant ID
     const messageId = uuidv4()
-    void await sender.send({
+    void (await sender.send({
       message_id: messageId,
       body: JSON.stringify(credDef),
       application_properties: {
         action: 'store-credentialdef' as Action,
       },
-    })
+    }))
 
     // Wait for the message to be processed
     await new Promise<void>((resolve) => {
@@ -257,7 +257,7 @@ describe('MessageProcessor Integration Test', () => {
 
     // Send a message with invalid JSON
     const messageId = uuidv4()
-    void await sender.send({
+    void (await sender.send({
       message_id: messageId,
       body: '{invalid json}',
       application_properties: {
@@ -265,7 +265,7 @@ describe('MessageProcessor Integration Test', () => {
         tenantId: 'test-tenant',
         apiUrlBase: 'http://localhost:8080',
       },
-    })
+    }))
 
     // Wait for the message to be processed
     await new Promise<void>((resolve) => {
@@ -316,14 +316,14 @@ describe('MessageProcessor Integration Test', () => {
 
     // Send a message with an unsupported action
     const messageId = uuidv4()
-    void await sender.send({
+    void (await sender.send({
       message_id: messageId,
       body: JSON.stringify(credDef),
       application_properties: {
         action: 'unsupported-action' as Action,
         tenantId: 'test-tenant',
       },
-    })
+    }))
 
     // Wait for the message to be processed
     await new Promise<void>((resolve) => {

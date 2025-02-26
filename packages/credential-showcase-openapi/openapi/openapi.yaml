@@ -9,6 +9,8 @@ servers:
   - url: https://api.example.com/v1
 
 tags:
+  - name: Showcases
+    description: Endpoints for managing showcases
   - name: Issuance Flow
     description: Endpoints related to credential issuance flows
   - name: Presentation Flow
@@ -23,15 +25,141 @@ tags:
     description: Endpoints for creating and managing credential definitions
   - name: Assets
     description: Endpoints related to media or static assets
-  - name: Showcases
-    description: Endpoints for managing showcases
 
 security:
   - OAuth2: []
   - OIDC: []
 
 paths:
-  /workflows/issuances:
+  /showcases:
+    get:
+      tags:
+        - Showcases
+      summary: List all showcases
+      operationId: listShowcases
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShowcaseResponse'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - Showcases
+      summary: Create a new showcase
+      operationId: createShowcase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShowcaseRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Showcase'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+  /showcases/{showcaseId}:
+    parameters:
+      - name: showcaseId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier of the showcase
+    get:
+      tags:
+        - Showcases
+      summary: Get a specific showcase
+      operationId: getShowcase
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Showcase'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Showcases
+      summary: Update a showcase
+      operationId: updateShowcase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShowcaseRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Showcase'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Showcases
+      summary: Delete a showcase
+      operationId: deleteShowcase
+      responses:
+        '204':
+            description: Deleted
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: A message indicating the showcase was deleted
+        '400':
+            $ref: '#/components/responses/BadRequest'
+        '401':
+            $ref: '#/components/responses/Unauthorized'
+        '403':
+            $ref: '#/components/responses/Forbidden'
+        '500':
+            $ref: '#/components/responses/InternalServerError'
+
+  /scenarios/issuances:
     get:
       tags:
         - Issuance Flow
@@ -78,7 +206,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /workflows/issuances/{issuanceFlowId}:
+  /scenarios/issuances/{issuanceFlowId}:
     get:
       tags: [ "Issuance Flow" ]
       summary: Retrieve a single issuance flow
@@ -163,7 +291,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /workflows/issuances/{issuanceFlowId}/steps:
+  /scenarios/issuances/{issuanceFlowId}/steps:
     get:
       tags:
         - "Issuance Flow"
@@ -225,7 +353,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /workflows/issuances/{issuanceFlowId}/steps/{stepId}:
+  /scenarios/issuances/{issuanceFlowId}/steps/{stepId}:
     get:
       tags: [ "Issuance Flow" ]
       summary: Retrieve a specific step in an issuance flow
@@ -325,7 +453,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /workflows/issuances/{issuanceFlowId}/steps/{stepId}/actions:
+  /scenarios/issuances/{issuanceFlowId}/steps/{stepId}/actions:
     get:
       tags: [ "Issuance Flow" ]
       summary: List actions in a step
@@ -396,7 +524,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /workflows/issuances/{issuanceFlowId}/steps/{stepId}/actions/{actionId}:
+  /scenarios/issuances/{issuanceFlowId}/steps/{stepId}/actions/{actionId}:
     get:
       tags: [ "Issuance Flow" ]
       summary: Retrieve a single action
@@ -511,7 +639,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /workflows/presentations:
+  /scenarios/presentations:
     get:
       tags:
         - Presentation Flow
@@ -558,7 +686,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /workflows/presentations/{presentationFlowId}:
+  /scenarios/presentations/{presentationFlowId}:
     get:
       tags: [ "Presentation Flow" ]
       summary: Retrieve a single presentation flow
@@ -643,7 +771,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /workflows/presentations/{presentationFlowId}/steps:
+  /scenarios/presentations/{presentationFlowId}/steps:
     get:
       tags:
         - "Presentation Flow"
@@ -705,7 +833,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /workflows/presentations/{presentationFlowId}/steps/{stepId}:
+  /scenarios/presentations/{presentationFlowId}/steps/{stepId}:
     get:
       tags: [ "Presentation Flow" ]
       summary: Retrieve a specific step in a presentation flow
@@ -805,7 +933,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /workflows/presentations/{presentationFlowId}/steps/{stepId}/actions:
+  /scenarios/presentations/{presentationFlowId}/steps/{stepId}/actions:
     get:
       tags: [ "Presentation Flow" ]
       summary: List actions in a step
@@ -876,7 +1004,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /workflows/presentations/{presentationFlowId}/steps/{stepId}/actions/{actionId}:
+  /scenarios/presentations/{presentationFlowId}/steps/{stepId}/actions/{actionId}:
     get:
       tags: [ "Presentation Flow" ]
       summary: Retrieve a single action
@@ -1481,25 +1609,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  # /roles/issuers/{issuerId}/credential-definitions:
-  #   parameters:
-  #     - name: issuerId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #   get:
-  #     tags:
-  #       - Issuer Role
-  #     summary: List credential definitions for an issuer
-  #     operationId: listIssuerCredentialDefinitions
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/CredentialDefinitionsResponse'
 
   /roles/relying-parties:
     get:
@@ -1617,218 +1726,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  # /roles/relying-parties/{relyingPartyId}/credential-definitions:
-  #   parameters:
-  #     - name: relyingPartyId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #   get:
-  #     tags:
-  #       - Relying Party Role
-  #     summary: List accepted credential definitions for a relying party
-  #     operationId: listRelyingPartyCredentialDefinitions
-  #     description: Retrieve the list of credential definitions that this relying party accepts for verification
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/CredentialDefinitionsResponse'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   post:
-  #     tags:
-  #       - Relying Party Role
-  #     summary: Add accepted credential definition to a relying party
-  #     operationId: addRelyingPartyCredentialDefinition
-  #     description: Add a credential definition to the list of credentials that this relying party accepts
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/CredentialDefinitionRequest'
-  #     responses:
-  #       '201':
-  #         description: Created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/CredentialDefinition'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  # /roles/relying-parties/{relyingPartyId}/credential-definitions/{definitionId}:
-  #   parameters:
-  #     - name: relyingPartyId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #     - name: definitionId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #   delete:
-  #     tags:
-  #       - Relying Party Role
-  #     summary: Remove an accepted credential definition from a relying party
-  #     operationId: removeRelyingPartyCredentialDefinition
-  #     description: Remove a credential definition from the list of credentials that this relying party accepts
-  #     responses:
-  #       '204':
-  #         description: Deleted
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-
-  # /showcases:
-  #   get:
-  #     tags:
-  #       - Showcases
-  #     summary: List all showcases
-  #     operationId: listShowcases
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/Showcase'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   post:
-  #     tags:
-  #       - Showcases
-  #     summary: Create a new showcase
-  #     operationId: createShowcase
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Showcase'
-  #       required: true
-  #     responses:
-  #       '201':
-  #         description: Created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Showcase'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  # /showcases/{showcaseId}:
-  #   parameters:
-  #     - name: showcaseId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         type: string
-  #       description: Unique identifier of the showcase
-  #   get:
-  #     tags:
-  #       - Showcases
-  #     summary: Get a specific showcase
-  #     operationId: getShowcase
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Showcase'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   put:
-  #     tags:
-  #       - Showcases
-  #     summary: Update a showcase
-  #     operationId: updateShowcase
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Showcase'
-  #     responses:
-  #       '200':
-  #         description: Updated
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Showcase'
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
-  #   delete:
-  #     tags:
-  #       - Showcases
-  #     summary: Delete a showcase
-  #     operationId: deleteShowcase
-  #     responses:
-  #       '204':
-  #           description: Deleted
-  #           content:
-  #             application/json:
-  #               schema:
-  #                 type: object
-  #                 properties:
-  #                   message:
-  #                     type: string
-  #                     description: A message indicating the showcase was deleted
-  #       '400':
-  #           $ref: '#/components/responses/BadRequest'
-  #       '401':
-  #           $ref: '#/components/responses/Unauthorized'
-  #       '403':
-  #           $ref: '#/components/responses/Forbidden'
-  #       '500':
-  #           $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -1847,6 +1744,93 @@ components:
       openIdConnectUrl: <https://auth.example.com/.well-known/openid-configuration>
       description: OpenID Connect security scheme for OAuth2 flows
   schemas:
+    AnonCredRevocation:
+      allOf:
+        - $ref: '#/components/schemas/RevocationInfo'
+        - type: object
+          required:
+            - registryId
+          properties:
+            registryId:
+              type: string
+              description: Identifier of the revocation registry for AnonCreds
+              example: 123e4567-e89b-12d3-a456-426614174123
+      description: Anonymous Credentials specific revocation information
+
+    AriesOOBAction:
+      allOf:
+        - $ref: '#/components/schemas/StepAction'
+        - type: object
+          required:
+            - proofRequest
+          properties:
+            proofRequest:
+              $ref: '#/components/schemas/AriesProofRequest'
+
+    AriesProofRequest:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AriesRequestCredentialAttributes'
+          description: Map of attribute groups requested in the proof
+          example:
+            name:
+              value: John Doe
+        predicates:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AriesRequestCredentialPredicates'
+          description: Map of predicate groups requested in the proof
+          example:
+            age:
+              value: 30
+
+    AriesRequestCredentialAttributes:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            type: string
+            description: Name of the attribute to be included in the proof
+            example: name
+          description: List of attribute names to be included in the proof
+        restrictions:
+          type: array
+          items:
+            type: string
+            description: Name of the restriction to be included in the proof
+            example: age
+          description: List of restrictions on the requested attributes
+
+    AriesRequestCredentialPredicates:
+      type: object
+      required:
+        - name
+        - type
+        - value
+        - restrictions
+      properties:
+        name:
+          type: string
+          description: Name of the attribute for predicate
+          example: age
+        type:
+          type: string
+          description: Type of predicate (e.g., >=, <=, etc.)
+          example: '>='
+        value:
+          type: string
+          description: Value to compare against
+          example: '30'
+        restrictions:
+          type: array
+          items:
+            type: string
+          description: List of restrictions on the predicate
+
     Asset:
       type: object
       required:
@@ -1874,6 +1858,7 @@ components:
           type: string
           description: Description of the asset
           example: A beautiful image of a cat
+
     AssetRequest:
       type: object
       required:
@@ -1896,6 +1881,15 @@ components:
           type: string
           description: Description of the asset
           example: A beautiful image of a cat
+
+    AssetResponse:
+      type: object
+      required:
+        - asset
+      properties:
+        asset:
+          $ref: '#/components/schemas/Asset'
+
     AssetsResponse:
       type: object
       required:
@@ -1905,595 +1899,47 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Asset'
-    AssetResponse:
-      type: object
-      required:
-        - asset
-      properties:
-        asset:
-          $ref: '#/components/schemas/Asset'
 
-    Step:
+    CredentialAttribute:
       type: object
       required:
         - id
-        - title
-        - description
-        - order
+        - name
         - type
-        - actions
       properties:
         id:
           type: string
-          description: Unique identifier for the step
-          example: 123e4567-e89b-12d3-a456-434314174000
-        title:
+          description: Unique identifier for the attribute
+          example: 890e4567-e89b-12d3-a456-426614174123
+        name:
           type: string
-          description: Title of the step
-          example: Verify Identity
-        description:
+          description: Name of the attribute
+          example: name
+        value:
           type: string
-          description: Detailed description of the step
-          example: Verify the user's identity
-        order:
-          type: integer
-          description: Order of the step in the workflow
-          minimum: 0
-          example: 1
+          description: Default or example value of the attribute
+          example: John Doe
         type:
-          $ref: '#/components/schemas/StepType'
-        subFlow:
-          type: string
-          description: Optional sub-workflow for this step
-          example: 123e4567-e89b-12d3-a456-434314174000
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/StepAction'
-        asset:
-          $ref: '#/components/schemas/Asset'
-    StepRequest:
-      type: object
-      required:
-        - title
-        - description
-        - order
-        - type
-        - actions
-      properties:
-        title:
-          type: string
-          description: Title of the step
-          example: Verify Identity
-        description:
-          type: string
-          description: Detailed description of the step
-          example: Verify the user's identity
-        order:
-          type: integer
-          description: Order of the step in the workflow
-          minimum: 0
-          example: 1
-        type:
-          $ref: '#/components/schemas/StepType'
-        subFlow:
-          type: string
-          description: Optional sub-workflow for this step
-          example: 123e4567-e89b-12d3-a456-434314174000
-        actions:
-          type: array
-          description: List of actions associated with this step
-          items:
-            $ref: '#/components/schemas/StepActionRequest'
-        asset:
-          type: string
-          description: Asset referenced by this step
-          example: 456e4567-e89b-12d3-a456-426614174000
-    StepsResponse:
-      properties:
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/Step'
-    StepResponse:
-      properties:
-        step:
-          $ref: '#/components/schemas/Step'
+          $ref: '#/components/schemas/CredentialAttributeType'
 
-    StepType:
-      type: string
-      enum:
-        - HUMAN_TASK
-        - SERVICE
-        - WORKFLOW
-      description: Type of step in the workflow
-      example: HUMAN_TASK
-
-    StepAction:
-      type: object
-      required:
-        - id
-        - actionType
-        - title
-        - text
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the action
-          example: 123e4567-ef2d-12d3-abcd-426614174456
-        actionType:
-          type: string
-          description: Type of action
-          example: EXAMPLE_ACTION
-        title:
-          type: string
-          description: Title of the action
-          example: Connect Wallet
-        text:
-          type: string
-          description: Descriptive text for the action
-          example: Connect your wallet to continue
-      discriminator:
-        propertyName: actionType
-        mapping:
-          ARIES_OOB: '#/components/schemas/AriesOOBAction'
-
-    StepActionRequest:
-      type: object
-      required:
-        - actionType
-        - title
-        - text
-      properties:
-        title:
-          type: string
-          description: Title of the action
-          example: Connect Wallet
-        text:
-          type: string
-          description: Descriptive text for the action
-          example: Connect your wallet to continue
-        actionType:
-          type: string
-          example: HUMAN_TASK
-      discriminator:
-        propertyName: actionType
-        mapping:
-          ARIES_OOB: '#/components/schemas/AriesOOBAction'
-    StepActionsResponse:
-      properties:
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/StepAction'
-    StepActionResponse:
-      properties:
-        action:
-          $ref: '#/components/schemas/StepAction'
-
-    AriesOOBAction:
-      allOf:
-        - $ref: '#/components/schemas/StepAction'
-        - type: object
-          required:
-            - proofRequest
-          properties:
-            proofRequest:
-              $ref: '#/components/schemas/AriesProofRequest'
-    AriesProofRequest:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/AriesRequestCredentialAttributes'
-          description: Map of attribute groups requested in the proof
-          example:
-            name:
-              value: John Doe
-        predicates:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/AriesRequestCredentialPredicates'
-          description: Map of predicate groups requested in the proof
-          example:
-            age:
-              value: 30
-    AriesRequestCredentialAttributes:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            type: string
-            description: Name of the attribute to be included in the proof
-            example: name
-          description: List of attribute names to be included in the proof
-        restrictions:
-          type: array
-          items:
-            type: string
-            description: Name of the restriction to be included in the proof
-            example: age
-          description: List of restrictions on the requested attributes
-    AriesRequestCredentialPredicates:
+    CredentialAttributeRequest:
       type: object
       required:
         - name
         - type
         - value
-        - restrictions
       properties:
         name:
           type: string
-          description: Name of the attribute for predicate
-          example: age
-        type:
-          type: string
-          description: Type of predicate (e.g., >=, <=, etc.)
-          example: '>='
+          description: Name of the attribute
+          example: name
         value:
           type: string
-          description: Value to compare against
-          example: '30'
-        restrictions:
-          type: array
-          items:
-            type: string
-          description: List of restrictions on the predicate
-
-    Persona:
-      type: object
-      required:
-        - name
-        - role
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the persona
-          example: 123e4567-e89b-12d3-a456-426614174456
-        name:
-          type: string
-          description: Name of the persona
+          description: Default or example value of the attribute
           example: John Doe
-        role:
-          type: string
-          description: Role of the persona in the system
-          example: Verifier
-        description:
-          type: string
-          description: Detailed description of the persona
-          example: John Doe is a verifier for the system
-        headshotImage:
-          $ref: '#/components/schemas/Asset'
-        bodyImage:
-          $ref: '#/components/schemas/Asset'
-    PersonaRequest:
-      type: object
-      required:
-        - name
-        - role
-      properties:
-        name:
-          type: string
-          description: Name of the persona
-          example: John Doe
-        role:
-          type: string
-          description: Role of the persona in the system
-          example: Verifier
-        description:
-          type: string
-          description: Detailed description of the persona
-          example: John Doe is a verifier for the system
-        headshotImage:
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174456
-        bodyImage:
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174877
-    PersonasResponse:
-      properties:
-        personas:
-          type: array
-          items:
-            $ref: '#/components/schemas/Persona'
-    PersonaResponse:
-      type: object
-      properties:
-        persona:
-          $ref: '#/components/schemas/Persona'
-
-    Workflow:
-      type: object
-      required:
-        - name
-        - type
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the workflow
-          example: 789e4567-e89b-12d3-a456-434314174123
-        name:
-          type: string
-          description: Name of the workflow
-          example: Credential Issuance
-        description:
-          type: string
-          description: Detailed description of the workflow
-          example: This workflow issues credentials to users
         type:
-          type: string
-          enum: [ISSUANCE, PRESENTATION]
-          description: Type of workflow
-          example: ISSUANCE
-        steps:
-          type: array
-          description: Ordered list of steps in the workflow
-          items:
-            $ref: '#/components/schemas/Step'
-        personas:
-          type: array
-          description: References to personas used in this workflow
-          items:
-            $ref: '#/components/schemas/Persona'
-    WorkflowRequest:
-      type: object
-      required:
-        - name
-        - description
-      properties:
-        name:
-          type: string
-          description: Name of the workflow
-          example: Credential Issuance
-        description:
-          type: string
-          description: Detailed description of the workflow
-          example: This workflow issues credentials to users
-        steps:
-          type: array
-          description: Ordered list of steps in the workflow
-          items:
-            $ref: '#/components/schemas/StepRequest'
-        personas:
-          type: array
-          description: References to personas used in this workflow
-          items:
-            type: string
-            example: 123e4567-e89b-12d3-a456-426614174456
+          $ref: '#/components/schemas/CredentialAttributeType'
 
-    IssuanceFlowsResponse:
-      type: object
-      properties:
-        issuanceFlows:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssuanceFlow'
-    IssuanceFlowResponse:
-      type: object
-      properties:
-        issuanceFlow:
-            $ref: '#/components/schemas/IssuanceFlow'
-    IssuanceFlow:
-      allOf:
-        - $ref: '#/components/schemas/Workflow'
-        - type: object
-          required:
-            - issuer
-          properties:
-            issuer:
-              $ref: '#/components/schemas/Issuer'
-      description: Workflow specialization for credential issuance
-    IssuanceFlowRequest:
-      allOf:
-        - $ref: '#/components/schemas/WorkflowRequest'
-        - type: object
-          required:
-            - issuer
-          properties:
-            issuer:
-              type: string
-              example: "313e4567-e89b-12d3-a456-426614174469"
-      description: Workflow specialization for credential issuance
-
-    PresentationFlowsResponse:
-      properties:
-        presentationFlows:
-          type: array
-          items:
-            $ref: '#/components/schemas/PresentationFlow'
-    PresentationFlow:
-      allOf:
-        - $ref: '#/components/schemas/Workflow'
-        - type: object
-          required:
-            - relyingParty
-          properties:
-            relyingParty:
-              $ref: '#/components/schemas/RelyingParty'
-      description: Workflow specialization for credential presentation
-    PresentationFlowRequest:
-      allOf:
-        - $ref: '#/components/schemas/WorkflowRequest'
-        - type: object
-          required:
-            - relyingParty
-          properties:
-            relyingParty:
-              type: string
-              example: "313e4567-e89b-12d3-a456-426614174469"
-
-    IssuerType:
-      type: string
-      enum:
-        - ARIES
-      description: Types of supported issuers
-    RelyingPartyType:
-      type: string
-      enum:
-        - ARIES
-      description: Types of supported relying parties
-
-    Issuer:
-      type: object
-      required:
-        - id
-        - name
-        - description
-        - type
-        - credentialDefinitions
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the issuer
-          example: 123e4567-e89b-12d3-abcd-426614174456
-        name:
-          type: string
-          description: Name of the issuer
-          example: Issuer Name
-        description:
-          type: string
-          description: Detailed description of the issuer
-          example: This issuer issues credentials to users
-        type:
-          $ref: '#/components/schemas/IssuerType'
-        organization:
-          type: string
-          description: Organization the issuer belongs to
-          example: Acme Corporation
-        logo:
-          $ref: '#/components/schemas/Asset'
-        credentialDefinitions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CredentialDefinition'
-    IssuerRequest:
-      type: object
-      required:
-        - name
-        - description
-        - type
-        - credentialDefinitions
-      properties:
-        name:
-          type: string
-          description: Name of the issuer
-          example: Issuer Name
-        description:
-          type: string
-          description: Detailed description of the issuer
-          example: This issuer issues credentials to users
-        type:
-          $ref: '#/components/schemas/IssuerType'
-        organization:
-          type: string
-          description: Organization the issuer belongs to
-          example: Acme Corporation
-        logo:
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174469
-        credentialDefinitions:
-          type: array
-          items:
-            type: string
-            example: 123e4567-e89b-12d3-a456-426614174469
-    IssuersResponse:
-      type: object
-      properties:
-        issuers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issuer'
-    IssuerResponse:
-      type: object
-      properties:
-        issuer:
-          $ref: '#/components/schemas/Issuer'
-
-
-    RelyingParty:
-      type: object
-      required:
-        - id
-        - name
-        - description
-        - type
-        - credentialDefinitions
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the relying party
-          example: 76543210-e89b-12d3-a456-426614174469
-        name:
-          type: string
-          description: Name of the relying party
-          example: Relying Party Name
-        description:
-          type: string
-          description: Detailed description of the relying party
-          example: This relying party verifies credentials from issuers
-        type:
-          $ref: '#/components/schemas/RelyingPartyType'
-        organization:
-          type: string
-          description: Organization the relying party belongs to
-          example: Acme Corporation
-        logo:
-          $ref: '#/components/schemas/Asset'
-        credentialDefinitions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CredentialDefinition'
-    RelyingPartyRequest:
-      type: object
-      required:
-        - name
-        - type
-        - description
-        - credentialDefinitions
-      properties:
-        name:
-          type: string
-          description: Name of the relying party
-          example: Relying Party Name
-        description:
-          type: string
-          description: Detailed description of the relying party
-          example: This relying party verifies credentials from issuers
-        type:
-          $ref: '#/components/schemas/RelyingPartyType'
-        organization:
-          type: string
-          description: Organization the relying party belongs to
-          example: Acme Corporation
-        logo:
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174469
-        credentialDefinitions:
-          type: array
-          items:
-            type: string
-            example: 123e4567-e89b-12d3-a456-426614174469
-
-    RelyingPartiesResponse:
-      type: object
-      properties:
-        relyingParties:
-          type: array
-          items:
-            $ref: '#/components/schemas/RelyingParty'
-    RelyingPartyResponse:
-      type: object
-      properties:
-        relyingParty:
-          $ref: '#/components/schemas/RelyingParty'
-
-    CredentialType:
-      type: string
-      enum:
-        - ANONCRED
-      description: Types of supported credentials
     CredentialAttributeType:
       type: string
       enum:
@@ -2546,6 +1992,7 @@ components:
             - $ref: '#/components/schemas/AnonCredRevocation'
         icon:
           $ref: '#/components/schemas/Asset'
+
     CredentialDefinitionRequest:
       type: object
       required:
@@ -2590,6 +2037,13 @@ components:
         icon:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174469
+
+    CredentialDefinitionResponse:
+      type: object
+      properties:
+        credentialDefinition:
+          $ref: '#/components/schemas/CredentialDefinition'
+
     CredentialDefinitionsResponse:
       type: object
       properties:
@@ -2598,50 +2052,7 @@ components:
           description: "List of credential definitions"
           items:
             $ref: '#/components/schemas/CredentialDefinition'
-    CredentialDefinitionResponse:
-      type: object
-      properties:
-        credentialDefinition:
-          $ref: '#/components/schemas/CredentialDefinition'
 
-    CredentialAttribute:
-      type: object
-      required:
-        - id
-        - name
-        - type
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the attribute
-          example: 890e4567-e89b-12d3-a456-426614174123
-        name:
-          type: string
-          description: Name of the attribute
-          example: name
-        value:
-          type: string
-          description: Default or example value of the attribute
-          example: John Doe
-        type:
-          $ref: '#/components/schemas/CredentialAttributeType'
-    CredentialAttributeRequest:
-      type: object
-      required:
-        - name
-        - type
-        - value
-      properties:
-        name:
-          type: string
-          description: Name of the attribute
-          example: name
-        value:
-          type: string
-          description: Default or example value of the attribute
-          example: John Doe
-        type:
-          $ref: '#/components/schemas/CredentialAttributeType'
     CredentialRepresentation:
       type: object
       required:
@@ -2651,6 +2062,133 @@ components:
           type: string
           description: Unique identifier for the credential representation
           example: 123e4567-e89b-12d3-abcd-426614174456
+
+    CredentialType:
+      type: string
+      enum:
+        - ANONCRED
+      description: Types of supported credentials
+
+    IssuanceFlowResponse:
+      type: object
+      properties:
+        issuanceFlow:
+            $ref: '#/components/schemas/IssuanceFlow'
+    IssuanceFlow:
+      allOf:
+        - $ref: '#/components/schemas/Scenario'
+        - type: object
+          required:
+            - issuer
+          properties:
+            issuer:
+              $ref: '#/components/schemas/Issuer'
+      description: Scenario specialization for credential issuance
+
+    IssuanceFlowRequest:
+      allOf:
+        - $ref: '#/components/schemas/ScenarioRequest'
+        - type: object
+          required:
+            - issuer
+          properties:
+            issuer:
+              type: string
+              example: "313e4567-e89b-12d3-a456-426614174469"
+      description: Scenario specialization for credential issuance
+
+    IssuanceFlowsResponse:
+      properties:
+        issuanceFlows:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuanceFlow'
+
+    Issuer:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - type
+        - credentialDefinitions
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the issuer
+          example: 123e4567-e89b-12d3-abcd-426614174456
+        name:
+          type: string
+          description: Name of the issuer
+          example: Issuer Name
+        description:
+          type: string
+          description: Detailed description of the issuer
+          example: This issuer issues credentials to users
+        type:
+          $ref: '#/components/schemas/IssuerType'
+        organization:
+          type: string
+          description: Organization the issuer belongs to
+          example: Acme Corporation
+        logo:
+          $ref: '#/components/schemas/Asset'
+        credentialDefinitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+
+    IssuerRequest:
+      type: object
+      required:
+        - name
+        - description
+        - type
+        - credentialDefinitions
+      properties:
+        name:
+          type: string
+          description: Name of the issuer
+          example: Issuer Name
+        description:
+          type: string
+          description: Detailed description of the issuer
+          example: This issuer issues credentials to users
+        type:
+          $ref: '#/components/schemas/IssuerType'
+        organization:
+          type: string
+          description: Organization the issuer belongs to
+          example: Acme Corporation
+        logo:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174469
+        credentialDefinitions:
+          type: array
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+
+    IssuerResponse:
+      type: object
+      properties:
+        issuer:
+          $ref: '#/components/schemas/Issuer'
+
+    IssuersResponse:
+      type: object
+      properties:
+        issuers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issuer'
+
+    IssuerType:
+      type: string
+      enum:
+        - ARIES
+      description: Types of supported issuers
+
     OCARepresentation:
       allOf:
         - $ref: '#/components/schemas/CredentialRepresentation'
@@ -2672,6 +2210,186 @@ components:
               description: URL to the OCA bundle for this representation
               example: https://example.com/ocaBundle.json
       description: Overlay Capture Architecture representation of a credential
+
+    Persona:
+      type: object
+      required:
+        - name
+        - role
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the persona
+          example: 123e4567-e89b-12d3-a456-426614174456
+        name:
+          type: string
+          description: Name of the persona
+          example: John Doe
+        role:
+          type: string
+          description: Role of the persona in the system
+          example: Verifier
+        description:
+          type: string
+          description: Detailed description of the persona
+          example: John Doe is a verifier for the system
+        headshotImage:
+          $ref: '#/components/schemas/Asset'
+        bodyImage:
+          $ref: '#/components/schemas/Asset'
+
+    PersonaRequest:
+      type: object
+      required:
+        - name
+        - role
+      properties:
+        name:
+          type: string
+          description: Name of the persona
+          example: John Doe
+        role:
+          type: string
+          description: Role of the persona in the system
+          example: Verifier
+        description:
+          type: string
+          description: Detailed description of the persona
+          example: John Doe is a verifier for the system
+        headshotImage:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174456
+        bodyImage:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174877
+
+    PersonaResponse:
+      type: object
+      properties:
+        persona:
+          $ref: '#/components/schemas/Persona'
+
+    PersonasResponse:
+      properties:
+        personas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Persona'
+
+    PresentationFlow:
+      allOf:
+        - $ref: '#/components/schemas/Scenario'
+        - type: object
+          required:
+            - relyingParty
+          properties:
+            relyingParty:
+              $ref: '#/components/schemas/RelyingParty'
+      description: Scenario specialization for credential presentation
+
+    PresentationFlowRequest:
+      allOf:
+        - $ref: '#/components/schemas/ScenarioRequest'
+        - type: object
+          required:
+            - relyingParty
+          properties:
+            relyingParty:
+              type: string
+              example: "313e4567-e89b-12d3-a456-426614174469"
+
+    PresentationFlowsResponse:
+      properties:
+        presentationFlows:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationFlow'
+
+    RelyingPartiesResponse:
+      type: object
+      properties:
+        relyingParties:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelyingParty'
+
+    RelyingParty:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - type
+        - credentialDefinitions
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the relying party
+          example: 76543210-e89b-12d3-a456-426614174469
+        name:
+          type: string
+          description: Name of the relying party
+          example: Relying Party Name
+        description:
+          type: string
+          description: Detailed description of the relying party
+          example: This relying party verifies credentials from issuers
+        type:
+          $ref: '#/components/schemas/RelyingPartyType'
+        organization:
+          type: string
+          description: Organization the relying party belongs to
+          example: Acme Corporation
+        logo:
+          $ref: '#/components/schemas/Asset'
+        credentialDefinitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+
+    RelyingPartyRequest:
+      type: object
+      required:
+        - name
+        - type
+        - description
+        - credentialDefinitions
+      properties:
+        name:
+          type: string
+          description: Name of the relying party
+          example: Relying Party Name
+        description:
+          type: string
+          description: Detailed description of the relying party
+          example: This relying party verifies credentials from issuers
+        type:
+          $ref: '#/components/schemas/RelyingPartyType'
+        organization:
+          type: string
+          description: Organization the relying party belongs to
+          example: Acme Corporation
+        logo:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174469
+        credentialDefinitions:
+          type: array
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+
+    RelyingPartyResponse:
+      type: object
+      properties:
+        relyingParty:
+          $ref: '#/components/schemas/RelyingParty'
+
+    RelyingPartyType:
+      type: string
+      enum:
+        - ARIES
+      description: Types of supported relying parties
+
     RevocationInfo:
       type: object
       required:
@@ -2689,129 +2407,305 @@ components:
           type: string
           description: Detailed description of the revocation process or requirements
           example: This credential is revocable
-    AnonCredRevocation:
-      allOf:
-        - $ref: '#/components/schemas/RevocationInfo'
-        - type: object
-          required:
-            - registryId
-          properties:
-            registryId:
-              type: string
-              description: Identifier of the revocation registry for AnonCreds
-              example: 123e4567-e89b-12d3-a456-426614174123
-      description: Anonymous Credentials specific revocation information
 
-    # Showcase:
-    #   type: object
-    #   required:
-    #     - name
-    #     - description
-    #   properties:
-    #     id:
-    #       type: string
-    #       description: Unique identifier for the showcase
-    #       example: 123e4567-e89b-12d3-a456-426614174456
-    #     name:
-    #       type: string
-    #       description: Name of the showcase
-    #       example: Credential Showcase BCGov
-    #     description:
-    #       type: string
-    #       description: Description of the showcase
-    #       example: Collection of credential usage scenarios
-    #     status:
-    #       type: string
-    #       enum: [pending, active, archived]
-    #       description: Current status of the showcase
-    #       example: pending
-    #     hidden:
-    #       type: boolean
-    #       description: Whether the showcase is hidden from public view
-    #       default: false
-    #     scenarios:
-    #       type: array
-    #       description: List of scenarios in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/Scenario'
-    #     credentials:
-    #       type: array
-    #       description: List of credential definitions used in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/CredentialDefinitionsResponse'
-    #     personas:
-    #       type: object
-    #       description: List of personas involved in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/PersonasResponse'
-    #     workflows:
-    #       type: array
-    #       description: List of workflows used in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/Workflow'
+    Scenario:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the scenario
+          example: 789e4567-e89b-12d3-a456-434314174123
+        name:
+          type: string
+          description: Name of the scenario
+          example: Credential Issuance
+        description:
+          type: string
+          description: Detailed description of the scenario
+          example: This scenario issues credentials to users
+        type:
+          type: string
+          enum: [ISSUANCE, PRESENTATION]
+          description: Type of scenario
+          example: ISSUANCE
+        steps:
+          type: array
+          description: Ordered list of steps in the scenario
+          items:
+            $ref: '#/components/schemas/Step'
+        personas:
+          type: array
+          description: References to personas used in this scenario
+          items:
+            $ref: '#/components/schemas/Persona'
 
-    # Scenario:
-    #   type: object
-    #   required:
-    #     - name
-    #     - description
-    #   properties:
-    #     id:
-    #       type: string
-    #       description: Unique identifier for the scenario
-    #       example: 123e4567-e89b-12d3-a456-426614174456
-    #     name:
-    #       type: string
-    #       description: Name of the scenario
-    #       example: University Parking Journey
-    #     description:
-    #       type: string
-    #       description: Description of the scenario
-    #       example: Student obtaining and using parking credentials
-    #     workflows:
-    #       type: array
-    #       description: References to workflows used in this scenario
-    #       items:
-    #         type: string
-    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-    #     personas:
-    #       type: array
-    #       description: References to personas involved in this scenario
-    #       items:
-    #         type: string
-    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-    # ScenarioRequest:
-    #   type: object
-    #   required:
-    #     - name
-    #     - description
-    #   properties:
-    #     name:
-    #       type: string
-    #       description: Name of the scenario
-    #       example: University Parking Journey
-    #     description:
-    #       type: string
-    #       description: Description of the scenario
-    #       example: Student obtaining and using parking credentials
-    #     workflows:
-    #       type: array
-    #       description: References to workflows used in this scenario
-    #       items:
-    #         type: string
-    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-    #     personas:
-    #       type: array
-    #       description: References to personas involved in this scenario
-    #       items:
-    #         type: string
-    #       example: ['123e4567-e89b-12d3-a456-426614174456', '123e4567-e89b-12d3-a456-426614174456']
-    # ScenarioResponse:
-    #   properties:
-    #     assets:
-    #       type: array
-    #       items:
-    #         $ref: '#/components/schemas/Scenario'
+    ScenarioRequest:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: Name of the scenario
+          example: Credential Issuance
+        description:
+          type: string
+          description: Detailed description of the scenario
+          example: This scenario issues credentials to users
+        steps:
+          type: array
+          description: Ordered list of steps in the scenario
+          items:
+            $ref: '#/components/schemas/StepRequest'
+        personas:
+          type: array
+          description: References to personas used in this scenario
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174456
+
+    Showcase:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the showcase
+          example: 123e4567-e89b-12d3-a456-426614174456
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            $ref: '#/components/schemas/Scenario'
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+        personas:
+          type: object
+          description: List of personas involved in this showcase
+          items:
+            $ref: '#/components/schemas/Persona'
+
+    ShowcaseRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+        personas:
+          type: array
+          description: List of personas involved in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+
+    ShowcaseResponse:
+      type: object
+      properties:
+        showcase:
+          $ref: '#/components/schemas/Showcase'
+
+    Step:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - order
+        - type
+        - actions
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the step
+          example: 123e4567-e89b-12d3-a456-434314174000
+        title:
+          type: string
+          description: Title of the step
+          example: Verify Identity
+        description:
+          type: string
+          description: Detailed description of the step
+          example: Verify the user's identity
+        order:
+          type: integer
+          description: Order of the step in the scenario
+          minimum: 0
+          example: 1
+        type:
+          $ref: '#/components/schemas/StepType'
+        subFlow:
+          $ref: '#/components/schemas/Scenario'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StepAction'
+        asset:
+          $ref: '#/components/schemas/Asset'
+
+    StepAction:
+      type: object
+      required:
+        - id
+        - actionType
+        - title
+        - text
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the action
+          example: 123e4567-ef2d-12d3-abcd-426614174456
+        actionType:
+          type: string
+          description: Type of action
+          example: EXAMPLE_ACTION
+        title:
+          type: string
+          description: Title of the action
+          example: Connect Wallet
+        text:
+          type: string
+          description: Descriptive text for the action
+          example: Connect your wallet to continue
+      discriminator:
+        propertyName: actionType
+        mapping:
+          ARIES_OOB: '#/components/schemas/AriesOOBAction'
+
+    StepActionRequest:
+      type: object
+      required:
+        - actionType
+        - title
+        - text
+      properties:
+        title:
+          type: string
+          description: Title of the action
+          example: Connect Wallet
+        text:
+          type: string
+          description: Descriptive text for the action
+          example: Connect your wallet to continue
+        actionType:
+          type: string
+          example: HUMAN_TASK
+      discriminator:
+        propertyName: actionType
+        mapping:
+          ARIES_OOB: '#/components/schemas/AriesOOBAction'
+
+    StepActionsResponse:
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StepAction'
+
+    StepRequest:
+      type: object
+      required:
+        - title
+        - description
+        - order
+        - type
+        - actions
+      properties:
+        title:
+          type: string
+          description: Title of the step
+          example: Verify Identity
+        description:
+          type: string
+          description: Detailed description of the step
+          example: Verify the user's identity
+        order:
+          type: integer
+          description: Order of the step in the scenario
+          minimum: 0
+          example: 1
+        type:
+          $ref: '#/components/schemas/StepType'
+        subFlow:
+          type: string
+          description: Optional sub-scenario for this step
+          example: 123e4567-e89b-12d3-a456-434314174000
+        actions:
+          type: array
+          description: List of actions associated with this step
+          items:
+            $ref: '#/components/schemas/StepActionRequest'
+        asset:
+          type: string
+          description: Asset referenced by this step
+          example: 456e4567-e89b-12d3-a456-426614174000
+
+    StepsResponse:
+      properties:
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Step'
+
+    StepType:
+      type: string
+      enum:
+        - HUMAN_TASK
+        - SERVICE
+        - WORKFLOW
+      description: Type of step in the scenario
+      example: HUMAN_TASK
 
   responses:
     'BadRequest':

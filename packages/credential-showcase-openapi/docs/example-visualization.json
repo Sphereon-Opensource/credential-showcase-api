@@ -4,22 +4,6 @@
   "description": "Collection of credential usage scenarios",
   "status": "pending",
   "hidden": false,
-  "scenarios": [
-    {
-      "id": "university-parking-scenario",
-      "name": "University Parking Journey",
-      "description": "Student obtaining and using parking credentials",
-      "workflowRefs": [
-        "issuance-flow-123",
-        "presentation-flow-123"
-      ],
-      "personaRefs": [
-        "issuer-persona-123",
-        "holder-persona-123",
-        "verifier-persona-123"
-      ]
-    }
-  ],
   "credentials": [
     {
       "id": "university-parking-123",
@@ -65,14 +49,13 @@
       }
     }
   ],
-  "workflows": [
+  "scenarios": [
     {
       "id": "issuance-flow-123",
       "type": "ISSUANCE",
       "name": "Parking Permit Issuance",
       "description": "Workflow for issuing parking permits",
-      "steps": [
-      ],
+      "steps": [],
       "credentialDefinitionRefs": ["university-parking-123"]
     },
     {
@@ -80,10 +63,8 @@
       "type": "PRESENTATION",
       "name": "Parking Permit Verification",
       "description": "Workflow for verifying parking permits",
-      "steps": [
-      ],
+      "steps": [],
       "credentialDefinitionRefs": ["university-parking-123"]
     }
   ]
 }
-

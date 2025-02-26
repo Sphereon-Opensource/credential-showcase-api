@@ -17,7 +17,7 @@ import {
     NewCredentialDefinition,
     NewPresentationFlow,
     NewStep,
-    NewStepAction,
+    NewAriesOOBAction,
     CredentialAttributeType,
     CredentialType,
     StepType,
@@ -130,7 +130,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -144,7 +170,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -226,7 +278,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -240,7 +318,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -267,7 +371,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -281,7 +411,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -309,7 +465,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -336,7 +518,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -363,7 +571,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -377,7 +611,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -430,7 +690,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -444,7 +730,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -479,7 +791,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -493,7 +831,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -525,7 +889,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -539,7 +929,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -564,12 +980,64 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title1',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text1'
+                            text: 'example_text1',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title2',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text2'
+                            text: 'example_text2',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -632,7 +1100,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -646,7 +1140,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -684,7 +1204,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -698,7 +1244,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -722,7 +1294,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -751,7 +1349,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -775,7 +1399,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -803,7 +1453,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -827,7 +1503,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -855,7 +1557,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -876,12 +1604,64 @@ describe('Database presentation flow repository tests', (): void => {
                 {
                     title: 'example_title1',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text1'
+                    text: 'example_text1',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 },
                 {
                     title: 'example_title2',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text2'
+                    text: 'example_text2',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 }
             ]
         };
@@ -924,7 +1704,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -963,12 +1769,64 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title1',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text1'
+                            text: 'example_text1',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title2',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text2'
+                            text: 'example_text2',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1014,7 +1872,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -1028,7 +1912,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1075,7 +1985,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -1089,7 +2025,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1125,7 +2087,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1143,12 +2131,64 @@ describe('Database presentation flow repository tests', (): void => {
                 {
                     title: 'example_title1',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text1'
+                    text: 'example_text1',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 },
                 {
                     title: 'example_title2',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text2'
+                    text: 'example_text2',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 }
             ],
             asset: savedPresentationFlow.steps[0].asset!.id
@@ -1187,7 +2227,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1223,7 +2289,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1234,10 +2326,36 @@ describe('Database presentation flow repository tests', (): void => {
         const savedPresentationFlow = await repository.create(presentationFlow)
         expect(savedPresentationFlow).toBeDefined()
 
-        const action: NewStepAction = {
+        const action: NewAriesOOBAction = {
             title: 'example_title',
             actionType: StepActionType.ARIES_OOB,
-            text: 'example_text'
+            text: 'example_text',
+            proofRequest: {
+                attributes: {
+                    attribute1: {
+                        attributes: ['attribute1', 'attribute2'],
+                        restrictions: ['restriction1', 'restriction2']
+                    },
+                    attribute2: {
+                        attributes: ['attribute1', 'attribute2'],
+                        restrictions: ['restriction1', 'restriction2']
+                    }
+                },
+                predicates: {
+                    predicate1: {
+                        name: 'example_name',
+                        type: 'example_type',
+                        value: 'example_value',
+                        restrictions: ['restriction1', 'restriction2']
+                    },
+                    predicate2: {
+                        name: 'example_name',
+                        type: 'example_type',
+                        value: 'example_value',
+                        restrictions: ['restriction1', 'restriction2']
+                    }
+                }
+            }
         };
         const savedStepAction = await repository.createStepAction(savedPresentationFlow.id, savedPresentationFlow.steps[0].id, action)
         expect(savedStepAction).toBeDefined();
@@ -1271,7 +2389,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1306,12 +2450,64 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1348,12 +2544,64 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1389,7 +2637,33 @@ describe('Database presentation flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1400,9 +2674,10 @@ describe('Database presentation flow repository tests', (): void => {
         const savedPresentationFlow = await repository.create(presentationFlow)
         expect(savedPresentationFlow).toBeDefined()
 
-        const updatedStepAction: NewStepAction = {
+        const updatedStepAction: NewAriesOOBAction = {
             ...savedPresentationFlow.steps[0].actions[0],
             title: 'new_title',
+            proofRequest: savedPresentationFlow.steps[0].actions[0].proofRequest!
         }
         const updatedStepResult = await repository.updateStepAction(savedPresentationFlow.id, savedPresentationFlow.steps[0].id, savedPresentationFlow.steps[0].actions[0].id, updatedStepAction)
 

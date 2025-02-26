@@ -6,6 +6,7 @@ import RelyingPartyRepository from './RelyingPartyRepository';
 import PersonaRepository from './PersonaRepository';
 import { NotFoundError } from '../../errors';
 import {
+    ariesProofRequests,
     assets,
     credentialDefinitions,
     stepActions,
@@ -18,10 +19,10 @@ import {
     PresentationFlow,
     NewPresentationFlow,
     NewStep,
-    NewStepAction,
+    NewAriesOOBAction,
     RepositoryDefinition,
     Step,
-    StepAction,
+    AriesOOBAction,
     WorkflowType
 } from '../../types';
 
@@ -88,13 +89,29 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                 ))
                 .returning();
 
+            const proofRequestsResult = await tx.insert(ariesProofRequests)
+                .values(presentationFlow.steps.flatMap((step, index) =>
+                    step.actions.map((action, actionIndex) => {
+                        const stepAction = stepActionsResult[index * step.actions.length + actionIndex]
+                        return {
+                            ...action.proofRequest,
+                            stepAction: stepAction.id,
+                        }
+                    })
+                ))
+                .returning();
+
             const stepAssetsResult = await tx.query.assets.findMany({
                 where: inArray(assets.id, stepsResult.map(step => step.asset).filter(assetId => assetId !== null))
             })
 
             const flowSteps = stepsResult.map(stepResult => ({
                 ...stepResult,
-                actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
+                actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id)
+                    .map(action => ({
+                        ...action,
+                        proofRequest: proofRequestsResult.find(proofRequest => proofRequest.stepAction === action.id)
+                    })),
                 asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
             }))
 
@@ -154,11 +171,7 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                 },
             })
 
-            const selectedSteps = await tx.select({ id: steps.id })
-                .from(steps)
-                .where(eq(steps.workflow, presentationFlowId));
             await tx.delete(steps).where(eq(steps.workflow, presentationFlowId))
-            await tx.delete(stepActions).where(inArray(stepActions.step, selectedSteps.map(step => step.id)));
 
             const stepsResult = await tx.insert(steps)
                 .values(presentationFlow.steps.map((step: NewStep) => ({
@@ -176,13 +189,29 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                 ))
                 .returning();
 
+            const proofRequestsResult = await tx.insert(ariesProofRequests)
+                .values(presentationFlow.steps.flatMap((step, index) =>
+                    step.actions.map((action, actionIndex) => {
+                        const stepAction = stepActionsResult[index * step.actions.length + actionIndex]
+                        return {
+                            ...action.proofRequest,
+                            stepAction: stepAction.id,
+                        }
+                    })
+                ))
+                .returning();
+
             const stepAssetsResult = await tx.query.assets.findMany({
                 where: inArray(assets.id, stepsResult.map(step => step.asset).filter(assetId => assetId !== null))
             })
 
             const flowSteps = stepsResult.map(stepResult => ({
                 ...stepResult,
-                actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id),
+                actions: stepActionsResult.filter(stepActionResult => stepActionResult.step === stepResult.id)
+                    .map(action => ({
+                        ...action,
+                        proofRequest: proofRequestsResult.find(proofRequest => proofRequest.stepAction === action.id)
+                    })),
                 asset: stepAssetsResult.find(asset => asset.id === stepResult.asset)
             }))
 
@@ -201,7 +230,11 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             with: {
                 steps: {
                     with: {
-                        actions: true,
+                        actions: {
+                            with: {
+                                proofRequest: true
+                            }
+                        },
                         asset: true
                     }
                 },
@@ -256,7 +289,11 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             with: {
                 steps: {
                     with: {
-                        actions: true,
+                        actions: {
+                            with: {
+                                proofRequest: true
+                            }
+                        },
                         asset: true
                     }
                 },
@@ -320,15 +357,28 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
                 .returning();
 
             const actionsResult = await tx.insert(stepActions)
-                .values(step.actions.map((action: NewStepAction) => ({
+                .values(step.actions.map((action: NewAriesOOBAction) => ({
                     ...action,
                     step: stepResult.id
                 })))
                 .returning();
 
+            const proofRequestsResult = await tx.insert(ariesProofRequests)
+                .values(step.actions.map((action, index) => {
+                    const stepAction = actionsResult[index]
+                    return {
+                        ...action.proofRequest,
+                        stepAction: stepAction.id,
+                    }
+                }))
+                .returning();
+
             return {
                 ...stepResult,
-                actions: actionsResult,
+                actions: actionsResult.map(action => ({
+                    ...action,
+                    proofRequest: proofRequestsResult.find(proofRequest => proofRequest.stepAction === action.id)
+                })),
                 asset: assetResult
             }
         })
@@ -361,15 +411,28 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             await tx.delete(stepActions).where(eq(stepActions.step, stepId))
 
             const actionsResult = await tx.insert(stepActions)
-                .values(step.actions.map((action: NewStepAction) => ({
+                .values(step.actions.map((action: NewAriesOOBAction) => ({
                     ...action,
                     step: stepResult.id
                 })))
                 .returning();
 
+            const proofRequestsResult = await tx.insert(ariesProofRequests)
+                .values(step.actions.map((action, index) => {
+                    const stepAction = actionsResult[index]
+                    return {
+                        ...action.proofRequest,
+                        stepAction: stepAction.id,
+                    }
+                }))
+                .returning();
+
             return {
                 ...stepResult,
-                actions: actionsResult,
+                actions: actionsResult.map(action => ({
+                    ...action,
+                    proofRequest: proofRequestsResult.find(proofRequest => proofRequest.stepAction === action.id)
+                })),
                 asset: assetResult
             }
         })
@@ -379,7 +442,11 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
         const result = await (await this.databaseService.getConnection()).query.steps.findFirst({
             where: and(and(eq(steps.id, stepId), eq(steps.workflow, presentationFlowId))),
             with: {
-                actions: true,
+                actions: {
+                    with: {
+                        proofRequest: true
+                    }
+                },
                 asset: true
             }
         })
@@ -396,7 +463,11 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             where: eq(steps.workflow, presentationFlowId),
             with: {
                 asset: true,
-                actions: true,
+                actions: {
+                    with: {
+                        proofRequest: true
+                    }
+                },
             },
         });
 
@@ -405,14 +476,29 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
 
     // PRESENTATION FLOW STEP ACTION
 
-    async createStepAction(presentationFlowId: string, stepId: string, action: NewStepAction): Promise<StepAction> {
+    async createStepAction(presentationFlowId: string, stepId: string, action: NewAriesOOBAction): Promise<AriesOOBAction> {
         await this.findByStepId(presentationFlowId, stepId)
-        const [result] = await (await this.databaseService.getConnection())
-            .insert(stepActions)
-            .values({ ...action, step: stepId })
-            .returning();
 
-        return result
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<AriesOOBAction> => {
+            const [actionResult] = await tx.insert(stepActions)
+                .values({
+                    ...action,
+                    step: stepId
+                })
+                .returning();
+
+            const [proofRequestsResult] = await tx.insert(ariesProofRequests)
+                .values({
+                    ...action.proofRequest,
+                    stepAction: actionResult.id
+                })
+                .returning();
+
+            return {
+                ...actionResult,
+                proofRequest: proofRequestsResult
+            }
+        })
     }
 
     async deleteStepAction(presentationFlowId: string, stepId: string, actionId: string): Promise<void> {
@@ -422,27 +508,42 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
             .where(and(eq(stepActions.id, actionId), eq(stepActions.step, stepId)));
     }
 
-    async updateStepAction(presentationFlowId: string, stepId: string, actionId: string, action: NewStepAction): Promise<StepAction> {
+    async updateStepAction(presentationFlowId: string, stepId: string, actionId: string, action: NewAriesOOBAction): Promise<AriesOOBAction> {
         await this.findByStepId(presentationFlowId, stepId)
 
-        const [result] = await (await this.databaseService.getConnection())
-            .update(stepActions)
-            .set({
-                ...action,
-                step: stepId
-            })
-            .where(eq(stepActions.id, actionId))
-            .returning();
+        return (await this.databaseService.getConnection()).transaction(async (tx): Promise<AriesOOBAction> => {
+            const [actionResult] = await tx.update(stepActions)
+                .set({
+                    ...action,
+                    step: stepId
+                })
+                .where(eq(stepActions.id, actionId))
+                .returning();
 
-        return result
+            await tx.delete(ariesProofRequests).where(eq(ariesProofRequests.stepAction, actionId))
+
+            const [proofRequestsResult] = await tx.insert(ariesProofRequests)
+                .values({
+                    ...action.proofRequest,
+                    stepAction: actionResult.id
+                })
+                .returning();
+
+            return {
+                ...actionResult,
+                proofRequest: proofRequestsResult
+            }
+        })
     }
 
-    async findByStepActionId(presentationFlowId: string, stepId: string, actionId: string): Promise<StepAction> {
+    async findByStepActionId(presentationFlowId: string, stepId: string, actionId: string): Promise<AriesOOBAction> {
         await this.findByStepId(presentationFlowId, stepId)
-        const [result] = await (await this.databaseService.getConnection())
-            .select()
-            .from(stepActions)
-            .where(eq(stepActions.id, actionId))
+        const result = await (await this.databaseService.getConnection()).query.stepActions.findFirst({
+            where: and(eq(stepActions.id, actionId)),
+            with: {
+                proofRequest: true
+            }
+        })
 
         if (!result) {
             return Promise.reject(new NotFoundError(`No action found for step id ${stepId} and action id: ${actionId}`))
@@ -451,11 +552,14 @@ class PresentationFlowRepository implements RepositoryDefinition<PresentationFlo
         return result
     }
 
-    async findAllStepActions(presentationFlowId: string, stepId: string): Promise<StepAction[]> {
+    async findAllStepActions(presentationFlowId: string, stepId: string): Promise<AriesOOBAction[]> {
         await this.findByStepId(presentationFlowId, stepId)
         return (await this.databaseService.getConnection()).query.stepActions.findMany({
-            where: eq(stepActions.step, stepId)
-        });
+            where: and(eq(stepActions.step, stepId)),
+            with: {
+                proofRequest: true
+            }
+        })
     }
 }
 

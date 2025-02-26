@@ -2765,32 +2765,7 @@ describe('Database issuance flow repository tests', (): void => {
         const updatedStepAction: NewAriesOOBAction = {
             ...savedIssuanceFlow.steps[0].actions[0],
             title: 'new_title',
-            proofRequest: {
-                attributes: {
-                    attribute1: {
-                        attributes: ['attribute1', 'attribute2'],
-                        restrictions: ['restriction1', 'restriction2']
-                    },
-                    attribute2: {
-                        attributes: ['attribute1', 'attribute2'],
-                        restrictions: ['restriction1', 'restriction2']
-                    }
-                },
-                predicates: {
-                    predicate1: {
-                        name: 'example_name',
-                        type: 'example_type',
-                        value: 'example_value',
-                        restrictions: ['restriction1', 'restriction2']
-                    },
-                    predicate2: {
-                        name: 'example_name',
-                        type: 'example_type',
-                        value: 'example_value',
-                        restrictions: ['restriction1', 'restriction2']
-                    }
-                }
-            }
+            proofRequest: savedIssuanceFlow.steps[0].actions[0].proofRequest!
         }
         const updatedStepResult = await repository.updateStepAction(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, savedIssuanceFlow.steps[0].actions[0].id, updatedStepAction)
 

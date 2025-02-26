@@ -17,7 +17,7 @@ import {
     NewCredentialDefinition,
     NewIssuanceFlow,
     NewStep,
-    NewStepAction,
+    NewAriesOOBAction,
     CredentialAttributeType,
     CredentialType,
     StepType,
@@ -130,7 +130,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -144,7 +170,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -167,6 +219,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow.steps[0].actions[0].title).toEqual(issuanceFlow.steps[0].actions[0].title)
         expect(savedIssuanceFlow.steps[0].actions[0].actionType).toEqual(issuanceFlow.steps[0].actions[0].actionType)
         expect(savedIssuanceFlow.steps[0].actions[0].text).toEqual(issuanceFlow.steps[0].actions[0].text)
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest).not.toBeNull()
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.attributes).not.toBeNull()
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.predicates).not.toBeNull()
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(savedIssuanceFlow.steps[0].actions[0].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
         expect(savedIssuanceFlow.steps[0].asset).not.toBeNull()
         expect(savedIssuanceFlow.steps[0].asset!.mediaType).toEqual(asset.mediaType)
         expect(savedIssuanceFlow.steps[0].asset!.fileName).toEqual(asset.fileName)
@@ -226,7 +289,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -240,7 +329,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -267,7 +382,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -281,7 +422,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -309,7 +476,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -336,7 +529,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -363,7 +582,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -377,7 +622,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -395,6 +666,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.description).toEqual(issuanceFlow.description)
         expect(fromDb.steps).toBeDefined()
         expect(fromDb.steps.length).toEqual(2)
+        expect(fromDb.steps[0].actions[0].proofRequest).not.toBeNull()
+        expect(fromDb.steps[0].actions[0].proofRequest!.attributes).not.toBeNull()
+        expect(fromDb.steps[0].actions[0].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(fromDb.steps[0].actions[0].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(fromDb.steps[0].actions[0].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(fromDb.steps[0].actions[0].proofRequest!.predicates).not.toBeNull()
+        expect(fromDb.steps[0].actions[0].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(fromDb.steps[0].actions[0].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(fromDb.steps[0].actions[0].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(fromDb.steps[0].actions[0].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(fromDb.steps[0].actions[0].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
         expect(fromDb.personas).toBeDefined();
         expect(fromDb.personas.length).toEqual(2)
         expect(fromDb.personas[0].name).toEqual(persona1.name)
@@ -430,7 +712,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -444,7 +752,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -479,7 +813,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -493,7 +853,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -525,7 +911,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -539,7 +951,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -564,12 +1002,64 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title1',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text1'
+                            text: 'example_text1',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title2',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text2'
+                            text: 'example_text2',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -597,6 +1087,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(updatedIssuanceFlowResult.steps[0].asset!.fileName).toEqual(asset.fileName)
         expect(updatedIssuanceFlowResult.steps[0].asset!.description).toEqual(asset.description)
         expect(updatedIssuanceFlowResult.steps[0].asset!.content).toStrictEqual(asset.content)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest).not.toBeNull()
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.attributes).not.toBeNull()
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.predicates).not.toBeNull()
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(updatedIssuanceFlowResult.steps[0].actions[0].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
         expect(updatedIssuanceFlowResult.personas).toBeDefined();
         expect(updatedIssuanceFlowResult.personas.length).toEqual(1)
         expect(updatedIssuanceFlowResult.personas[0].name).toEqual(persona1.name)
@@ -632,7 +1133,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -646,7 +1173,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -684,7 +1237,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -698,7 +1277,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -722,7 +1327,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -751,7 +1382,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -775,7 +1432,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -803,7 +1486,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -827,7 +1536,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -855,7 +1590,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -876,12 +1637,64 @@ describe('Database issuance flow repository tests', (): void => {
                 {
                     title: 'example_title1',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text1'
+                    text: 'example_text1',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 },
                 {
                     title: 'example_title2',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text2'
+                    text: 'example_text2',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 }
             ]
         };
@@ -906,6 +1719,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.steps[1].asset!.fileName).toEqual(asset.fileName)
         expect(fromDb.steps[1].asset!.description).toEqual(asset.description)
         expect(fromDb.steps[1].asset!.content).toStrictEqual(asset.content);
+        expect(fromDb.steps[1].actions[0].proofRequest).not.toBeNull()
+        expect(fromDb.steps[1].actions[0].proofRequest!.attributes).not.toBeNull()
+        expect(fromDb.steps[1].actions[0].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(fromDb.steps[1].actions[0].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(fromDb.steps[1].actions[0].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(fromDb.steps[1].actions[0].proofRequest!.predicates).not.toBeNull()
+        expect(fromDb.steps[1].actions[0].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(fromDb.steps[1].actions[0].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(fromDb.steps[1].actions[0].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(fromDb.steps[1].actions[0].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(fromDb.steps[1].actions[0].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
     })
 
     it('Should throw error when adding issuance flow step with no actions', async (): Promise<void> => {
@@ -924,7 +1748,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -963,12 +1813,64 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title1',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text1'
+                            text: 'example_text1',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title2',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text2'
+                            text: 'example_text2',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -996,6 +1898,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.asset!.fileName).toEqual(asset.fileName)
         expect(fromDb.asset!.description).toEqual(asset.description)
         expect(fromDb.asset!.content).toStrictEqual(asset.content);
+        expect(fromDb.actions[0].proofRequest).not.toBeNull()
+        expect(fromDb.actions[0].proofRequest!.attributes).not.toBeNull()
+        expect(fromDb.actions[0].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(fromDb.actions[0].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(fromDb.actions[0].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(fromDb.actions[0].proofRequest!.predicates).not.toBeNull()
+        expect(fromDb.actions[0].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(fromDb.actions[0].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(fromDb.actions[0].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(fromDb.actions[0].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(fromDb.actions[0].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
     })
 
     it('Should get all issuance flow steps from database', async (): Promise<void> => {
@@ -1014,7 +1927,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -1028,7 +1967,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1075,7 +2040,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -1089,7 +2080,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1125,7 +2142,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1143,12 +2186,64 @@ describe('Database issuance flow repository tests', (): void => {
                 {
                     title: 'example_title1',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text1'
+                    text: 'example_text1',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 },
                 {
                     title: 'example_title2',
                     actionType: StepActionType.ARIES_OOB,
-                    text: 'example_text2'
+                    text: 'example_text2',
+                    proofRequest: {
+                        attributes: {
+                            attribute1: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            attribute2: {
+                                attributes: ['attribute1', 'attribute2'],
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        },
+                        predicates: {
+                            predicate1: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            },
+                            predicate2: {
+                                name: 'example_name',
+                                type: 'example_type',
+                                value: 'example_value',
+                                restrictions: ['restriction1', 'restriction2']
+                            }
+                        }
+                    }
                 }
             ],
             asset: savedIssuanceFlow.steps[0].asset!.id
@@ -1169,6 +2264,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(updatedStepResult.asset!.fileName).toEqual(asset.fileName)
         expect(updatedStepResult.asset!.description).toEqual(asset.description)
         expect(updatedStepResult.asset!.content).toStrictEqual(asset.content)
+        expect(updatedStepResult.actions[0].proofRequest).not.toBeNull()
+        expect(updatedStepResult.actions[0].proofRequest!.attributes).not.toBeNull()
+        expect(updatedStepResult.actions[0].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(updatedStepResult.actions[0].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(updatedStepResult.actions[0].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(updatedStepResult.actions[0].proofRequest!.predicates).not.toBeNull()
+        expect(updatedStepResult.actions[0].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(updatedStepResult.actions[0].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(updatedStepResult.actions[0].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(updatedStepResult.actions[0].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(updatedStepResult.actions[0].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
     })
 
     it('Should throw error when updating issuance flow step with no actions', async (): Promise<void> => {
@@ -1187,7 +2293,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1223,7 +2355,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1234,10 +2392,36 @@ describe('Database issuance flow repository tests', (): void => {
         const savedIssuanceFlow = await repository.create(issuanceFlow)
         expect(savedIssuanceFlow).toBeDefined()
 
-        const action: NewStepAction = {
+        const action: NewAriesOOBAction = {
             title: 'example_title',
             actionType: StepActionType.ARIES_OOB,
-            text: 'example_text'
+            text: 'example_text',
+            proofRequest: {
+                attributes: {
+                    attribute1: {
+                        attributes: ['attribute1', 'attribute2'],
+                        restrictions: ['restriction1', 'restriction2']
+                    },
+                    attribute2: {
+                        attributes: ['attribute1', 'attribute2'],
+                        restrictions: ['restriction1', 'restriction2']
+                    }
+                },
+                predicates: {
+                    predicate1: {
+                        name: 'example_name',
+                        type: 'example_type',
+                        value: 'example_value',
+                        restrictions: ['restriction1', 'restriction2']
+                    },
+                    predicate2: {
+                        name: 'example_name',
+                        type: 'example_type',
+                        value: 'example_value',
+                        restrictions: ['restriction1', 'restriction2']
+                    }
+                }
+            }
         };
         const savedStepAction = await repository.createStepAction(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, action)
         expect(savedStepAction).toBeDefined();
@@ -1253,6 +2437,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.steps[0].actions[1].title).toEqual(action.title)
         expect(fromDb.steps[0].actions[1].actionType).toEqual(action.actionType)
         expect(fromDb.steps[0].actions[1].text).toEqual(action.text)
+        expect(fromDb.steps[0].actions[1].proofRequest).not.toBeNull()
+        expect(fromDb.steps[0].actions[1].proofRequest!.attributes).not.toBeNull()
+        expect(fromDb.steps[0].actions[1].proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(fromDb.steps[0].actions[1].proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(fromDb.steps[0].actions[1].proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(fromDb.steps[0].actions[1].proofRequest!.predicates).not.toBeNull()
+        expect(fromDb.steps[0].actions[1].proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(fromDb.steps[0].actions[1].proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(fromDb.steps[0].actions[1].proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(fromDb.steps[0].actions[1].proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(fromDb.steps[0].actions[1].proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
     })
 
     it('Should get issuance flow step action by action id from database', async (): Promise<void> => {
@@ -1271,7 +2466,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1288,6 +2509,17 @@ describe('Database issuance flow repository tests', (): void => {
         expect(fromDb.title).toEqual(issuanceFlow.steps[0].actions[0].title)
         expect(fromDb.actionType).toEqual(issuanceFlow.steps[0].actions[0].actionType)
         expect(fromDb.text).toEqual(issuanceFlow.steps[0].actions[0].text)
+        expect(fromDb.proofRequest).not.toBeNull()
+        expect(fromDb.proofRequest!.attributes).not.toBeNull()
+        expect(fromDb.proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(fromDb.proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(fromDb.proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(fromDb.proofRequest!.predicates).not.toBeNull()
+        expect(fromDb.proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(fromDb.proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(fromDb.proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(fromDb.proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(fromDb.proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
     })
 
     it('Should get all issuance flow step actions from database', async (): Promise<void> => {
@@ -1306,12 +2538,64 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1348,12 +2632,64 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         },
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1389,7 +2725,33 @@ describe('Database issuance flow repository tests', (): void => {
                         {
                             title: 'example_title',
                             actionType: StepActionType.ARIES_OOB,
-                            text: 'example_text'
+                            text: 'example_text',
+                            proofRequest: {
+                                attributes: {
+                                    attribute1: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    attribute2: {
+                                        attributes: ['attribute1', 'attribute2'],
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                },
+                                predicates: {
+                                    predicate1: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    },
+                                    predicate2: {
+                                        name: 'example_name',
+                                        type: 'example_type',
+                                        value: 'example_value',
+                                        restrictions: ['restriction1', 'restriction2']
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -1400,9 +2762,35 @@ describe('Database issuance flow repository tests', (): void => {
         const savedIssuanceFlow = await repository.create(issuanceFlow)
         expect(savedIssuanceFlow).toBeDefined()
 
-        const updatedStepAction: NewStepAction = {
+        const updatedStepAction: NewAriesOOBAction = {
             ...savedIssuanceFlow.steps[0].actions[0],
             title: 'new_title',
+            proofRequest: {
+                attributes: {
+                    attribute1: {
+                        attributes: ['attribute1', 'attribute2'],
+                        restrictions: ['restriction1', 'restriction2']
+                    },
+                    attribute2: {
+                        attributes: ['attribute1', 'attribute2'],
+                        restrictions: ['restriction1', 'restriction2']
+                    }
+                },
+                predicates: {
+                    predicate1: {
+                        name: 'example_name',
+                        type: 'example_type',
+                        value: 'example_value',
+                        restrictions: ['restriction1', 'restriction2']
+                    },
+                    predicate2: {
+                        name: 'example_name',
+                        type: 'example_type',
+                        value: 'example_value',
+                        restrictions: ['restriction1', 'restriction2']
+                    }
+                }
+            }
         }
         const updatedStepResult = await repository.updateStepAction(savedIssuanceFlow.id, savedIssuanceFlow.steps[0].id, savedIssuanceFlow.steps[0].actions[0].id, updatedStepAction)
 
@@ -1411,5 +2799,16 @@ describe('Database issuance flow repository tests', (): void => {
         expect(updatedStepResult.title).toEqual(updatedStepAction.title)
         expect(updatedStepResult.actionType).toEqual(updatedStepAction.actionType)
         expect(updatedStepResult.text).toEqual(updatedStepAction.text)
+        expect(updatedStepResult.proofRequest).not.toBeNull()
+        expect(updatedStepResult.proofRequest!.attributes).not.toBeNull()
+        expect(updatedStepResult.proofRequest!.attributes!.attribute1).toBeDefined()
+        expect(updatedStepResult.proofRequest!.attributes!.attribute1.attributes!.length).toEqual(2)
+        expect(updatedStepResult.proofRequest!.attributes!.attribute1.restrictions!.length).toEqual(2)
+        expect(updatedStepResult.proofRequest!.predicates).not.toBeNull()
+        expect(updatedStepResult.proofRequest!.predicates!.predicate1).toBeDefined()
+        expect(updatedStepResult.proofRequest!.predicates!.predicate1.name).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.name)
+        expect(updatedStepResult.proofRequest!.predicates!.predicate1.type).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.type)
+        expect(updatedStepResult.proofRequest!.predicates!.predicate1.value).toEqual(issuanceFlow.steps[0].actions[0].proofRequest!.predicates.predicate1.value)
+        expect(updatedStepResult.proofRequest!.predicates!.predicate1.restrictions!.length).toEqual(2)
     })
 })

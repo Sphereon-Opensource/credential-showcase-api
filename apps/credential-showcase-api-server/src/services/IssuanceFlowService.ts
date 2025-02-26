@@ -4,9 +4,9 @@ import {
     IssuanceFlow,
     NewIssuanceFlow,
     NewStep,
-    NewStepAction,
+    NewAriesOOBAction,
     Step,
-    StepAction
+    AriesOOBAction
 } from '../types';
 
 @Service()
@@ -59,19 +59,19 @@ class IssuanceFlowService {
 
     // ISSUANCE FLOW STEP ACTION
 
-    public getIssuanceFlowStepActions = async (issuanceFlowId: string, stepId: string): Promise<StepAction[]> => {
+    public getIssuanceFlowStepActions = async (issuanceFlowId: string, stepId: string): Promise<AriesOOBAction[]> => {
         return this.issuanceFlowRepository.findAllStepActions(issuanceFlowId, stepId)
     };
 
-    public getIssuanceFlowStepAction = async (issuanceFlowId: string, stepId: string, actionId: string): Promise<StepAction> => {
+    public getIssuanceFlowStepAction = async (issuanceFlowId: string, stepId: string, actionId: string): Promise<AriesOOBAction> => {
         return this.issuanceFlowRepository.findByStepActionId(issuanceFlowId, stepId, actionId)
     };
 
-    public createIssuanceFlowStepAction = async (issuanceFlowId: string, stepId: string, action: NewStepAction): Promise<StepAction> => {
+    public createIssuanceFlowStepAction = async (issuanceFlowId: string, stepId: string, action: NewAriesOOBAction): Promise<AriesOOBAction> => {
         return this.issuanceFlowRepository.createStepAction(issuanceFlowId, stepId, action)
     };
 
-    public updateIssuanceFlowStepAction = async (issuanceFlowId: string, stepId: string, actionId: string, action: NewStepAction): Promise<StepAction> => {
+    public updateIssuanceFlowStepAction = async (issuanceFlowId: string, stepId: string, actionId: string, action: NewAriesOOBAction): Promise<AriesOOBAction> => {
         return this.issuanceFlowRepository.updateStepAction(issuanceFlowId, stepId, actionId, action)
     };
 

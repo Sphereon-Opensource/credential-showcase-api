@@ -9,12 +9,15 @@ classDiagram
         +name : String
         +description : String
         +status : String
-        +workflows: List~String~
+        +scenarios: List~String~
         +personas: List~String~
         +credentials: List~String~
-        hidden : Boolean = false
+        +status : String
+        +hidden : Boolean
+        +status : String
     }
-    class Workflow {
+    class Scenario {
+        <!-- Scenarios is a collection of workflows -->
         +name : String
         +description : String
         +steps: List~Steps~
@@ -31,7 +34,7 @@ classDiagram
         +description : String
         +order : int
         +type : StepType
-        subFlow: Workflow
+        subFlow: Scenario
         actions: List~StepAction~
         asset: Asset
     }
@@ -90,7 +93,7 @@ classDiagram
     }
     class RelyingParty {
         +name : String
-        +type: RelyingPartyType 
+        +type: RelyingPartyType
         +credentialDefinitions: List~CredentialDefinition~
         +description: String
         organization: String
@@ -140,11 +143,12 @@ classDiagram
     BOOLEAN
     DATE
    }
-    Showcase <|-- Workflow : specialization (workflow)
-    Showcase <|-- Persona
-    Workflow <|-- IssuanceFlow : specialization (onboarding)
-    Workflow <|-- PresentationFlow : specialization (scenario)
-    Workflow "1" *-- "1..*" Step : contains
+    Showcase <|-- Scenario
+    Showcase "1" *-- "1..*" Persona
+    Showcase "1" *-- "1..*" CredentialDefinition : contains
+    Scenario <|-- IssuanceFlow : specialization (onboarding)
+    Scenario <|-- PresentationFlow : specialization (scenario)
+    Scenario "1" *-- "1..*" Step : contains
     CredentialAttribute  o-- "1" CredentialAttributeType : of
     CredentialDefinition "1" *-- "1..*" CredentialAttribute : has
     CredentialDefinition "icon" --> Asset
@@ -167,7 +171,8 @@ classDiagram
     AriesOOBAction "1" *-- "1" AriesProofRequest
     AriesProofRequest "1" *-- "1..*" AriesRequestCredentialAttributes: attributes
     AriesProofRequest "1" *-- "1..*" AriesRequestCredentialPredicates: predicates
-    Workflow "0..*" o-- "1..*" Persona : involves
+    Scenario "0..*" o-- "1..*" Persona : involves
     IssuanceFlow "0..*" o-- "1" Issuer : includes
     PresentationFlow "0..*" o-- "1" RelyingParty : includes
 
+```

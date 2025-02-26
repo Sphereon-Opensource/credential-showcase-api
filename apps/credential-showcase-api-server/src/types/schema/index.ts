@@ -9,7 +9,8 @@ import {
     revocationInfo,
     workflows,
     steps,
-    stepActions
+    stepActions,
+    ariesProofRequests
 } from '../../database/schema';
 
 // $inferSelect does not respect nullability of fields and the type has every field as required
@@ -129,14 +130,33 @@ export type NewPresentationFlow = Omit<typeof workflows.$inferInsert, 'issuer' |
 };
 
 export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
-    actions: StepAction[]
+    actions: AriesOOBAction[]
     asset?: Asset | null
 };
 export type NewStep = Omit<typeof steps.$inferInsert, 'workflow'> & {
     asset?: string | null
-    actions: NewStepAction[]
+    actions: NewAriesOOBAction[]
     subFlow?: string | null
 };
 
-export type StepAction = typeof stepActions.$inferSelect;
-export type NewStepAction = Omit<typeof stepActions.$inferInsert, 'step'>;
+export type AriesOOBAction = Omit<typeof stepActions.$inferSelect, 'proofRequest'> & {
+    proofRequest?: AriesProofRequests | null
+};
+export type NewAriesOOBAction = Omit<typeof stepActions.$inferInsert, 'step' | 'proofRequest'> & {
+    proofRequest: NewAriesProofRequests
+};
+
+export type AriesRequestCredentialAttribute = {
+    attributes?: string[]
+    restrictions?: string[]
+}
+
+export type AriesRequestCredentialPredicate = {
+    name?: string
+    type?: string
+    value?: string
+    restrictions?: string[]
+}
+
+export type AriesProofRequests = typeof ariesProofRequests.$inferSelect;
+export type NewAriesProofRequests = Omit<typeof ariesProofRequests.$inferInsert, 'stepAction'>;

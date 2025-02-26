@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc",
-    "build:clean": "tsc --build --clean && tsc --build"
+    "build": "tsc --build --clean && mvn install && tsc --build",
+    "build:clean": "tsc --build --clean && mvn install && tsc --build"
   },
   "files": [
     "dist/**/*",

@@ -32,6 +32,9 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
       ts-jest:
         specifier: ^29.2.5
         version: 29.2.5(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(jest@29.7.0(@types/node@22.13.1)(ts-node@10.9.2(@types/node@22.13.1)(typescript@5.7.3)))(typescript@5.7.3)
@@ -2409,6 +2412,11 @@ packages:
 
   rhea@3.0.3:
     resolution: {integrity: sha512-Y7se0USZQu6dErWSZ7eCmSVTMscyVfz/0+jjhBF7f9PqYfEXdIoQpPkC9Strks6wF9WytuBhn8w8Nz/tmBWpgA==}
+
+  rimraf@6.0.1:
+    resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
+    engines: {node: 20 || >=22}
+    hasBin: true
 
   routing-controllers@0.11.1:
     resolution: {integrity: sha512-IGHHR+SpLsmDLUpYmGCwAwg1d6bobugNLlBfljnWnXEwQJhx1FGHOc93aQrErixkT3GiNxkgkVlZeFBXYcZ0LA==}
@@ -5443,6 +5451,11 @@ snapshots:
       debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
+
+  rimraf@6.0.1:
+    dependencies:
+      glob: 11.0.1
+      package-json-from-dist: 1.0.1
 
   routing-controllers@0.11.1(class-transformer@0.5.1)(class-validator@0.14.1):
     dependencies:

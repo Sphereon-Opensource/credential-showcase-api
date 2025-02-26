@@ -83,10 +83,7 @@ function validateParameters(key: Buffer, nonceSize: number): void {
  * @param nonceSize Size of the nonce in bytes (default from environment)
  * @returns Object containing encrypted data and nonce
  */
-export function encryptBuffer(
-  data: Buffer,
-  nonceSize: number = env.NONCE_SIZE
-): { encrypted: Buffer; nonce: Buffer } {
+export function encryptBuffer(data: Buffer, nonceSize: number = env.NONCE_SIZE): { encrypted: Buffer; nonce: Buffer } {
   const key = getKeyFromEnv()
   validateParameters(key, nonceSize)
 
@@ -117,10 +114,7 @@ export function encryptBuffer(
  * @returns Buffer containing decrypted data
  * @throws Error if decryption fails
  */
-export function decryptBuffer(
-  encryptedData: Buffer,
-  nonce: Buffer
-): Buffer {
+export function decryptBuffer(encryptedData: Buffer, nonce: Buffer): Buffer {
   const key = getKeyFromEnv()
   validateParameters(key, nonce.length)
 
@@ -152,10 +146,7 @@ export function decryptBuffer(
  * @param nonceSize Size of the nonce in bytes (default from environment)
  * @returns Object containing base64 encoded encrypted data and nonce
  */
-export function encryptString(
-  text: string,
-  nonceSize: number = env.NONCE_SIZE,
-): { encryptedBase64: string; nonceBase64: string } {
+export function encryptString(text: string, nonceSize: number = env.NONCE_SIZE): { encryptedBase64: string; nonceBase64: string } {
   const result = encryptBuffer(Buffer.from(text, 'utf8'), nonceSize)
   return {
     encryptedBase64: result.encrypted.toString('base64'),
@@ -170,10 +161,7 @@ export function encryptString(
  * @returns Decrypted string
  * @throws Error if decryption fails
  */
-export function decryptString(
-  encryptedBase64: string,
-  nonceBase64: string
-): string {
+export function decryptString(encryptedBase64: string, nonceBase64: string): string {
   const encryptedData = Buffer.from(encryptedBase64, 'base64')
   const nonce = Buffer.from(nonceBase64, 'base64')
 
@@ -187,10 +175,7 @@ export function decryptString(
  * @param nonceSize Size of the nonce in bytes (default from environment)
  * @returns Object containing encrypted data and nonce as Uint8Arrays
  */
-export function encryptBytes(
-  data: Uint8Array,
-  nonceSize: number = env.NONCE_SIZE,
-): { encrypted: Uint8Array; nonce: Uint8Array } {
+export function encryptBytes(data: Uint8Array, nonceSize: number = env.NONCE_SIZE): { encrypted: Uint8Array; nonce: Uint8Array } {
   const result = encryptBuffer(Buffer.from(data), nonceSize)
   return {
     encrypted: new Uint8Array(result.encrypted),
@@ -205,10 +190,7 @@ export function encryptBytes(
  * @returns Uint8Array containing decrypted data
  * @throws Error if decryption fails
  */
-export function decryptBytes(
-  encryptedData: Uint8Array,
-  nonce: Uint8Array
-): Uint8Array {
+export function decryptBytes(encryptedData: Uint8Array, nonce: Uint8Array): Uint8Array {
   const result = decryptBuffer(Buffer.from(encryptedData), Buffer.from(nonce))
   return new Uint8Array(result)
 }
@@ -217,20 +199,20 @@ export function decryptBytes(
  * Main function that can be called from command line
  */
 function main() {
-  const args = process.argv.slice(2);
-  const command = args[0];
+  const args = process.argv.slice(2)
+  const command = args[0]
 
   switch (command) {
     case 'generate-key':
-      const key = generateKey();
-      console.log('Generated key:', key);
-      break;
+      const key = generateKey()
+      console.log('Generated key:', key)
+      break
     default:
-      console.log('Unknown command. Available commands: generate-key');
+      console.log('Unknown command. Available commands: generate-key')
   }
 }
 
 // Run main if this file is executed directly
 if (require.main === module) {
-  main();
+  main()
 }

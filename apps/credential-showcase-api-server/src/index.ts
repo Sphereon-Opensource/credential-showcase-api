@@ -7,6 +7,8 @@ import CredentialDefinitionController from './controllers/CredentialDefinitionCo
 import PersonaController from './controllers/PersonaController';
 import RelyingPartyController from './controllers/RelyingPartyController';
 import IssuerController from './controllers/IssuerController';
+import IssuanceFlowController from './controllers/IssuanceFlowController';
+import PresentationFlowController from './controllers/PresentationFlowController';
 
 require('dotenv-flow').config();
 
@@ -19,7 +21,9 @@ const app = createExpressServer({
         PersonaController,
         CredentialDefinitionController,
         RelyingPartyController,
-        IssuerController
+        IssuerController,
+        IssuanceFlowController,
+        PresentationFlowController
     ],
     middlewares: [ExpressErrorHandler],
     defaultErrorHandler: false,

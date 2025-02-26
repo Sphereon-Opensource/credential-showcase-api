@@ -1,7 +1,7 @@
 import { Middleware, ExpressErrorMiddlewareInterface, HttpError, UnauthorizedError } from 'routing-controllers';
 import { Service } from 'typedi';
 import { Response } from 'express';
-import { NotFoundError } from '../errors/NotFoundError';
+import { NotFoundError } from '../errors';
 
 @Service()
 @Middleware({ type: 'after' })

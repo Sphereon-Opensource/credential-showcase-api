@@ -118,6 +118,17 @@ export type NewIssuanceFlow = Omit<typeof workflows.$inferInsert, 'relyingParty'
     steps: NewStep[]
 };
 
+export type PresentationFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer' | 'workflowType'> & {
+    personas: Persona[]
+    steps: Step[]
+    relyingParty?: RelyingParty | null
+};
+export type NewPresentationFlow = Omit<typeof workflows.$inferInsert, 'issuer' | 'workflowType'> & {
+    personas: string[]
+    relyingParty: string
+    steps: NewStep[]
+};
+
 export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
     actions: AriesOOBAction[]
     asset?: Asset | null

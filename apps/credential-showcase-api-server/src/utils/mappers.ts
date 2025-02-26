@@ -4,6 +4,7 @@ import {
     RelyingParty as RelyingPartyDTO,
     Issuer as IssuerDTO,
     IssuanceFlow as IssuanceFlowDTO,
+    PresentationFlow as PresentationFlowDTO,
     Step as StepDTO,
     Persona as PersonaDTO,
     AssetRequest,
@@ -15,6 +16,7 @@ import {
     RelyingParty,
     Issuer,
     IssuanceFlow,
+    PresentationFlow,
     Step,
     WorkflowType,
     Persona
@@ -73,6 +75,20 @@ export const issuanceFlowDTOFrom = (issuanceFlow: IssuanceFlow): IssuanceFlowDTO
         type: WorkflowType.ISSUANCE,
         steps: issuanceFlow.steps.map(step => stepDTOFrom(step)),
         personas: issuanceFlow.personas.map(persona => personaDTOFrom(persona)),
+    }
+}
+
+export const presentationFlowDTOFrom = (presentationFlow: PresentationFlow): PresentationFlowDTO => {
+    if (!presentationFlow.relyingParty) {
+        throw Error('Missing relying party in presentation flow')
+    }
+
+    return {
+        ...presentationFlow,
+        relyingParty: relyingPartyDTOFrom(presentationFlow.relyingParty),
+        type: WorkflowType.PRESENTATION,
+        steps: presentationFlow.steps.map(step => stepDTOFrom(step)),
+        personas: presentationFlow.personas.map(persona => personaDTOFrom(persona)),
     }
 }
 

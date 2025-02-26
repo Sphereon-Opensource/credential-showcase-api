@@ -13,15 +13,15 @@
   "dependencies": {
     "credential-showcase-openapi" : "workspace:*",
     "dotenv-flow": "^4.1.0",
-    "drizzle-orm": "^0.39.1",
+    "drizzle-orm": "^0.39.3",
     "express": "^4.21.2",
-    "pg": "^8.13.1",
+    "pg": "^8.13.3",
     "reflect-metadata": "^0.2.2",
-    "routing-controllers": "^0.11.0",
+    "routing-controllers": "^0.11.1",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.2.16",
+    "@electric-sql/pglite": "^0.2.17",
     "@types/dotenv-flow": "^3.3.3",
     "@types/express": "^5.0.0",
     "@types/pg": "^8.11.11",

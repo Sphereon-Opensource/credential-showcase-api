@@ -2174,6 +2174,7 @@ components:
         issuanceFlow:
             $ref: '#/components/schemas/IssuanceFlow'
     IssuanceFlow:
+      type: object
       allOf:
         - $ref: '#/components/schemas/Workflow'
         - type: object
@@ -2184,6 +2185,7 @@ components:
               $ref: '#/components/schemas/Issuer'
       description: Workflow specialization for credential issuance
     IssuanceFlowRequest:
+      type: object
       allOf:
         - $ref: '#/components/schemas/WorkflowRequest'
         - type: object
@@ -2196,13 +2198,19 @@ components:
       description: Workflow specialization for credential issuance
 
     PresentationFlowsResponse:
+      type: object
       properties:
         presentationFlows:
           type: array
           items:
             $ref: '#/components/schemas/PresentationFlow'
-
+    PresentationFlowResponse:
+      type: object
+      properties:
+        presentationFlow:
+          $ref: '#/components/schemas/PresentationFlow'
     PresentationFlow:
+      type: object
       allOf:
         - $ref: '#/components/schemas/Workflow'
         - type: object

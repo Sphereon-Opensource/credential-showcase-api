@@ -170,6 +170,18 @@ export function decryptString(encryptedBase64: string, nonceBase64: string): str
 }
 
 /**
+ * Decrypts a string using ChaCha20-Poly1305 with the environment key
+ * @param encryptedData Buffer containing encrypted data with auth tag
+ * @param nonce Buffer containing nonce used during encryption
+ * @returns Decrypted string
+ * @throws Error if decryption fails
+ */
+export function decryptBufferAsString(encryptedData: Buffer, nonce: Buffer): string {
+  const decrypted = decryptBuffer(encryptedData, nonce)
+  return decrypted.toString('utf8')
+}
+
+/**
  * Encrypts a Uint8Array using ChaCha20-Poly1305 with the environment key
  * @param data Uint8Array containing data to encrypt
  * @param nonceSize Size of the nonce in bytes (default from environment)

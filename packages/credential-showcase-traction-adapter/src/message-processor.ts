@@ -4,13 +4,15 @@ import { CredentialDefinitionFromJSON } from 'credential-showcase-openapi'
 import { TractionService } from './services/traction-service'
 import { getTractionService } from './services/service-manager'
 import { Action, Topic } from './types'
+import { Buffer } from 'buffer'
 
 interface MessageHeaders {
   action?: Action
   tenantId?: string
   apiUrlBase?: string
   walletId?: string
-  accessTokenEnc?: string
+  accessTokenEnc?: Buffer
+  accessTokenNonce?: Buffer
 }
 
 export class MessageProcessor {
@@ -100,7 +102,7 @@ export class MessageProcessor {
       tenantId: applicationProperties['tenantId'] as string | undefined,
       apiUrlBase: applicationProperties['apiUrlBase'] as string | undefined,
       walletId: applicationProperties['walletId'] as string | undefined,
-      accessTokenEnc: applicationProperties['accessTokenEnc'] as string | undefined,
+      accessTokenEnc: applicationProperties['accessTokenEnc'] as Buffer | undefined,
     }
   }
 

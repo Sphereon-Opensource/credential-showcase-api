@@ -1,6 +1,8 @@
 import { TractionService } from './traction-service'
 import { environment } from '../environment'
 import { LRUCache } from 'lru-cache'
+import { decryptBufferAsString } from '../util/CypherUtil'
+import { Buffer } from 'buffer'
 
 class ServiceManager {
   private readonly services = new LRUCache<string, TractionService>({
@@ -8,25 +10,44 @@ class ServiceManager {
     ttl: environment.traction.TENANT_SESSION_TTL_MINS * 60,
   })
 
-  public getTractionService(tenantId: string, apiUrlBase?: string, walletId?: string, accessTokenEnc?: string): TractionService {
+  public getTractionService(
+    tenantId: string,
+    apiUrlBase?: string,
+    walletId?: string,
+    accessTokenEnc?: Buffer,
+    accessTokenNonce?: Buffer,
+  ): TractionService {
     const key = this.buildKey(apiUrlBase, tenantId, walletId)
+    const decodedToken = this.decodeToken(accessTokenEnc, accessTokenNonce)
 
     // Return existing service if it exists
     if (this.services.has(key)) {
       const service = this.services.get(key)!
 
       // Update token if provided
-      if (accessTokenEnc) {
-        service.updateBearerToken(accessTokenEnc)
+      if (decodedToken) {
+        service.updateBearerToken(decodedToken)
       }
 
       return service
     }
 
-    const service = new TractionService(tenantId, apiUrlBase, walletId, accessTokenEnc)
+    const service = new TractionService(tenantId, apiUrlBase, walletId, decodedToken)
 
     this.services.set(key, service)
     return service
+  }
+
+  private decodeToken(accessTokenEnc?: Buffer, accessTokenNonce?: Buffer) {
+    let decodedToken: string | undefined
+    if (accessTokenEnc) {
+      if (accessTokenNonce) {
+        decodedToken = decryptBufferAsString(accessTokenEnc, accessTokenNonce)
+      } else {
+        throw Error('An access token was provided without a nonce')
+      }
+    }
+    return decodedToken
   }
 
   private buildKey(apiUrlBase: string = environment.traction.DEFAULT_API_BASE_PATH, tenantId: string, walletId?: string): string {
@@ -37,7 +58,7 @@ class ServiceManager {
 // Singleton instance
 const serviceRegistry = new ServiceManager()
 
-export function getTractionService(tenantId: string, apiUrlBase?: string, walletId?: string, accessTokenEnc?: string): TractionService {
+export function getTractionService(tenantId: string, apiUrlBase?: string, walletId?: string, accessTokenEnc?: Buffer): TractionService {
   if (!tenantId) {
     throw new Error('tenantId is required')
   }

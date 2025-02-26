@@ -126,6 +126,9 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      '@types/node':
+        specifier: ^22.13.1
+        version: 22.13.1
       testcontainers:
         specifier: ^10.18.0
         version: 10.18.0

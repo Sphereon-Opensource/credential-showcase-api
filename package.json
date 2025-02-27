@@ -9,7 +9,7 @@
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
     "generate-models": "pnpm -r --if-present --stream run generate-models",
-    "build": "turbo run build",
+    "build": "pnpm generate-models && turbo run build",
     "prettier": "prettier --write \"{packages,__tests__,!dist}/**/*.{ts,js,json,md}\"",
     "prettier:check": "prettier --check \"{packages,__tests__,!dist}/**/*.{ts,js,json,md}\"",
     "test:ci": "jest --config=jest.json",

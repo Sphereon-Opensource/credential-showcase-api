@@ -1613,7 +1613,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ShowcaseResponse'
+                  $ref: '#/components/schemas/ShowcasesResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1631,7 +1631,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Showcase'
+              $ref: '#/components/schemas/ShowcaseRequest'
         required: true
       responses:
         '201':
@@ -1667,7 +1667,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Showcase'
+                $ref: '#/components/schemas/ShowcaseResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1686,14 +1686,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Showcase'
+              $ref: '#/components/schemas/ShowcaseRequest'
       responses:
         '200':
           description: Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Showcase'
+                $ref: '#/components/schemas/ShowcaseResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -2608,53 +2608,112 @@ components:
               example: 123e4567-e89b-12d3-a456-426614174123
       description: Anonymous Credentials specific revocation information
 
-    # Showcase:
-    #   type: object
-    #   required:
-    #     - name
-    #     - description
-    #   properties:
-    #     id:
-    #       type: string
-    #       description: Unique identifier for the showcase
-    #       example: 123e4567-e89b-12d3-a456-426614174456
-    #     name:
-    #       type: string
-    #       description: Name of the showcase
-    #       example: Credential Showcase BCGov
-    #     description:
-    #       type: string
-    #       description: Description of the showcase
-    #       example: Collection of credential usage scenarios
-    #     status:
-    #       type: string
-    #       enum: [pending, active, archived]
-    #       description: Current status of the showcase
-    #       example: pending
-    #     hidden:
-    #       type: boolean
-    #       description: Whether the showcase is hidden from public view
-    #       default: false
-    #     scenarios:
-    #       type: array
-    #       description: List of scenarios in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/Scenario'
-    #     credentials:
-    #       type: array
-    #       description: List of credential definitions used in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/CredentialDefinitionsResponse'
-    #     personas:
-    #       type: object
-    #       description: List of personas involved in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/PersonasResponse'
-    #     workflows:
-    #       type: array
-    #       description: List of workflows used in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/Workflow'
+    Showcase:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - status
+        - scenarios
+        - personas
+        - credentials
+        - hidden
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the showcase
+          example: 123e4567-e89b-12d3-a456-426614174456
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            $ref: '#/components/schemas/Workflow'
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+        personas:
+          type: object
+          description: List of personas involved in this showcase
+          items:
+            $ref: '#/components/schemas/Persona'
+    ShowcasesResponse:
+      type: object
+      properties:
+        showcases:
+          type: array
+          description: "List of showcases"
+          items:
+            $ref: '#/components/schemas/Showcase'
+    ShowcaseResponse:
+      type: object
+      properties:
+        showcase:
+          $ref: '#/components/schemas/Showcase'
+    ShowcaseRequest:
+      required:
+        - name
+        - description
+        - status
+        - scenarios
+        - personas
+        - credentials
+        - hidden
+      properties:
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+        personas:
+          type: array
+          description: List of personas involved in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
 
     # Scenario:
     #   type: object

@@ -46,7 +46,7 @@ export function credentialDefinitionToCredDefPostRequest(credentialDef: Credenti
 
   return {
     credentialDefinition: innerCredDef,
-    options: getRevocationOptions(credentialDef),
+    options: getOptions(credentialDef),
   }
 }
 
@@ -55,7 +55,7 @@ export function credentialDefinitionToCredDefPostRequest(credentialDef: Credenti
  * @param credDef The credential definition
  * @returns Options with revocation settings
  */
-export function getRevocationOptions(credDef: CredentialDefinition): CredDefPostOptions {
+export function getOptions(credDef: CredentialDefinition): CredDefPostOptions {
   if (!credDef.revocation) {
     return {
       supportRevocation: false,

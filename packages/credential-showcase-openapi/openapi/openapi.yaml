@@ -2907,6 +2907,55 @@ components:
             type: string
             example: 123e4567-e89b-12d3-a456-426614174469
 
+
+    # Showcase:
+    #   type: object
+    #   required:
+    #     - name
+    #     - description
+    #   properties:
+    #     id:
+    #       type: string
+    #       description: Unique identifier for the showcase
+    #       example: 123e4567-e89b-12d3-a456-426614174456
+    #     name:
+    #       type: string
+    #       description: Name of the showcase
+    #       example: Credential Showcase BCGov
+    #     description:
+    #       type: string
+    #       description: Description of the showcase
+    #       example: Collection of credential usage scenarios
+    #     status:
+    #       type: string
+    #       enum: [pending, active, archived]
+    #       description: Current status of the showcase
+    #       example: pending
+    #     hidden:
+    #       type: boolean
+    #       description: Whether the showcase is hidden from public view
+    #       default: false
+    #     scenarios:
+    #       type: array
+    #       description: List of scenarios in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/Scenario'
+    #     credentials:
+    #       type: array
+    #       description: List of credential definitions used in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/CredentialDefinitionsResponse'
+    #     personas:
+    #       type: object
+    #       description: List of personas involved in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/PersonasResponse'
+    #     workflows:
+    #       type: array
+    #       description: List of workflows used in this showcase
+    #       items:
+    #         $ref: '#/components/schemas/Workflow'
+
     # Scenario:
     #   type: object
     #   required:

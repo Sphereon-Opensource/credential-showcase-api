@@ -2780,12 +2780,10 @@ components:
           type: string
           description: Version of the credential schema
           example: '1.0'
-        attrNames:
+        attributes:
           type: array
-          description: List of attribute names for the schema
           items:
-            type: string
-          example: [ "firstName", "lastName", "birthDate", "degree" ]
+            $ref: '#/components/schemas/CredentialAttribute'
     CredentialSchemasResponse:
       type: object
       properties:

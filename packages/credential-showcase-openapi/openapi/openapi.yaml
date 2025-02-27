@@ -1131,6 +1131,123 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /credential-schemas:
+    get:
+      tags:
+        - Credential Definitions
+      summary: List credential schemas
+      operationId: listCredentialSchemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialSchemasResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - Credential Definitions
+      summary: Create a credential schema
+      operationId: createCredentialSchema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredentialSchemaRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialSchemaResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /credential-schemas/{schemaId}:
+    parameters:
+      - name: schemaId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Credential Definitions
+      summary: Get a specific credential schema
+      operationId: getCredentialSchema
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialSchemaResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Credential Definitions
+      summary: Update a credential schema
+      operationId: updateCredentialSchema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredentialSchemaRequest'
+        required: true
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialSchemaResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Credential Definitions
+      summary: Delete a credential schema
+      operationId: deleteCredentialSchema
+      responses:
+        '204':
+          description: Deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /personas:
     get:
       tags:
@@ -1613,7 +1730,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ShowcaseResponse'
+                  $ref: '#/components/schemas/ShowcasesResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1631,7 +1748,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Showcase'
+              $ref: '#/components/schemas/ShowcaseRequest'
         required: true
       responses:
         '201':
@@ -1667,7 +1784,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Showcase'
+                $ref: '#/components/schemas/ShowcaseResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -1686,14 +1803,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Showcase'
+              $ref: '#/components/schemas/ShowcaseRequest'
       responses:
         '200':
           description: Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Showcase'
+                $ref: '#/components/schemas/ShowcaseResponse'
         '400':
             $ref: '#/components/responses/BadRequest'
         '401':
@@ -2415,17 +2532,22 @@ components:
       type: object
       required:
         - id
+        - issuerId
         - name
         - version
         - type
+        - schemaId
         - icon
-        - attributes
         - representations
       properties:
         id:
           type: string
           description: Unique identifier for the credential definition
           example: 123e4567-e89b-12d3-a456-426614174123
+        issuerId:
+          type: string
+          description: Identifier of the issuer that owns this credential definition
+          example: 123e4567-e89b-12d3-a456-426614174321
         name:
           type: string
           description: Name of the credential definition
@@ -2436,10 +2558,10 @@ components:
           example: '1.0'
         type:
           $ref: '#/components/schemas/CredentialType'
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CredentialAttribute'
+        schemaId:
+          type: string
+          description: Reference to the associated credential schema
+          example: 456e4567-e89b-12d3-a456-426614174789
         representations:
           type: array
           items:
@@ -2455,11 +2577,12 @@ components:
     CredentialDefinitionRequest:
       type: object
       required:
+        - issuerId
         - name
         - version
         - type
         - icon
-        - attributes
+        - schemaId
         - representations
       properties:
         name:
@@ -2472,10 +2595,10 @@ components:
           example: '1.0'
         type:
           $ref: '#/components/schemas/CredentialType'
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CredentialAttributeRequest'
+        schemaId:
+          type: string
+          description: Reference to the associated credential schema
+          example: 456e4567-e89b-12d3-a456-426614174789
         representations:
           type: array
           description: List of representations for this credential definition
@@ -2608,53 +2731,181 @@ components:
               example: 123e4567-e89b-12d3-a456-426614174123
       description: Anonymous Credentials specific revocation information
 
-    # Showcase:
-    #   type: object
-    #   required:
-    #     - name
-    #     - description
-    #   properties:
-    #     id:
-    #       type: string
-    #       description: Unique identifier for the showcase
-    #       example: 123e4567-e89b-12d3-a456-426614174456
-    #     name:
-    #       type: string
-    #       description: Name of the showcase
-    #       example: Credential Showcase BCGov
-    #     description:
-    #       type: string
-    #       description: Description of the showcase
-    #       example: Collection of credential usage scenarios
-    #     status:
-    #       type: string
-    #       enum: [pending, active, archived]
-    #       description: Current status of the showcase
-    #       example: pending
-    #     hidden:
-    #       type: boolean
-    #       description: Whether the showcase is hidden from public view
-    #       default: false
-    #     scenarios:
-    #       type: array
-    #       description: List of scenarios in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/Scenario'
-    #     credentials:
-    #       type: array
-    #       description: List of credential definitions used in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/CredentialDefinitionsResponse'
-    #     personas:
-    #       type: object
-    #       description: List of personas involved in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/PersonasResponse'
-    #     workflows:
-    #       type: array
-    #       description: List of workflows used in this showcase
-    #       items:
-    #         $ref: '#/components/schemas/Workflow'
+    CredentialSchema:
+      type: object
+      required:
+        - id
+        - issuerId
+        - name
+        - version
+        - attrNames
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the credential schema
+          example: 123e4567-e89b-12d3-a456-426614174789
+        issuerId:
+          type: string
+          description: Identifier of the issuer who created this schema
+          example: 123e4567-e89b-12d3-a456-426614174123
+        name:
+          type: string
+          description: Name of the credential schema
+          example: Diploma Schema
+        version:
+          type: string
+          description: Version of the credential schema
+          example: '1.0'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialAttribute'
+    CredentialSchemaRequest:
+      type: object
+      required:
+        - issuerId
+        - name
+        - version
+        - attrNames
+      properties:
+        issuerId:
+          type: string
+          description: Identifier of the issuer creating the schema
+          example: 123e4567-e89b-12d3-a456-426614174123
+        name:
+          type: string
+          description: Name of the credential schema
+          example: Diploma Schema
+        version:
+          type: string
+          description: Version of the credential schema
+          example: '1.0'
+        attrNames:
+          type: array
+          description: List of attribute names for the schema
+          items:
+            type: string
+          example: [ "firstName", "lastName", "birthDate", "degree" ]
+    CredentialSchemasResponse:
+      type: object
+      properties:
+        credentialSchemas:
+          type: array
+          description: "List of credential schemas"
+          items:
+            $ref: '#/components/schemas/CredentialSchema'
+    CredentialSchemaResponse:
+      type: object
+      properties:
+        credentialSchema:
+          $ref: '#/components/schemas/CredentialSchema'
+
+    Showcase:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - status
+        - scenarios
+        - personas
+        - credentials
+        - hidden
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the showcase
+          example: 123e4567-e89b-12d3-a456-426614174456
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            $ref: '#/components/schemas/Workflow'
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            $ref: '#/components/schemas/CredentialDefinition'
+        personas:
+          type: object
+          description: List of personas involved in this showcase
+          items:
+            $ref: '#/components/schemas/Persona'
+    ShowcasesResponse:
+      type: object
+      properties:
+        showcases:
+          type: array
+          description: "List of showcases"
+          items:
+            $ref: '#/components/schemas/Showcase'
+    ShowcaseResponse:
+      type: object
+      properties:
+        showcase:
+          $ref: '#/components/schemas/Showcase'
+    ShowcaseRequest:
+      required:
+        - name
+        - description
+        - status
+        - scenarios
+        - personas
+        - credentials
+        - hidden
+      properties:
+        name:
+          type: string
+          description: Name of the showcase
+          example: Credential Showcase BCGov
+        description:
+          type: string
+          description: Description of the showcase
+          example: Collection of credential usage scenarios
+        status:
+          type: string
+          enum: [pending, active, archived]
+          description: Current status of the showcase
+          example: pending
+        hidden:
+          type: boolean
+          description: Whether the showcase is hidden from public view
+          default: false
+        scenarios:
+          type: array
+          description: List of scenarios in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+        credentials:
+          type: array
+          description: List of credential definitions used in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
+        personas:
+          type: array
+          description: List of personas involved in this showcase
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174469
 
     # Scenario:
     #   type: object

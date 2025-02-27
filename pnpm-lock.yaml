@@ -91,6 +91,28 @@ importers:
         specifier: ^0.30.4
         version: 0.30.4
 
+  packages/credential-showcase-adapter-client-api:
+    dependencies:
+      bs58:
+        specifier: ^6.0.0
+        version: 6.0.0
+      credential-showcase-openapi:
+        specifier: workspace:*
+        version: link:../credential-showcase-openapi
+      rhea:
+        specifier: ^3.0.3
+        version: 3.0.3
+      rhea-promise:
+        specifier: ^3.0.3
+        version: 3.0.3
+      typedi:
+        specifier: ^0.10.0
+        version: 0.10.0
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.1
+        version: 22.13.1
+
   packages/credential-showcase-openapi: {}
 
   packages/credential-showcase-traction-adapter:

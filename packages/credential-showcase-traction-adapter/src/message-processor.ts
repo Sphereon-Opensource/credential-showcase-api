@@ -103,6 +103,7 @@ export class MessageProcessor {
       apiUrlBase: applicationProperties['apiUrlBase'] as string | undefined,
       walletId: applicationProperties['walletId'] as string | undefined,
       accessTokenEnc: applicationProperties['accessTokenEnc'] as Buffer | undefined,
+      accessTokenNonce: applicationProperties['accessTokenNonce'] as Buffer | undefined,
     }
   }
 

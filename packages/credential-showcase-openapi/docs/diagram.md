@@ -11,7 +11,7 @@ classDiagram
         +status : String
         +scenarios: List~String~
         +personas: List~String~
-        +credentials: List~String~
+        +credentialDefinitions: List~String~
         +hidden : Boolean
     }
     class Scenario {
@@ -141,9 +141,9 @@ classDiagram
     BOOLEAN
     DATE
    }
-    Showcase <|-- Scenario
-    Showcase "1" *-- "1..*" Persona
-    Showcase "1" *-- "1..*" CredentialDefinition : contains
+    Showcase "1" <|-- "1..*" Scenario: has
+    Showcase "1..*" o-- "1..*" Persona
+    Showcase "1..*" o-- "1..*" CredentialDefinition : contains
     Scenario <|-- IssuanceFlow : specialization (onboarding)
     Scenario <|-- PresentationFlow : specialization (scenario)
     Scenario "1" *-- "1..*" Step : contains

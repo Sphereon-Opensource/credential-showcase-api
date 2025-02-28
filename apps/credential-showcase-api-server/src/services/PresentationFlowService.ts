@@ -1,82 +1,83 @@
 import { Service } from 'typedi';
-import PresentationFlowRepository from '../database/repositories/PresentationFlowRepository';
+import ScenarioRepository from '../database/repositories/ScenarioRepository';
 import {
     PresentationFlow,
     NewPresentationFlow,
     NewStep,
     NewAriesOOBAction,
     Step,
-    AriesOOBAction
+    AriesOOBAction,
+    WorkflowType
 } from '../types';
 
 @Service()
 class PresentationFlowService {
-    constructor(private readonly presentationFlowRepository: PresentationFlowRepository) {}
+    constructor(private readonly scenarioRepository: ScenarioRepository) {}
 
     // PRESENTATION FLOW
 
     public getPresentationFlows = async (): Promise<PresentationFlow[]> => {
-        return this.presentationFlowRepository.findAll()
+        return this.scenarioRepository.findAll({ filter: { scenarioType: WorkflowType.PRESENTATION } })
     };
 
     public getPresentationFlow = async (presentationFlowId: string): Promise<PresentationFlow> => {
-        return this.presentationFlowRepository.findById(presentationFlowId)
+        return this.scenarioRepository.findById(presentationFlowId)
     };
 
     public createPresentationFlow = async (presentationFlow: NewPresentationFlow): Promise<PresentationFlow> => {
-        return this.presentationFlowRepository.create(presentationFlow)
+        return this.scenarioRepository.create(presentationFlow)
     };
 
     public updatePresentationFlow = async (presentationFlowId: string, presentationFlow: NewPresentationFlow): Promise<PresentationFlow> => {
-        return this.presentationFlowRepository.update(presentationFlowId, presentationFlow)
+        return this.scenarioRepository.update(presentationFlowId, presentationFlow)
     };
 
     public deletePresentationFlow = async (presentationFlowId: string): Promise<void> => {
-        return this.presentationFlowRepository.delete(presentationFlowId)
+        return this.scenarioRepository.delete(presentationFlowId)
     };
 
     // PRESENTATION FLOW STEP
 
     public getPresentationFlowSteps = async (presentationFlowId: string): Promise<Step[]> => {
-        return this.presentationFlowRepository.findAllSteps(presentationFlowId)
+        return this.scenarioRepository.findAllSteps(presentationFlowId)
     };
 
     public getPresentationFlowStep = async (presentationFlowId: string, stepId: string): Promise<Step> => {
-        return this.presentationFlowRepository.findByStepId(presentationFlowId, stepId)
+        return this.scenarioRepository.findByStepId(presentationFlowId, stepId)
     };
 
     public createPresentationFlowStep = async (presentationFlowId: string, step: NewStep): Promise<Step> => {
-        return this.presentationFlowRepository.createStep(presentationFlowId, step)
+        return this.scenarioRepository.createStep(presentationFlowId, step)
     };
 
     public updatePresentationFlowStep = async (presentationFlowId: string, stepId: string, step: NewStep): Promise<Step> => {
-        return this.presentationFlowRepository.updateStep(presentationFlowId, stepId, step)
+        return this.scenarioRepository.updateStep(presentationFlowId, stepId, step)
     };
 
     public deletePresentationFlowStep = async (presentationFlowId: string, stepId: string): Promise<void> => {
-        return this.presentationFlowRepository.deleteStep(presentationFlowId, stepId)
+        return this.scenarioRepository.deleteStep(presentationFlowId, stepId)
     };
 
     // PRESENTATION FLOW STEP ACTION
 
     public getPresentationFlowStepActions = async (presentationFlowId: string, stepId: string): Promise<AriesOOBAction[]> => {
-        return this.presentationFlowRepository.findAllStepActions(presentationFlowId, stepId)
+        return this.scenarioRepository.findAllStepActions(presentationFlowId, stepId)
     };
 
     public getPresentationFlowStepAction = async (presentationFlowId: string, stepId: string, actionId: string): Promise<AriesOOBAction> => {
-        return this.presentationFlowRepository.findByStepActionId(presentationFlowId, stepId, actionId)
+        return this.scenarioRepository.findByStepActionId(presentationFlowId, stepId, actionId)
     };
 
     public createPresentationFlowStepAction = async (presentationFlowId: string, stepId: string, action: NewAriesOOBAction): Promise<AriesOOBAction> => {
-        return this.presentationFlowRepository.createStepAction(presentationFlowId, stepId, action)
+        return this.scenarioRepository.createStepAction(presentationFlowId, stepId, action)
     };
 
     public updatePresentationFlowStepAction = async (presentationFlowId: string, stepId: string, actionId: string, action: NewAriesOOBAction): Promise<AriesOOBAction> => {
-        return this.presentationFlowRepository.updateStepAction(presentationFlowId, stepId, actionId, action)
+        return this.scenarioRepository.updateStepAction(presentationFlowId, stepId, actionId, action)
     };
 
     public deletePresentationFlowStepAction = async (presentationFlowId: string, stepId: string, actionId: string): Promise<void> => {
-        return this.presentationFlowRepository.deleteStepAction(presentationFlowId, stepId, actionId)
+        return this.scenarioRepository.deleteStepAction(presentationFlowId, stepId, actionId)
     };
 }
 

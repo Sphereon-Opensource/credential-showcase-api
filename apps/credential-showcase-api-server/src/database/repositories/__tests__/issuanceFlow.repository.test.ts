@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { PGlite } from '@electric-sql/pglite';
-import { drizzle } from 'drizzle-orm/pglite';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import { Container } from 'typedi';
+import {PGlite} from '@electric-sql/pglite';
+import {drizzle} from 'drizzle-orm/pglite';
+import {NodePgDatabase} from 'drizzle-orm/node-postgres';
+import {migrate} from 'drizzle-orm/node-postgres/migrator';
+import {Container} from 'typedi';
 import DatabaseService from '../../../services/DatabaseService';
-import IssuanceFlowRepository from '../../../database/repositories/IssuanceFlowRepository';
+import ScenarioRepository from '../../../database/repositories/ScenarioRepository';
 import IssuerRepository from '../../../database/repositories/IssuerRepository';
 import CredentialDefinitionRepository from '../../../database/repositories/CredentialDefinitionRepository';
 import AssetRepository from '../../../database/repositories/AssetRepository';
@@ -13,25 +13,27 @@ import PersonaRepository from '../PersonaRepository';
 import * as schema from '../../../database/schema';
 import {
     Asset,
+    CredentialAttributeType,
+    CredentialType,
+    IssuanceFlow,
+    Issuer,
+    IssuerType,
+    NewAriesOOBAction,
     NewAsset,
     NewCredentialDefinition,
     NewIssuanceFlow,
-    NewStep,
-    NewAriesOOBAction,
-    CredentialAttributeType,
-    CredentialType,
-    StepType,
     NewIssuer,
-    IssuerType,
-    Issuer,
-    Persona,
     NewPersona,
-    StepActionType
+    NewStep,
+    Persona,
+    StepActionType,
+    StepType,
+    WorkflowType
 } from '../../../types';
 
 describe('Database issuance flow repository tests', (): void => {
     let client: PGlite;
-    let repository: IssuanceFlowRepository;
+    let repository: ScenarioRepository;
     let issuer: Issuer
     let asset: Asset
     let persona1: Persona
@@ -45,7 +47,7 @@ describe('Database issuance flow repository tests', (): void => {
             getConnection: jest.fn().mockResolvedValue(database),
         };
         Container.set(DatabaseService, mockDatabaseService);
-        repository = Container.get(IssuanceFlowRepository);
+        repository = Container.get(ScenarioRepository);
         const issuerRepository = Container.get(IssuerRepository);
         const credentialDefinitionRepository = Container.get(CredentialDefinitionRepository);
         const assetRepository = Container.get(AssetRepository);
@@ -235,12 +237,12 @@ describe('Database issuance flow repository tests', (): void => {
         expect(savedIssuanceFlow.steps[0].asset!.fileName).toEqual(asset.fileName)
         expect(savedIssuanceFlow.steps[0].asset!.description).toEqual(asset.description)
         expect(savedIssuanceFlow.steps[0].asset!.content).toStrictEqual(asset.content)
-        expect(savedIssuanceFlow.issuer).not.toBeNull()
-        expect(savedIssuanceFlow.issuer!.name).toEqual(issuer.name);
-        expect(savedIssuanceFlow.issuer!.credentialDefinitions.length).toEqual(1);
-        expect(savedIssuanceFlow.issuer!.description).toEqual(issuer.description);
-        expect(savedIssuanceFlow.issuer!.organization).toEqual(issuer.organization);
-        expect(savedIssuanceFlow.issuer!.logo).not.toBeNull()
+        expect((<IssuanceFlow>savedIssuanceFlow).issuer).not.toBeNull()
+        expect((<IssuanceFlow>savedIssuanceFlow).issuer!.name).toEqual(issuer.name);
+        expect((<IssuanceFlow>savedIssuanceFlow).issuer!.credentialDefinitions.length).toEqual(1);
+        expect((<IssuanceFlow>savedIssuanceFlow).issuer!.description).toEqual(issuer.description);
+        expect((<IssuanceFlow>savedIssuanceFlow).issuer!.organization).toEqual(issuer.organization);
+        expect((<IssuanceFlow>savedIssuanceFlow).issuer!.logo).not.toBeNull()
         expect(savedIssuanceFlow.personas).toBeDefined();
         expect(savedIssuanceFlow.personas.length).toEqual(2)
         expect(savedIssuanceFlow.personas[0].name).toEqual(persona1.name)
@@ -792,7 +794,7 @@ describe('Database issuance flow repository tests', (): void => {
         const savedIssuanceFlow2 = await repository.create(issuanceFlow)
         expect(savedIssuanceFlow2).toBeDefined()
 
-        const fromDb = await repository.findAll()
+        const fromDb = await repository.findAll({ filter: { scenarioType: WorkflowType.ISSUANCE } })
 
         expect(fromDb.length).toEqual(2)
     })
@@ -892,7 +894,7 @@ describe('Database issuance flow repository tests', (): void => {
 
         await repository.delete(savedIssuanceFlow.id)
 
-        await expect(repository.findById(savedIssuanceFlow.id)).rejects.toThrowError(`No issuance flow found for id: ${savedIssuanceFlow.id}`)
+        await expect(repository.findById(savedIssuanceFlow.id)).rejects.toThrowError(`No scenario found for id: ${savedIssuanceFlow.id}`)
     })
 
     it('Should update issuance flow in database', async (): Promise<void> => {
@@ -1064,7 +1066,7 @@ describe('Database issuance flow repository tests', (): void => {
                     ]
                 }
             ],
-            issuer: savedIssuanceFlow.issuer!.id,
+            issuer: (<IssuanceFlow>savedIssuanceFlow).issuer!.id,
             personas: [persona1.id]
         }
         const updatedIssuanceFlowResult = await repository.update(savedIssuanceFlow.id, updatedIssuanceFlow)
@@ -1213,7 +1215,7 @@ describe('Database issuance flow repository tests', (): void => {
         const updatedIssuanceFlow: NewIssuanceFlow = {
             ...savedIssuanceFlow,
             steps: [],
-            issuer: savedIssuanceFlow.issuer!.id,
+            issuer: (<IssuanceFlow>savedIssuanceFlow).issuer!.id,
             personas: [persona1.id]
         }
 
@@ -1567,7 +1569,7 @@ describe('Database issuance flow repository tests', (): void => {
                     ]
                 },
             ],
-            issuer: savedIssuanceFlow.issuer!.id,
+            issuer: (<IssuanceFlow>savedIssuanceFlow).issuer!.id,
             personas: []
         }
 

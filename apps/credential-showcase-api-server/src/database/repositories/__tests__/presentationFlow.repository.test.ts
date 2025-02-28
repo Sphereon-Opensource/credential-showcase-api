@@ -5,7 +5,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
 import DatabaseService from '../../../services/DatabaseService';
-import PresentationFlowRepository from '../../../database/repositories/PresentationFlowRepository';
+import ScenarioRepository from '../../../database/repositories/ScenarioRepository';
 import RelyingPartyRepository from '../../../database/repositories/RelyingPartyRepository';
 import CredentialDefinitionRepository from '../../../database/repositories/CredentialDefinitionRepository';
 import AssetRepository from '../../../database/repositories/AssetRepository';
@@ -13,25 +13,27 @@ import PersonaRepository from '../PersonaRepository';
 import * as schema from '../../../database/schema';
 import {
     Asset,
-    NewAsset,
-    NewCredentialDefinition,
-    NewPresentationFlow,
-    NewStep,
-    NewAriesOOBAction,
     CredentialAttributeType,
     CredentialType,
-    StepType,
-    NewRelyingParty,
-    RelyingPartyType,
-    RelyingParty,
-    Persona,
+    NewAriesOOBAction,
+    NewAsset,
+    NewCredentialDefinition,
     NewPersona,
-    StepActionType
+    NewPresentationFlow,
+    NewRelyingParty,
+    NewStep,
+    Persona,
+    PresentationFlow,
+    RelyingParty,
+    RelyingPartyType,
+    StepActionType,
+    StepType,
+    WorkflowType
 } from '../../../types';
 
 describe('Database presentation flow repository tests', (): void => {
     let client: PGlite;
-    let repository: PresentationFlowRepository;
+    let repository: ScenarioRepository;
     let relyingParty: RelyingParty
     let asset: Asset
     let persona1: Persona
@@ -45,7 +47,7 @@ describe('Database presentation flow repository tests', (): void => {
             getConnection: jest.fn().mockResolvedValue(database),
         };
         Container.set(DatabaseService, mockDatabaseService);
-        repository = Container.get(PresentationFlowRepository);
+        repository = Container.get(ScenarioRepository);
         const relyingPartyRepository = Container.get(RelyingPartyRepository);
         const credentialDefinitionRepository = Container.get(CredentialDefinitionRepository);
         const assetRepository = Container.get(AssetRepository);
@@ -224,12 +226,12 @@ describe('Database presentation flow repository tests', (): void => {
         expect(savedPresentationFlow.steps[0].asset!.fileName).toEqual(asset.fileName)
         expect(savedPresentationFlow.steps[0].asset!.description).toEqual(asset.description)
         expect(savedPresentationFlow.steps[0].asset!.content).toStrictEqual(asset.content)
-        expect(savedPresentationFlow.relyingParty).not.toBeNull()
-        expect(savedPresentationFlow.relyingParty!.name).toEqual(relyingParty.name);
-        expect(savedPresentationFlow.relyingParty!.credentialDefinitions.length).toEqual(1);
-        expect(savedPresentationFlow.relyingParty!.description).toEqual(relyingParty.description);
-        expect(savedPresentationFlow.relyingParty!.organization).toEqual(relyingParty.organization);
-        expect(savedPresentationFlow.relyingParty!.logo).not.toBeNull()
+        expect((<PresentationFlow>savedPresentationFlow).relyingParty).not.toBeNull()
+        expect((<PresentationFlow>savedPresentationFlow).relyingParty!.name).toEqual(relyingParty.name);
+        expect((<PresentationFlow>savedPresentationFlow).relyingParty!.credentialDefinitions.length).toEqual(1);
+        expect((<PresentationFlow>savedPresentationFlow).relyingParty!.description).toEqual(relyingParty.description);
+        expect((<PresentationFlow>savedPresentationFlow).relyingParty!.organization).toEqual(relyingParty.organization);
+        expect((<PresentationFlow>savedPresentationFlow).relyingParty!.logo).not.toBeNull()
         expect(savedPresentationFlow.personas).toBeDefined();
         expect(savedPresentationFlow.personas.length).toEqual(2)
         expect(savedPresentationFlow.personas[0].name).toEqual(persona1.name)
@@ -770,7 +772,7 @@ describe('Database presentation flow repository tests', (): void => {
         const savedPresentationFlow2 = await repository.create(presentationFlow)
         expect(savedPresentationFlow2).toBeDefined()
 
-        const fromDb = await repository.findAll()
+        const fromDb = await repository.findAll({ filter: { scenarioType: WorkflowType.PRESENTATION } })
 
         expect(fromDb.length).toEqual(2)
     })
@@ -870,7 +872,7 @@ describe('Database presentation flow repository tests', (): void => {
 
         await repository.delete(savedPresentationFlow.id)
 
-        await expect(repository.findById(savedPresentationFlow.id)).rejects.toThrowError(`No presentation flow found for id: ${savedPresentationFlow.id}`)
+        await expect(repository.findById(savedPresentationFlow.id)).rejects.toThrowError(`No scenario found for id: ${savedPresentationFlow.id}`)
     })
 
     it('Should update presentation flow in database', async (): Promise<void> => {
@@ -1042,7 +1044,7 @@ describe('Database presentation flow repository tests', (): void => {
                     ]
                 }
             ],
-            relyingParty: savedPresentationFlow.relyingParty!.id,
+            relyingParty: (<PresentationFlow>savedPresentationFlow).relyingParty!.id,
             personas: [persona1.id]
         }
         const updatedPresentationFlowResult = await repository.update(savedPresentationFlow.id, updatedPresentationFlow)
@@ -1180,7 +1182,7 @@ describe('Database presentation flow repository tests', (): void => {
         const updatedPresentationFlow: NewPresentationFlow = {
             ...savedPresentationFlow,
             steps: [],
-            relyingParty: savedPresentationFlow.relyingParty!.id,
+            relyingParty: (<PresentationFlow>savedPresentationFlow).id,
             personas: [persona1.id]
         }
 
@@ -1534,7 +1536,7 @@ describe('Database presentation flow repository tests', (): void => {
                     ]
                 },
             ],
-            relyingParty: savedPresentationFlow.relyingParty!.id,
+            relyingParty: (<PresentationFlow>savedPresentationFlow).id,
             personas: []
         }
 

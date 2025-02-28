@@ -36,20 +36,20 @@ class ShowcaseController {
     @Get('/:id')
     public async getOne(@Param('id') id: string): Promise<ShowcaseResponse> {
         const result = await this.showcaseService.getShowcase(id);
-        return ShowcaseResponseFromJSONTyped({ asset: showcaseDTOFrom(result) }, false)
+        return ShowcaseResponseFromJSONTyped({ showcase: showcaseDTOFrom(result) }, false)
     }
 
     @HttpCode(201)
     @Post('/')
     public async post(@Body() showcaseRequest: ShowcaseRequest): Promise<ShowcaseResponse> {
         const result = await this.showcaseService.createShowcase(ShowcaseRequestToJSONTyped(showcaseRequest));
-        return ShowcaseResponseFromJSONTyped({ asset: showcaseDTOFrom(result) }, false)
+        return ShowcaseResponseFromJSONTyped({ showcase: showcaseDTOFrom(result) }, false)
     }
 
     @Put('/:id')
     public async put(@Param('id') id: string, @Body() showcaseRequest: ShowcaseRequest): Promise<ShowcaseResponse> {
         const result = await this.showcaseService.updateShowcase(id, ShowcaseRequestToJSONTyped(showcaseRequest))
-        return ShowcaseResponseFromJSONTyped({ asset: showcaseDTOFrom(result) }, false)
+        return ShowcaseResponseFromJSONTyped({ showcase: showcaseDTOFrom(result) }, false)
     }
 
     @OnUndefined(204)

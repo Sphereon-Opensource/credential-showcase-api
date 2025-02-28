@@ -127,7 +127,7 @@ export const showcaseDTOFrom = (showcase: Showcase): ShowcaseDTO => {
     return {
         ...showcase,
         personas: showcase.personas.map(persona => personaDTOFrom(persona)),
-        credentialsDefinitions: showcase.credentialDefinitions.map(credentialsDefinition => credentialDefinitionDTOFrom(credentialsDefinition)),
+        credentialDefinitions: showcase.credentialDefinitions.map(credentialsDefinition => credentialDefinitionDTOFrom(credentialsDefinition)),
         scenarios: showcase.scenarios.map(scenario => scenarioDTOFrom(scenario)),
     }
 }

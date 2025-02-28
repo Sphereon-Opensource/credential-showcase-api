@@ -2617,7 +2617,7 @@ components:
         - status
         - scenarios
         - personas
-        - credentialsDefinitions
+        - credentialDefinitions
         - hidden
       properties:
         id:
@@ -2643,7 +2643,7 @@ components:
           description: List of scenarios in this showcase
           items:
             $ref: '#/components/schemas/Workflow'
-        credentialsDefinitions:
+        credentialDefinitions:
           type: array
           description: List of credential definitions used in this showcase
           items:
@@ -2673,7 +2673,7 @@ components:
         - status
         - scenarios
         - personas
-        - credentialsDefinitions
+        - credentialDefinitions
         - hidden
       properties:
         name:
@@ -2696,7 +2696,7 @@ components:
           items:
             type: string
             example: 123e4567-e89b-12d3-a456-426614174469
-        credentialsDefinitions:
+        credentialDefinitions:
           type: array
           description: List of credential definitions used in this showcase
           items:

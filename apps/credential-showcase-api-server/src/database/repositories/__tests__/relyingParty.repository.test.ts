@@ -4,11 +4,11 @@ import { drizzle } from 'drizzle-orm/pglite';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Container } from 'typedi';
-import DatabaseService from '../services/DatabaseService';
-import RelyingPartyRepository from '../database/repositories/RelyingPartyRepository';
-import AssetRepository from '../database/repositories/AssetRepository';
-import CredentialDefinitionRepository from '../database/repositories/CredentialDefinitionRepository';
-import * as schema from '../database/schema';
+import DatabaseService from '../../../services/DatabaseService';
+import RelyingPartyRepository from '../RelyingPartyRepository';
+import AssetRepository from '../AssetRepository';
+import CredentialDefinitionRepository from '../CredentialDefinitionRepository';
+import * as schema from '../../schema';
 import {
     Asset,
     CredentialAttributeType,
@@ -18,7 +18,7 @@ import {
     NewCredentialDefinition,
     NewRelyingParty,
     RelyingPartyType
-} from '../types';
+} from '../../../types';
 
 describe('Database relying party repository tests', (): void => {
     let client: PGlite;

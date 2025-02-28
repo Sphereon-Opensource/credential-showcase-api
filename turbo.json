@@ -2,7 +2,20 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build"]
+    },
+    "credential-showcase-api-server#build": {
+      "dependsOn": [
+        "^build",
+        "credential-showcase-openapi#build"
+      ],
+      "env": [
+        "DB_URL"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
     },
     "check-types": {
       "dependsOn": ["^check-types"]

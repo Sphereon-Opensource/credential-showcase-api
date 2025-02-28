@@ -1,11 +1,17 @@
 import {
     assets,
+    personas,
     credentialAttributes,
     credentialDefinitions,
     credentialRepresentations,
     issuers,
     relyingParties,
-    revocationInfo
+    revocationInfo,
+    workflows,
+    steps,
+    stepActions,
+    ariesProofRequests,
+    showcases
 } from '../../database/schema';
 
 // $inferSelect does not respect nullability of fields and the type has every field as required
@@ -13,6 +19,12 @@ import {
 
 export type Asset = typeof assets.$inferSelect;
 export type NewAsset = typeof assets.$inferInsert & { fileName?: string | null, description?: string | null };
+
+export type Persona = Omit<typeof personas.$inferSelect, 'headshotImage' | 'bodyImage'> & {
+    headshotImage: Asset | null
+    bodyImage: Asset | null
+};
+export type NewPersona = typeof personas.$inferInsert & { headshotImage?: string | null, bodyImage?: string | null };
 
 export type CredentialDefinition = Omit<typeof credentialDefinitions.$inferSelect, 'icon' | 'type'> & {
     type: CredentialType
@@ -87,8 +99,85 @@ export enum StepType {
     WORKFLOW = 'WORKFLOW',
 }
 
+export enum StepActionType {
+    ARIES_OOB = 'ARIES_OOB',
+}
+
 export enum WorkflowType {
     ISSUANCE = 'ISSUANCE',
     PRESENTATION = 'PRESENTATION',
 }
 
+export type IssuanceFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer'> & {
+    personas: Persona[]
+    steps: Step[]
+    issuer?: Issuer | null
+};
+export type NewIssuanceFlow = Omit<typeof workflows.$inferInsert, 'relyingParty' | 'workflowType'> & {
+    personas: string[]
+    issuer: string
+    steps: NewStep[]
+};
+
+export type PresentationFlow = Omit<typeof workflows.$inferSelect, 'relyingParty' | 'issuer'> & {
+    personas: Persona[]
+    steps: Step[]
+    relyingParty?: RelyingParty | null
+};
+export type NewPresentationFlow = Omit<typeof workflows.$inferInsert, 'issuer' | 'workflowType'> & {
+    personas: string[]
+    relyingParty: string
+    steps: NewStep[]
+};
+
+export type Step = Omit<typeof steps.$inferSelect, 'asset'> & {
+    actions: AriesOOBAction[]
+    asset?: Asset | null
+};
+export type NewStep = Omit<typeof steps.$inferInsert, 'workflow'> & {
+    asset?: string | null
+    actions: NewAriesOOBAction[]
+    subFlow?: string | null
+};
+
+export type AriesOOBAction = Omit<typeof stepActions.$inferSelect, 'proofRequest'> & {
+    proofRequest?: AriesProofRequest | null
+};
+export type NewAriesOOBAction = Omit<typeof stepActions.$inferInsert, 'step' | 'proofRequest'> & {
+    proofRequest: NewAriesProofRequest
+};
+
+export type AriesRequestCredentialAttribute = {
+    attributes?: string[]
+    restrictions?: string[]
+}
+
+export type AriesRequestCredentialPredicate = {
+    name?: string
+    type?: string
+    value?: string
+    restrictions?: string[]
+}
+
+export type AriesProofRequest = typeof ariesProofRequests.$inferSelect;
+export type NewAriesProofRequest = Omit<typeof ariesProofRequests.$inferInsert, 'stepAction'>;
+
+export type Showcase = typeof showcases.$inferSelect & {
+    scenarios: Scenario[]
+    credentialDefinitions: CredentialDefinition[]
+    personas: Persona[]
+};
+export type NewShowcase = typeof showcases.$inferInsert & {
+    scenarios: string[]
+    credentialDefinitions: string[]
+    personas: string[]
+};
+
+export type Scenario = IssuanceFlow | PresentationFlow
+export type NewScenario = NewIssuanceFlow | NewPresentationFlow
+
+export enum ShowcaseStatus {
+    PENDING = 'PENDING',
+    ACTIVE = 'ACTIVE',
+    ARCHIVED = 'ARCHIVED'
+}

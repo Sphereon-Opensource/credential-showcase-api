@@ -58,7 +58,7 @@
       }
     }
   ],
-  "workflows": [
+  "scenarios": [
     {
       "id": "issuance-flow-123",
       "type": "ISSUANCE",

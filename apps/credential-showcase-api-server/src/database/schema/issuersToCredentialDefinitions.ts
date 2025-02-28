@@ -13,7 +13,7 @@ export const issuersToCredentialDefinitions = pgTable('issuersToCredentialDefini
 );
 
 export const issuersToCredentialDefinitionsRelations = relations(issuersToCredentialDefinitions, ({ one }) => ({
-    credentialDefinition: one(credentialDefinitions, {
+    cd: one(credentialDefinitions, {
         fields: [issuersToCredentialDefinitions.credentialDefinition],
         references: [credentialDefinitions.id],
     }),

@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, integer, varchar, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, integer, text, uuid, unique } from 'drizzle-orm/pg-core';
 import { StepTypePg } from './stepType';
 import { workflows } from './workflow';
 import { stepActions } from './stepAction';
@@ -8,13 +8,17 @@ import { StepType } from '../../types';
 
 export const steps = pgTable('step', {
     id: uuid('id').notNull().primaryKey().defaultRandom(),
-    title: varchar({ length: 255 }).notNull(),
-    description: varchar({ length: 255 }).notNull(),
+    title: text().notNull(),
+    description: text().notNull(),
     order: integer().notNull(),
-    type: StepTypePg('step_type').notNull().$type<StepType>(),
+    type: StepTypePg().notNull().$type<StepType>(),
     subFlow: uuid('sub_flow').references(() => workflows.id),
-    workflowId: uuid('workflow_id').references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
-    asset: uuid().references(() => assets.id),
+    workflow: uuid().references(() => workflows.id,{ onDelete: 'cascade' }).notNull(),
+    asset: uuid().references(() => assets.id)
+}, (table) => {
+    return {
+        uniqueStepOrder: unique().on(table.order, table.workflow)
+    };
 });
 
 export const stepRelations = relations(steps, ({ one, many }) => ({
@@ -24,10 +28,11 @@ export const stepRelations = relations(steps, ({ one, many }) => ({
     }),
     actions: many(stepActions),
     workflow: one(workflows, {
-        fields: [steps.workflowId],
+        fields: [steps.workflow],
         references: [workflows.id],
+        relationName: 'steps_workflow',
     }),
-    image: one(assets, {
+    asset: one(assets, {
         fields: [steps.asset],
         references: [assets.id],
     }),

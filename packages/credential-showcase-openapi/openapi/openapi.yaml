@@ -2373,7 +2373,7 @@ components:
         id:
           type: string
           description: Unique identifier for the issuer
-          example: 123e4567-e89b-12d3-abcd-426614174456
+          example: did:sov:XUeUZauFLeBNofY3NhaZCB
         name:
           type: string
           description: Name of the issuer
@@ -2546,24 +2546,24 @@ components:
           type: string
           description: Unique identifier for the credential definition
           example: 123e4567-e89b-12d3-a456-426614174123
-        issuerId:
-          type: string
-          description: Identifier of the issuer that owns this credential definition
-          example: 123e4567-e89b-12d3-a456-426614174321
         name:
           type: string
           description: Name of the credential definition
           example: Credential Definition Name
+        issuerId:
+          type: string
+          description: Identifier of the issuer who created this schema
+          example: did:sov:XUeUZauFLeBNofY3NhaZCB
+        schemaId:
+          type: string
+          description: Identifier of the associated credential schema
+          example: did:sov:XUeUZauFLeBNofY3NhaZCB
         version:
           type: string
           description: Version of the credential definition
           example: '1.0'
         type:
           $ref: '#/components/schemas/CredentialType'
-        schemaId:
-          type: string
-          description: Reference to the associated credential schema
-          example: 456e4567-e89b-12d3-a456-426614174789
         representations:
           type: array
           items:
@@ -2745,15 +2745,15 @@ components:
         id:
           type: string
           description: Unique identifier for the credential schema
-          example: 123e4567-e89b-12d3-a456-426614174789
-        issuerId:
-          type: string
-          description: Identifier of the issuer who created this schema
-          example: 123e4567-e89b-12d3-a456-426614174123
+          example: did:sov:XUeUZauFLeBNofY3NhaZCB
         name:
           type: string
           description: Name of the credential schema
           example: Diploma Schema
+        issuerId:
+          type: string
+          description: Identifier of the issuer who created this schema
+          example: 123e4567-e89b-12d3-a456-426614174123
         version:
           type: string
           description: Version of the credential schema
